@@ -1,0 +1,7 @@
+*.aux
+*.fdb*
+*.fls
+*.log
+*.pdf
+*.gz
+template.tex
