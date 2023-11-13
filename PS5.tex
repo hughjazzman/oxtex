@@ -286,4 +286,68 @@ From part (b) and Theorem 4.3.1, each $B_i$ is called at least
 \[k\geq \frac{3\log\frac{2}{\delta'/m}}{(\varepsilon'/2m)^2 x_i} 
 = O\left(\frac{m^2 \log\frac{m}{\delta'}}{\varepsilon'^2}\right)\]
 times.
+
+\section*{Question 4}
+
+Theorem 4.4.5 in the lecture notes is referred from when referencing claims and proofs mentioned.
+
+Let $E=\{e_1,e_2,...,e_m\}$ denote the set of edges, and define $G_i = (V,E_i)\subseteq G$,
+where $E_i=\{e_1,e_2,...,e_i\}\subseteq E$. 
+Let $\Omega: G \rightarrow \{\sigma\}^*$, 
+where $\Omega(G)$ denotes the full set of proper $q$-colourings for graph $G$. Then
+
+\[|\Omega(G)|=|\Omega(G_m)|
+=\frac{|\Omega(G_m)|}{|\Omega(G_{m-1})|}\cdot\dots\cdot\frac{|\Omega(G_1)|}{|\Omega(G_0)|}\cdot |\Omega(G_0)|\]
+
+Since $G_0$ has no edges, $|\Omega(G_0)| = q^n$. Considering the ratios
+\[\rho_i = \frac{|\Omega(G_i)|}{|\Omega(G_{i-1})|},\]
+then
+\[|\Omega(G)|=q^n\prod_{i=1}^m \rho_i\]
+
+From the lecture notes under Claim 1, 
+we just need a $(\varepsilon/(2m), \delta'/m)$-approximation for each $\rho_i$
+to obtain a $(\varepsilon,\delta')$-approximation for $|\Omega(G)|$.
+
+We then need to prove Claim 2 for $q$-colourings.
+To obtain an FPRAS, we show $\exists\delta'\in (1/2,1)$ such that $\delta' \leq \rho_i \leq 1$.
+
+The upper bound is easy since $\forall i, \Omega(G_i)\subseteq \Omega(G_{i-1})$.
+For the lower bound, we show that $\rho_i \geq 3/4$.
+Suppose that $e_i=(u,v)$ and denote the degree of $u,v$ in $G_i$ as $d_i(u),d_i(v)$ respectively.
+Let $d_i = \min(d_i(u),d_i(v))$.
+When $e_i$ is added, only $q$-colourings where $\sigma_{i-1}(u)=\sigma_{i-1}(v)$ will need to be removed.
+Note that restricting the colouring of either $u$ or $v$ 
+in order to have $\sigma_i(u)\neq\sigma_i(v)$, reducing the number of colours for the chosen vertex by 1,
+will imply the $q$-colouring will be proper for $G_i$. 
+To ensure the restriction, we can multiply $|\Omega(G_{i-1})|$ by a factor of $\frac{q-d_i}{q-d_i+1}$,
+where $q-d_i$ and $q-d_i+1$ are minimum number of possible colours before and after adding edge $e_i$.
+Then we have
+\[\rho_i \geq \frac{q-d_i}{q-d_i+1}\geq \frac{q-\Delta}{q-\Delta+1} \geq \frac{3}{4}\]
+Thus, we have $\delta'=3/4$, similar to the proof in the lecture notes.
+
+
+
+$\rho_i$ can then be estimated by drawing the appropriate number of samples from $\Omega(G_{i-1})$ using the PAUS,
+and calculating the fraction of them that are in $\Omega(G_i)$.
+
+Let $\mu_i$ denote the probability that the PAUS returns a sample in $\Omega(G_i)$.
+Let $\hat{\rho}_i$ be the computed estimates using the PAUS.
+
+Using the same reasoning as the lecture notes proof, fixing $\delta = \delta'/m$,
+\[|\rho_i-\mu_i| \leq \frac{\varepsilon}{6m}\rho_i\]
+\[|\hat{\rho}_i - \mu_i| \leq \frac{\varepsilon}{4m}\rho_i\]
+\[\Pr\left[|\hat{\rho}_i - \rho_i| \leq \frac{\varepsilon}{2m}\rho_i\right] \geq 1 - \delta\]
+The number of samples required is 
+\[\left\lceil \frac{3\log\frac{2}{\delta}}{(\frac{\varepsilon}{8m})^2 \mu_i}\right\rceil
+=O\left(\frac{m^2}{\varepsilon^2} \log\frac{1}{\delta}\right)\]
+
+\section*{Question 5}
+
+\section*{Question 6}
+
+\paragraph{(a)}
+\paragraph{(b)}
+\paragraph{(c)}
+\paragraph{(d)}
+
 \end{document}
