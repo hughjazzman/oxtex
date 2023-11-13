@@ -342,12 +342,91 @@ The number of samples required is
 =O\left(\frac{m^2}{\varepsilon^2} \log\frac{1}{\delta}\right)\]
 
 \section*{Question 5}
+The Markov chain $M_t$ is \textbf{finite}, since there are $n!$ permutations.
+It is \textbf{irreducible}, since you can get from any permutation to any other permutation,
+in a sequence of swaps, similar to selection sort.
+It is \textbf{aperiodic}, since the same card can be chosen, so the state does not change.
+
+Thus, it converges to the unique stationary distribution $\pi$. Define
+\[(\pi_1,\pi_2,...,\pi_{n!})=(1/n!,1/n!,...,1/n!)\]
+
+Consider the system $(\pi_1,\pi_2,...,\pi_{n!})P=(\pi_1,\pi_2,...,\pi_{n!})$.
+Consider $\pi_i$ on the RHS.
+There are exactly $\binom{n}{2}+1$ states that could move to state $i$.
+These correspond to choosing any 2 cards to swap from state $i$,
+as well as self-looping choosing the exact same card.
+Each have probability $1/n!$ on the left.
+The self-loop has probability $1/n$ of transition to $i$, 
+while the rest of the states have probability $2/n^2$.
+Thus, we obtain as desired
+\[\pi_i=\frac{1}{n!}\left(\binom{n}{2}\frac{2}{n^2} + \frac{1}{n}\right) = \frac{1}{n!}\]
+
+Let $(X_t,Y_t)$ be a coupling of the Markov chain $M_t$.
+We choose a coupling as follows.
+
+\begin{itemize}
+    \item Choose positions $j_1,j_2$ u.a.r. from $\{1,...,n\}$.
+    \item Obtain $X_{t+1}$ from $X_t$ by swapping the card at position $j_1$ with card at position $j_2$.
+    Call the card at position $j_2$ card $C$.
+    \item Obtain $Y_{t+1}$ from $Y_t$ by swapping the card at position $j_1$ with card $C$.
+\end{itemize}
+
+We show that $Y_t$ is a faithful copy of the original chain.
+Consider any position $k_1,k_2$. Let $C'$ be the card in position $k_2$ in $Y_t$.
+Let $j_2$ be the position of $C'$ in $X_t$, and let $j_1=k_1$.
+The probability that $j_1,j_2$ are chosen are each $1/n$, 
+so this is the probability that position $k_1,k_2$ are chosen in the transition from $Y_t$ to $Y_{t+1}$.
+
+Note that when a card $C$ is moved to position $j_1$ in $(X_t)$ and $(Y_t)$
+it thereafter occupies the same position in both decks.
+The probability that a given $C\in\{1,...,n\}$ is chosen in each transition is $1/n$.
+
+Thus, we have a coupon collector problem. 
+As in the lecture notes for the card shuffling example,
+the probability that the chain has not coupled in $t$ steps is at most $\exp (-\frac{t}{n}+\log n)$.
+Choosing $t=n(\log(1/\varepsilon)+\log n)$ gives that this probability is at most $\varepsilon$.
+By coupling lemma, the mixing time is at most
+\[n(\log(1/\varepsilon)+\log n)\]
 
 \section*{Question 6}
 
 \paragraph{(a)}
+\[P=
+\begin{pmatrix}
+1/2 & 1/2 & 0\\
+1/2 & 0 & 1/2\\
+1/2 & 0 & 1/2\\
+\end{pmatrix}\]
+
 \paragraph{(b)}
+The Markov chain is \textbf{finite}, since there are $n$ states.
+It is \textbf{irreducible}, since it can get from any state $i$ to $j$ by going to $0$ with a tails,
+and tossing head until reaching $j$.
+It is \textbf{aperiodic}, since it can use the self-loop on state $n$ 
+to end up returning to each state with even or odd steps.
+
+Thus, there is a unique stationary distribution $\pi$. Define
+\[\pi=(1/2,1/2^2,1/2^3,...,1/2^{n-1},1/2^n,1/2^n)\]
+so $\pi_i=1/2^{i+1}$ for $0\leq i<n$.
+Consider $\pi_i$.
+\[\forall i, 0 < i < n, \pi_i = \frac{1}{2}\pi_{i-1} = \frac{1}{2^{i+1}}\]
+\[\pi_0 = \frac{1}{2}\sum_{i=0}^n \pi_i = \frac{1}{2}\]
+\[\pi_n = \frac{1}{2}(\pi_{n-1}+\pi_n) = \frac{1}{2^n}\]
+Then $\pi=\pi P$. The chosen $\pi$ is the unique stationary distribution.
+
 \paragraph{(c)}
+We define a coupling $(X_t,Y_t)$ by having $(X_t)$ and $(Y_t)$ behave like independent copies 
+of the Markov chain if $X_t\neq Y_t$, and otherwise have them behave identically.
+Note that
+\[\forall i,j,i\neq j, \Pr[(X_{t+1},Y_{t+1})=(0,0)|(X_t,Y_t)=(i,j)] = 1/4\]
+Then
+\[\Pr[X_{t+1}=Y_{t+1}|X_t\neq Y_t] \geq 1/4\]
+
+The probability of not being equal after $t$ steps is at most $(3/4)^t$.
+Set $\varepsilon\geq(3/4)^t$, so $t\geq\log_{4/3}(1/\varepsilon)$ and
+\[\Pr[X_t\neq Y_t]\leq \varepsilon\]
+By the coupling lemma, the mixing time is bounded by $O(\log(1/\varepsilon))$.
+
 \paragraph{(d)}
 
 \end{document}
