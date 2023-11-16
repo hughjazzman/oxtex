@@ -89,13 +89,13 @@ The size of the input is $t + \log |U| = t + n$.
 For $1 \leq i \leq t$, the set $H_i$ is the set of truth assignments 
 with exactly $k$ true variables that satisfy clause $C_i$.
 Then,
-\[|H_i| = \binom{n-p_i}{k-m_i}\]
+\[|H_i| = \binom{n-l_i}{k-m_i}\]
 as this corresponds to setting $m_i$ variables true, 
-and choosing which of the remaining $(n-p_i)$ variables not in clause $C_i$ to set to be true,
+and choosing which of the remaining $(n-l_i)$ variables not in clause $C_i$ to set to be true,
 which can be computed in $poly(n)$ time.
 
 To sample uniformly from $H_i$, we can pick $(k-m_i)$ variables without replacement u.a.r.
-from the $(n-p_i)$ variables not in clause $C_i$.
+from the $(n-l_i)$ variables not in clause $C_i$.
 
 Finally, given a truth assignment $x\in U$, we can check in poly time whether $x \in H_i$.
 
@@ -199,7 +199,6 @@ Note that
     \left|A_i\left(\frac{\varepsilon'}{m},\frac{\delta'}{m}\right) - x_i \right| \geq \frac{\varepsilon'x_i}{m}\right] 
     \quad\text{(by union bound)}\\
     &\geq 1 - m\left(\frac{\delta'}{m}\right)\\
-    &= 1-\delta'\\
     &= 1-\delta'
 \end{aligned}
 \end{equation}
@@ -227,6 +226,7 @@ Then from Theorem 4.3.1, if $k\geq \frac{3\log\frac{2}{\delta}}{\varepsilon^2 x_
 
 Thus,
 \[\Pr \left[1-\varepsilon \leq \frac{A_i(\varepsilon,\delta)}{x_i} \leq 1+\varepsilon\right] \geq 1-\delta\]
+where $k=O(\log(1/\delta)/\varepsilon^2)$ since $\frac{1}{3}<x_i<1$.
 
 \clearpage
 \paragraph{(c)}
@@ -318,9 +318,12 @@ Let $d_i = \min(d_i(u),d_i(v))$.
 When $e_i$ is added, only $q$-colourings where $\sigma_{i-1}(u)=\sigma_{i-1}(v)$ will need to be removed.
 Note that restricting the colouring of either $u$ or $v$ 
 in order to have $\sigma_i(u)\neq\sigma_i(v)$, reducing the number of colours for the chosen vertex by 1,
-will imply the $q$-colouring will be proper for $G_i$. 
-To ensure the restriction, we can multiply $|\Omega(G_{i-1})|$ by a factor of $\frac{q-d_i}{q-d_i+1}$,
-where $q-d_i$ and $q-d_i+1$ are minimum number of possible colours before and after adding edge $e_i$.
+will imply the $q$-colouring will be proper for $G_i$.
+If the chosen vertex had $d+1$ choice of colours, 
+then we can multiply $|\Omega(G_{i-1})|$ by a factor of $\frac{q-d}{q-d+1}$.
+To ensure the restriction, we multiply $|\Omega(G_{i-1})|$ by a factor of $\frac{q-d_i}{q-d_i+1}$,
+where $q-d_i$ and $q-d_i+1$ are minimum number of possible colours before and after adding edge $e_i$
+(we have for $ 0 < a< b < q, \frac{q-b}{q-b+1}<\frac{q-a}{q-a+1})$.
 Then we have
 \[\rho_i \geq \frac{q-d_i}{q-d_i+1}\geq \frac{q-\Delta}{q-\Delta+1} \geq \frac{3}{4}\]
 Thus, we have $\delta'=3/4$, similar to the proof in the lecture notes.
@@ -427,6 +430,56 @@ Set $\varepsilon\geq(3/4)^t$, so $t\geq\log_{4/3}(1/\varepsilon)$ and
 \[\Pr[X_t\neq Y_t]\leq \varepsilon\]
 By the coupling lemma, the mixing time is bounded by $O(\log(1/\varepsilon))$.
 
+\clearpage
 \paragraph{(d)}
+Note that this Markov chain is also finite, irreducible, and aperiodic, since it is the time-reversal.
+Thus, it has a unique stationary distribution.
+In fact, its stationary distribution is exactly the same as before.
+\[\hat{\pi}=\pi=(1/2,1/2^2,1/2^3,...,1/2^{n-1},1/2^n,1/2^n)\]
+
+Observe that 
+\begin{itemize}
+    \item $\forall i<n, \hat{P}_{0,i}=\frac{1}{2^{i+1}}$
+    \item $0\leq i < n-1,\hat{P}_{i+1,i}=1$
+    \item $\hat{P}_{n,n-1}=\hat{P}_{n,n}=\frac{1}{2}$ 
+\end{itemize}
+
+Analysing the $\hat{\pi}_i$,
+\[\forall i, 0<i<n, \hat{\pi}_i = \hat{\pi}_{i+1} + \frac{1}{2^{i+1}}\hat{\pi}_0
+=\frac{2}{2^{i+2}}=\frac{1}{2^{i+1}}=\hat{\pi}_i\]
+\[\hat{\pi}_0 = \frac{1}{2}(\hat{\pi}_0+\hat{\pi}_1)=\frac{1}{2}=\hat{\pi}_0\]
+\[\hat{\pi}_n = \frac{1}{2}\hat{\pi}_n + \frac{1}{2^n}\hat{\pi}_0 
+=\frac{2}{2^{n+1}}=\frac{1}{2^n}=\hat{\pi}_n\]
+Then $\hat{\pi}=\hat{\pi}\hat{P}$.
+
+Note that since for $0\leq i<n-1, \hat{P}_{i+1,i}=1$ then for $0<i<n, \hat{P}_{i,0}^i=1$.
+
+Define $\vec{1}_i= (0,...,1,...,0)$ where it is equal to 1 at index $i$, and 0 otherwise.
+
+Consider an arbitrary $i, 0\leq i<n$, such that $\hat{\pi}_B^0=\vec{1}_i$.
+Then since $\hat{P}_{i,0}^i=1$, we have $\hat{\pi}_B^i=\vec{1}_0$. 
+Then we must have $\hat{\pi}_B^{i+1}=\hat{\pi}$, where clearly $i+1\leq n$.
+Since it is in a stationary distribution, it will stay there so $\hat{\pi}_B^{n}=\hat{\pi}$.
+
+For the case $i=n$ where $\hat{\pi}_B^0=\vec{1}_n$, note that in each time step $t\leq n$, for $i<n$,
+\[(i+t\geq n) \implies \hat{\pi}_{B,i}^t = \frac{1}{2^{i+1+t-n}}\]
+and $\hat{\pi}_{B,n}^t=\frac{1}{2^t}$.
+
+Then at time step $t=n$, we have
+\[\hat{\pi}_{B,i}^n = \frac{1}{2^{i+1}}\]
+\[\hat{\pi}_{B,n}^n=\frac{1}{2^n}\]
+
+Thus, $\hat{\pi}^n=\hat{\pi}$.
+We have 
+\[\forall i, \hat{\pi}_B^0=\vec{1}_i \implies \hat{\pi}_B^n=\hat{\pi}\]
+
+Next, we note that for any distribution $\hat{\pi}_D^0=(p_1,p_2,...,p_n)$,
+it can be expressed in terms of $\vec{1}_i$ as
+\[\hat{\pi}_D^0=(p_0,p_1,...,p_n)=\sum_{i=0}^n p_i \vec{1}_i\]
+where $\sum_{i=0}^n p_i =1$.
+Since after $t=n$ steps, we know that $\vec{1}_i$ will be in the stationary distribution $\hat{\pi}$,
+\[\hat{\pi}_D^n = \sum_{i=0}^n p_i \hat{\pi} = \hat{\pi}\]
+
+Then the mixing time is at most $n$ for any distribution of $\hat{\pi}_D$.
 
 \end{document}
