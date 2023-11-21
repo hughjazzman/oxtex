@@ -1,0 +1,312 @@
+% Please do not change %
+\documentclass[11pt]{article} % font size
+\usepackage[margin=1in]{geometry} % margins
+\usepackage{amsmath,amsthm,amssymb} % for the  common "math symbols"
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[shortlabels]{enumitem} % for enumeration
+\usepackage{booktabs} % if you need tables
+\usepackage{listings}
+\usepackage{color}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+\lstset{
+  frame=none,
+  xleftmargin=2pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\ttfamily\tiny\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=haskell,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\small\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
+% Feel free to include additional packages (if needed), but make sure it does not override the margin/font requirements.
+%
+\setlength{\parindent}{0pt} % no indent for new paragraphs.
+\setlength{\parskip}{5pt} % distance between paragraphs, which will be used when you have a blank line in your LaTeX code.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Probability and Computing: \\Exercise Sheet 6}
+%
+\author{Wira Azmoon Ahmad}
+\date{24 Nov 2023}
+%
+\begin{document}
+%
+\maketitle
+
+%You may use the usual \LaTeX\ environments to structure your answers:
+%\begin{align}
+%        \label{basegnn}
+%        \mathbf{h}_u^{(t+1)} = \sigma \bigg( \mathbf{W}_\text{self}^{(t)} \mathbf{h}_u^{(t)}  + \mathbf{W}_\text{neigh}^{(t)} \sum_{v \in N(u)} \mathbf{h}_v^{(t)} + \mathbf{b}^{(t)} \bigg). 
+%\end{align}
+
+
+%\begin{table}[h]
+%\caption{A simple table.}
+%\centering
+%\begin{tabular}[t]{lrrrr}
+%\toprule
+%Graphs & Can & Be  & Fun & Too \\ 
+%\midrule 
+%$G_1$ & $1$  & $2$ & $3$ & $4$ \\ 
+%$G_2$ & $-1$  & $-2$ & $-3$ & $-4$ \\ 
+%$G_3$ & $0.1$  & $0.2$ & $0.3$ & $0.4$ \\ 
+%\bottomrule
+%\end{tabular}
+%\label{tab}
+%\end{table}
+
+\section*{Question 1}
+
+% To answer each part of the question, please simply use a paragraph command 
+% \paragraph{(a)}
+Let $(X_t,Y_t)$ be a coupling of the Markov chain $M_t$.
+We choose a coupling as follows.
+
+\begin{itemize}
+    \item Choose positions $j_1,j_2$ u.a.r. from $\{1,...,n\}$.
+    \item Obtain $X_{t+1}$ from $X_t$ by swapping the card at position $j_1$ with card at position $j_2$.
+    Call the card at position $j_2$ card $C$.
+    \item Obtain $Y_{t+1}$ from $Y_t$ by swapping the card at position $j_1$ with card $C$.
+\end{itemize}
+
+We show that $Y_t$ is a faithful copy of the original chain.
+Consider any position $k_1,k_2$. Let $C'$ be the card in position $k_2$ in $Y_t$.
+Let $j_2$ be the position of $C'$ in $X_t$, and let $j_1=k_1$.
+The probability that $j_1,j_2$ are chosen are each $1/n$, 
+so this is the probability that position $k_1,k_2$ are chosen in the transition from $Y_t$ to $Y_{t+1}$.
+
+% Let $d(x,y)$ be the number of positions on which the states $x,y$ disagree.
+% Suppose $d(x,y)=k$. At each time step, if $C_i$ in the same position for both, 
+% or if the card at $j_i$ is the same for both $X_t$ and $Y_t$,
+% then the number of disagreements stay the same.
+% Otherwise, it goes down by at least one, with probability $(d(x,y)/n)^2$ since the events are independent.
+% Then for $d(x,y)\geq 1$,
+% \[\mathbb{E}[d(X_1,Y_1)|(X_0,Y_0)=(x,y)] \leq d(x,y) - \left(\frac{d(x,y)}{n}\right)^2 
+% \leq d(x,y) - d(x,y)/n^2 \leq\beta d(x,y)\]
+% for $\beta = 1-1/n^2$.
+
+
+Let $Z_t$ denote the random variable of the number of cards whose positions are different for $X_t$ and $Y_t$.
+Clearly $0\leq Z_t \leq n$. At each time step $t$, we choose a (card, position) pair $(C_i,j_i)$.
+If $C_i$ in the same position for both, or if the card at $j_i$ is the same 
+for both $X_t$ and $Y_t$, then $Z_{t+1}=Z_t$. 
+Otherwise, we have $Z_{t+1} \leq Z_t -1$.
+The probability of the chosen card $C_i$ being in different positions is $Z_t/n$,
+and the probability of the chosen position $j_i$ having different cards is also $Z_t/n$.
+Since both events are independent, 
+\[\Pr(Z_{t+1} \leq Z_t - 1) = \left(\frac{Z_t}{n}\right)^2\]
+
+Let $T_i$ be the time spent for which $Z_t=i$. 
+Then the maximum total time spent before coupling is $T\leq\sum_{i=1}^n T_i$, 
+then $\mathbb{E}[T]\leq\sum_{i=1}^n \mathbb{E}[T_i]$.
+$T_i$ is a geometric r.v. with parameter $p_i=\frac{i^2}{n^2}$, so $\mathbb{E}[T_i] = \frac{n^2}{i^2}$.
+Then, the expected time spent  is
+\[\mathbb{E}[T]\leq n^2\sum_{i=1}^{n} \frac{1}{i^2}< \frac{n^2\pi^2}{6}\]
+
+By Markov's inequality, the probability not to obtain the desired sequence after $\frac{n^2\pi^2}{3}$
+steps is at most $1/2$.
+Thus, after $\frac{kn^2\pi^2}{3}$ steps, the probability not to obtain the sequence is at most $2^{-k}$.
+We deduce that $\Pr(X_t\neq Y_t)\leq \varepsilon$ if $t\geq \frac{\log_2(1/\varepsilon)n^2\pi^2}{3}$,
+so by the Coupling Lemma, the mixing time is
+\[\tau(\varepsilon) = O(n^2 \log(1/\varepsilon))\]
+
+\section*{Question 2}
+The Markov chain is \textbf{finite}, with state space $\Omega=\mathcal{I}(G)\subseteq 2^V$.
+It is \textbf{irreducible}, since we can get from any independent sets 
+$I\in\mathcal{I}(G)$ to $I'\in\mathcal{I}(G)$ by adding or removing vertices approriately.
+It is \textbf{aperiodic}, since it can self-loop. 
+Thus, there is a unique stationary distribution $\pi$.
+
+Observe that for $I,J\in\mathcal{I}(G),I\neq J$,
+\begin{itemize}
+    \item $P_{I,J} = \frac{\lambda}{2n(1+\lambda)}$, if $J\in\mathcal{I}(G)$ has 1 more vertex than $I$
+    \item $P_{I,J} = \frac{1}{2n(1+\lambda)}$, if $J\in\mathcal{I}(G)$ has 1 less vertex than $I$
+    \item $P_{I,J} = 0$, otherwise
+\end{itemize}
+Consider the distribution of the Gibbs measure, so $\pi_I = \lambda^{|I|}/Z(G)$.
+Consider also arbitrary $I,J\in\mathcal{I}(G)$, where $|I|+1=|J|$.
+
+\begin{equation}
+\begin{aligned}
+\pi_I P_{I,J} &= \frac{\lambda^{|I|}}{Z(G)}\frac{\lambda}{2n(1+\lambda)}\\
+&=\frac{\lambda^{|I|+1}}{Z(G)}\frac{1}{2n(1+\lambda)}\\
+&=\frac{\lambda^{|J|}}{Z(G)}\frac{1}{2n(1+\lambda)}\\
+&=\pi_J P_{J,I}
+\end{aligned}
+\end{equation}
+Clearly if $P_{I,J} = P_{J,I} = 0, \pi_I P_{I,J} = 0 = \pi_J P_{J,I}$.
+Thus, $\forall I,J, \pi_I P_{I,J} = \pi_J P_{J,I}$.
+By time-reversibility in Theorem 4.2.12, the Gibbs measure is the stationary distribution $\pi$.
+
+Suppose the state space $\Omega$ is instead the set of all subgraphs of $G$.
+The chain still has the same unique distribution $\pi$ being the Gibbs measure on the independent sets.
+If a state $I\notin \mathcal{I}(G)$, then the algorithm will have the state only remain the same
+or remove vertices until it is an independent set, after which, it will not return to being a non-independent set.
+
+Now let $H$ be the graph on $\Omega$ in which there is an edge from $x$ to $y$ if and only if
+$x$ and $y$ differ by only 1 vertex. For all edges $(x,y), d(x, y)=1$.
+Since $\Omega$ contains all subgraphs, the corresponding distance metric $d$ 
+is just number of vertices that are in either $X_t$ or $Y_t$, and not both.
+For all states $(x,y), d (x,y)$ is just $|x-y|+|y-x|$. 
+We choose the coupling where both $(X_t), (Y_t)$ make the same decision in the original Markov chain.
+
+\clearpage
+Take $t=0$ and suppose that $(X_0,Y_0)=(x,y)$ where $(x,y)$ is an edge of $H$ so $x$ and $y$
+differ by only 1 vertex.
+WLOG, suppose $x=I,y=I\cup \{u\}$. Let $d_t=d(X_t,Y_t)$, and let $d_0=1$.
+If $X_1 \leftarrow X_0$, so $Y_1 \leftarrow Y_0$, then $d_1=d_0=1$.
+Otherwise, consider when the vertex $v$ is chosen u.a.r. from $V$.
+
+\begin{itemize}
+    \item If $v\in X_0$, so $v\in Y_0$, then $d_1-d_0=0$ unchanged for any decision made.
+    \item Else If $v=u$, then $d_1-d_0=-1$ decrease for any decision made.
+    \item Else If $v\in N(u)$,
+    \begin{itemize}
+        \item Removing $v$ will leave $d_1-d_0=0$ unchanged.
+        \item Adding $v$ will have $d_1-d_0=1$ increase, since it can only be added to $X_0$, and not $Y_0$.
+    \end{itemize}
+    \item Else If $v \notin N(u)$, then $d_1-d_0=0$ unchanged for any decision made.
+\end{itemize}
+
+Analysing all cases, only 2 of them will cause $d_1 \neq d_0$, and noting $d_0=1$, so
+\begin{equation}
+\begin{aligned}
+\mathbb{E}[d_1] &=1-\frac{1}{2n}+\frac{\lambda}{1+\lambda}\cdot \frac{d(u)}{2n}\\
+&\leq 1 -\frac{1}{2n}+\frac{\lambda}{1+\lambda}\cdot \frac{3}{2n}\\
+&=1 + \frac{1}{2n}\left(-1+\frac{3\lambda}{1+\lambda}\right)\\
+&=1 + \frac{1}{2n}\cdot\frac{2\lambda - 1}{1+\lambda}\\
+&=d_0\left(1 + \frac{1}{2n}\cdot\frac{2\lambda - 1}{1+\lambda}\right)\\
+&< d_0
+\end{aligned}
+\end{equation}
+where $n=|V|$. Note that since $0<\lambda<\frac{1}{2}, -1<\frac{2\lambda - 1}{1+\lambda}<0$.
+
+Now we can apply the path coupling lemma with 
+$\beta = \left(1 + \frac{1}{2n}\cdot\frac{2\lambda - 1}{1+\lambda}\right)$
+and $D=n$, since the maximum the maximum number of vertices $X_t,Y_t$ can differ by is $n$.
+This shows that the mixing time satisfies $\tau(\varepsilon)=O(\ln(n/\varepsilon)/\ln(1/\beta))$.
+Since $1+x\geq e^x$, and $1+\lambda=\Theta(1)$,
+\[\beta \leq e^{\frac{1}{2n}\cdot\frac{2\lambda-1}{1+\lambda}}\]
+\[\frac{1}{\beta} \geq e^{-\frac{1}{2n}\cdot\frac{2\lambda-1}{1+\lambda}}\]
+\[\ln\frac{1}{\beta} \geq -\frac{1}{2n}\cdot\frac{2\lambda-1}{1+\lambda}\]
+\[\frac{\ln(\frac{n}{\varepsilon})}{\ln\frac{1}{\beta}} 
+\leq \frac{\ln(\frac{n}{\varepsilon})}{\frac{1-2\lambda}{2n(1+\lambda)}}
+= \frac{2n(1+\lambda)\ln(\frac{n}{\varepsilon})}{1-2\lambda}\]
+\[\tau(\varepsilon)=O\left(\frac{2n\ln(\frac{n}{\varepsilon})}{1-2\lambda}\right)\]
+
+\section*{Question 3}
+Let $X_t$ denote the random variable where $X_t=1$ and $X_t=-1$ 
+if the clockwise and anticlockwise are taken at step $t\geq 1$, and $X_0=0$.
+Then $Z_t=\sum_{i=0}^t X_t$ is the position of the fox at step $t$.
+
+% Let $X_t$ denote the position of the wolf at time $t$.
+% Let $Z_t$ denote the martingale where $Z_{t+1}-Z_t=1$ if step $t$ is clockwise, and $Z_{t+1}-Z_t=-1$ if step $t$ is an
+We treat going anticlockwise from 0 as going into the negative values to the minimum of $-(n-1)$.
+Clearly we have $|Z_t|\leq n-1$.
+Then the event that the fox eats sheep $i$ last is the union of the events 
+that it reaches the sheep going clockwise, or anticlockwise.
+
+Consider the fox eats the sheep clockwise.
+Then it must have reached sheep $i+1$ first before reaching $i$,
+followed by reaching $i$ from $i-1$ before reaching $i$ from $i+1$.
+Then this is the same reaching $i+1-n$ before $i$ in random walk on a line in $[i+1-n,i]$, 
+followed by reaching $n-1$ before $-1$ in a random walk on a line in $[-1,n-1]$
+
+Similarly, if the fox eats the sheep anticlockwise,
+it reached the sheep $i-1$ first before reaching $i$,
+followed by reaching $i$ from $i+1$ before reaching $i$ from $i-1$.
+This is the same as reaching $i-1$ before $i-n$ in random walk on a line in $[i-n, i-1]$,
+followed by reaching $1-n$ before $1$ in a random walk on a line in $[1-n,1]$.
+
+Both these events are then consecutive instances of the gambler's fortune,
+with $a_{1,1}=i,b_{1,1}=n-i-1,a_{1,2}=n-1,b_{1,2}=1$ in the clockwise case,
+and $a_{2,1}=i-1,b_{2,1}=n-i,a_{2,2}=1,b_{2,2}=n-1$. 
+Note that for all cases $a_{i,1}+b_{i,1}=n-1$, and $a_{i,2}+b_{i,2}=n$.
+
+Since we the know the probability of reaching $a$ before $b$ is $\frac{b}{a+b}$,
+and $b$ before $a$ is $\frac{a}{a+b}$,
+the probability the fox eats sheep $i$ last is
+\[\frac{a_{1,1} b_{1,2}}{n(n-1)} + \frac{b_{2,1} a_{2,2}}{n(n-1)}
+=\frac{i+n-i}{n(n-1)}
+=\frac{1}{n-1}
+\]
+This is independent of $i$, so every sheep is equally likely to be eaten last.
+% \begin{enumerate}
+%     \item The fox starts at $0$,  $i-1$, then goes back around to $i+1$, before
+% \end{enumerate}
+This is just the gambler's fortune from the lecture notes, with $a=n-1,b=1-n$.
+
+Then $Z_0,Z_1,...,$ is a martingale as 
+\[\mathbb{E}[Z_{n+1}|Z_0,...,Z_n]=\frac{1}{2} (Z_n + 1 + Z_n - 1) = Z_n\]
+Let $T$ be the stopping time for $Z_1,Z_2,...,$.
+The second condition of the optional stopping theorem holds as 
+\[\forall i, |Z_{\min\{i,T\}}|\leq n\]
+Thus, $\mathbb{E}[Z_T]=\mathbb{E}[Z_0]=0$.
+
+For $i=0,...,n-1$, denote
+\[s_i=\min\{t\geq 1:X_t=i\}\]
+\[r_i=\min\{t\geq 1:X_t=i \wedge M_{t+1}-M_t=1\}\]
+\[r_{n-i}=\min\{t\geq 1:X_t=i \wedge M_{t+1}-M_t=-1\}\]
+so $r_i,r_{n-i}$ is the first time that $X_t=i$ with the previous step being 
+clockwise and anticlockwise respectively.
+We have $s_i=\min\{r_i,r_{n-i}\}$.
+Since $Z_t$ is a martingale, $\forall i,\mathbb{E}[Z_{s_i}]=0$.
+We want to find the $\argmax_{i} \Pr(s_i=T)$.
+
+For $i=1$,
+\[\Pr(s_1=T)=\Pr(s_2<s_1)=\Pr(r_1>r_{n-1})\]
+Then the moment the fox eats the sheep at $i=1$
+\begin{equation}
+\begin{aligned}
+\mathbb{E}[Z_{s_1}]&=\Pr(r_1 < r_{n-1}) + (1-n)\Pr(r_{n-1} < r_1)\\
+&=1-\Pr(s_1=T) + (1-n)\Pr(s_1=T)\\
+&=0
+\end{aligned}
+\end{equation}
+Thus,
+\[\Pr(s_1=T)=\frac{1}{n}\]
+
+Then for each $i\geq 1$,
+\begin{equation}
+\begin{aligned}
+\mathbb{E}[Z_{s_i}]&=i\Pr(r_i < r_{n-i}) + (i-n)\Pr(r_{n-i} < r_i)\\
+&=i\Pr(r_i < r_{n-i}) + (i-n)(1-\Pr(r_i < r_{n-i}))\\
+&=0
+\end{aligned}
+\end{equation}
+Thus,
+\[\Pr(r_i < r_{n-i})=\frac{n-i}{n}\]
+\[\Pr(r_i > r_{n-i})=\frac{i}{n}\]
+
+\begin{equation}
+\begin{aligned}
+\Pr(s_i=T)&=\Pr(s_i=T|s_{i-1} < s_{i+1})\Pr(s_{i-1} < s_{i+1}) + \Pr(s_i=T|s_{i+1} < s_{i-1})\Pr(s_{i+1}< s_{i-1})
+\end{aligned}
+\end{equation}
+
+
+
+\section*{Question 4}
+\section*{Question 5}
+
+
+\section*{Question 6}
+
+
+\end{document}
