@@ -41,7 +41,7 @@
 \title{Probability and Computing: \\Formulas}
 %
 \author{Wira Azmoon Ahmad}
-\date{19 Nov 2023}
+\date{22 Nov 2023}
 %
 \begin{document}
 %
@@ -75,6 +75,7 @@
 \[\forall x\in[0,1], 1-\frac{x}{2}\geq e^{-x}\]
 \[\forall x\in(0,1),e^{x/2}\leq 1+x\]
 \[\forall x\in(0,1),\ln(1+x)\geq \frac{x}{2}\]
+\[\forall x\in(-1,1), (1-x)^y \approx e^{-yx}\]
 \[\frac{e^x + e^{-x}}{2} \leq e^{x^2/2}\]
 \[\left(\frac{n}{k}\right)^k \leq \binom{n}{k} \leq \left(\frac{en}{k}\right)^k\]
 Stirling's formula
@@ -83,7 +84,8 @@ Stirling's formula
 Harmonic sum
 \[H_n = \sum_{i=1}^n \frac{1}{i} = \ln n + \Theta(1)\]
 Basel problem
-\[\sum_{i=1}^n \frac{1}{i^2} \leq \sum_{i = 1}^\infty\frac{1}{i^2} = \frac{\pi^2}{6}\]
-\[\forall x,y, -1<x<y, x<y\implies \frac{x}{1+x}<\frac{y}{1+y}\]
+\[\sum_{i=1}^n \frac{1}{i^2} < \sum_{i = 1}^\infty\frac{1}{i^2} = \frac{\pi^2}{6}
+\implies\sum_{i=1}^n \frac{1}{i^2}=\Theta(1)\]
+\[\forall x,y, -1<x<y, \frac{x}{1+x}<\frac{y}{1+y}\]
 
 \end{document}
