@@ -133,7 +133,7 @@ $I\in\mathcal{I}(G)$ to $I'\in\mathcal{I}(G)$ by adding or removing vertices app
 It is \textbf{aperiodic}, since it can self-loop. 
 Thus, there is a unique stationary distribution $\pi$.
 
-Observe that for $I,J\in\mathcal{I}(G),I\neq J$,
+Let $n=|V|$. Observe that for $I,J\in\mathcal{I}(G),I\neq J$,
 \begin{itemize}
     \item $P_{I,J} = \frac{\lambda}{2n(1+\lambda)}$, if $J\in\mathcal{I}(G)$ has 1 more vertex than $I$
     \item $P_{I,J} = \frac{1}{2n(1+\lambda)}$, if $J\in\mathcal{I}(G)$ has 1 less vertex than $I$
@@ -195,7 +195,7 @@ Analysing all cases, only 2 of them will cause $d_1 \neq d_0$, and noting $d_0=1
 &< d_0
 \end{aligned}
 \end{equation}
-where $n=|V|$. Note that since $0<\lambda<\frac{1}{2}, -1<\frac{2\lambda - 1}{1+\lambda}<0$.
+Note that since $0<\lambda<\frac{1}{2}, -1<\frac{2\lambda - 1}{1+\lambda}<0$.
 
 Now we can apply the path coupling lemma with 
 $\beta = \left(1 + \frac{1}{2n}\cdot\frac{2\lambda - 1}{1+\lambda}\right)$
@@ -275,8 +275,8 @@ Base case: $n=0$
 \mathbb{E}[Y_2|X_1]&=\mathbb{E}[X_1 Z_0 + X_2 Z_1 | X_1]\\
 &= \mathbb{E}[X_1 Z_0 | X_1] + \mathbb{E}[X_2 Z_1 | X_1] \quad\text{(linearity of expectation)}\\
 &= 0 + \mathbb{E}[X_2 X_1 | X_1] \quad\text{(since $Z_0=0$)}\\
-&= \mathbb{E}[X_2 | X_1]\mathbb{E}[X_1|X_1] \quad\text{(since $X_1,X_2$ independent, given $X_1$)}\\
-&= \mathbb{E}[X_2]\mathbb{E}[X_1|X_1] \quad\text{(since $X_1,X_2$ independent)}\\
+% &= \mathbb{E}[X_2 | X_1]\mathbb{E}[X_1|X_1] \quad\text{(since $X_1,X_2$ independent, given $X_1$)}\\
+&= \mathbb{E}[X_2]X_1 \quad\text{(since $X_1,X_2$ independent)}\\
 &= 0 \quad\text{(since $\mathbb{E}[X_i]=0$)}\\
 &= Y_1
 \end{aligned}
