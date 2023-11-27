@@ -2,6 +2,7 @@
 *.fdb*
 *.fls
 *.log
-*.pdf
 *.gz
+ProblemSheet*
 template.tex
+.DS_Store
