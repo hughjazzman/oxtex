@@ -1,0 +1,11 @@
+*.aux
+*.fdb*
+*.fls
+*.log
+*.gz
+*.blg
+*.out
+*test*
+
+template.tex
+.DS_Store

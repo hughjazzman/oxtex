@@ -1,0 +1,53 @@
+\usepackage{xspace}
+\usepackage{bm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{fadings}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{decorations.markings}
+
+\newcommand{\zxcalculus}{ZX-calculus\xspace}
+\newcommand{\zxdiagram}{ZX-diagram\xspace}
+\newcommand{\zxdiagrams}{ZX-diagrams\xspace}
+
+\newcommand{\SpiderRule}{\ensuremath{(\hyperref[table:rewrite]{\bm f})}\xspace}
+\newcommand{\FusionRule}{\SpiderRule}
+\newcommand{\PiRule}{\ensuremath{(\hyperref[table:rewrite]{\bm \pi})}\xspace}
+\newcommand{\CopyRule}{\ensuremath{(\hyperref[table:rewrite]{\bm c})}\xspace}
+\newcommand{\HadamardRule}{\ensuremath{(\hyperref[table:rewrite]{\bm{h}})}\xspace}
+\newcommand{\IdentityRule}{\ensuremath{(\hyperref[table:rewrite]{\bm{i}})}\xspace}
+\newcommand{\IdRule}{\IdentityRule}
+\newcommand{\HCancelRule}{\ensuremath{(\hyperref[table:rewrite]{\bm{hh}})}\xspace}
+\newcommand{\IdIIRule}{\HCancelRule}
+\newcommand{\HHRule}{\HCancelRule}
+%\newcommand{\BialgRule}{\ensuremath{(\hyperref[table:rewrite]{\bm b})}\xspace}
+\newcommand{\BialgebraRule}{\BialgRule}
+\newcommand{\SCRule}{\BialgRule}
+\newcommand{\StrongCompRule}{\BialgRule}
+\newcommand{\HopfRule}{\ensuremath{(\hyperref[table:rewrite]{\bm x})}\xspace}
+\newcommand{\AntipodeRule}{\HopfRule}
+\newcommand{\CompRule}{\HopfRule}
+\newcommand{\PiCopyRule}{\ensuremath{(\hyperref[table:rewrite]{\bm{\pi c}})}\xspace}
+
+%% small versions
+\newcommand{\antipoderule}{\footnotesize\AntipodeRule}
+\newcommand{\picopyrule}{\footnotesize\PiCopyRule}
+\newcommand{\comprule}{\footnotesize\CompRule}
+\newcommand{\hopfrule}{\footnotesize\HopfRule}
+\newcommand{\strongcomprule}{\footnotesize\StrongCompRule}
+\newcommand{\scrule}{\footnotesize\SCRule}
+\newcommand{\bialgebrarule}{\footnotesize\BialgebraRule}
+\newcommand{\bialgrule}{\footnotesize\BialgRule}
+\newcommand{\idiirule}{\footnotesize\IdIIRule}
+\newcommand{\hcancelrule}{\footnotesize\HCancelRule}
+\newcommand{\idrule}{\footnotesize\IdRule}
+\newcommand{\identityrule}{\footnotesize\IdentityRule}
+\newcommand{\hadamardrule}{\footnotesize\HadamardRule}
+\newcommand{\hhrule}{\hadamardrule}
+\newcommand{\copyrule}{\footnotesize\CopyRule}
+\newcommand{\pirule}{\footnotesize\PiRule}
+\newcommand{\spiderrule}{\footnotesize\SpiderRule}
+\newcommand{\fusionrule}{\footnotesize\SpiderRule}

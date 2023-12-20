@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=gray phase ddot] (2) at (0, 1) {$k\pi$};
+		\node [style=none] (3) at (0, -1) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=thick] (3.center) to (2);
+	\end{pgfonlayer}
+\end{tikzpicture}

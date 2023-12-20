@@ -1,0 +1,11 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (6) at (0, -2) {};
+		\node [style=none] (7) at (0, 2) {};
+		\node [style=small dhadamard] (8) at (0, 0) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=thick] (8) to (6.center);
+		\draw [style=thick] (7.center) to (8);
+	\end{pgfonlayer}
+\end{tikzpicture}

@@ -1,0 +1,11 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=white phase ddot] (2) at (0, 0) {$\frac{\pi}{2}$};
+		\node [style=none] (6) at (0, -1) {};
+		\node [style=none] (7) at (0, 1) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=thick] (2) to (6.center);
+		\draw [style=thick] (7.center) to (2);
+	\end{pgfonlayer}
+\end{tikzpicture}

@@ -1,0 +1,221 @@
+% Please do not change %
+\documentclass[11pt]{article} % font size
+\usepackage[margin=1in]{geometry} % margins
+\usepackage{amsmath,amsthm,amssymb} % for the  common "math symbols"
+\usepackage[shortlabels]{enumitem} % for enumeration
+\usepackage{booktabs} % if you need tables
+\usepackage{listings}
+\usepackage{color}
+\usepackage{tikzit}
+\input{sample.tikzstyles}
+\input{dots.tikzdefs}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{fact}[theorem]{Fact}
+
+
+% Feel free to include additional packages (if needed), but make sure it does not override the margin/font requirements.
+%
+\setlength{\parindent}{0pt} % no indent for new paragraphs.
+\setlength{\parskip}{5pt} % distance between paragraphs, which will be used when you have a blank line in your LaTeX code.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Quantum Processes and Computation Mini-Project}
+%
+\author{1633814}
+\date{Michaelmas Term 2023}
+%
+\begin{document}
+%
+\maketitle
+
+%You may use the usual \LaTeX\ environments to structure your answers:
+%\begin{align}
+%        \label{basegnn}
+%        \mathbf{h}_u^{(t+1)} = \sigma \bigg( \mathbf{W}_\text{self}^{(t)} \mathbf{h}_u^{(t)}  + \mathbf{W}_\text{neigh}^{(t)} \sum_{v \in N(u)} \mathbf{h}_v^{(t)} + \mathbf{b}^{(t)} \bigg). 
+%\end{align}
+
+
+%\begin{table}[h]
+%\caption{A simple table.}
+%\centering
+%\begin{tabular}[t]{lrrrr}
+%\toprule
+%Graphs & Can & Be  & Fun & Too \\ 
+%\midrule 
+%$G_1$ & $1$  & $2$ & $3$ & $4$ \\ 
+%$G_2$ & $-1$  & $-2$ & $-3$ & $-4$ \\ 
+%$G_3$ & $0.1$  & $0.2$ & $0.3$ & $0.4$ \\ 
+%\bottomrule
+%\end{tabular}
+%\label{tab}
+%\end{table}
+
+\section*{Question 1}
+\addtocounter{section}{1}
+The labelled $ZX$-rules shown below \cite{Kissinger_2019} for $\alpha,\beta\in[0,2\pi)$ and $a\in\{0,1\}$ 
+are as taught in lectures \cite{coecke2017picturing}, and will be used to justify the equations below.
+\setlength{\tabcolsep}{10pt}
+\begin{figure}[h!]
+\ctikzfig{ZX-rules}
+\caption{$ZX$-rules presented in \cite{Kissinger_2019}}\label{table:rewrite}
+\end{figure}
+
+% To answer each part of the question, please simply use a paragraph command 
+\clearpage
+\paragraph{(a)}
+% \begin{equation}
+% \psi_S = 
+% \tikzfig{1a}
+% \end{equation}
+Let 
+\[\psi_S= \tikzfig{psiS}\]
+Note for $j,k\in\{0,1\}$, 
+\[|j-k|\pi + j\pi + (-1)^k \frac{\pi}{2} = 2n\pi + \frac{\pi}{2}\]
+for some $n\in\{0,1\}$.
+
+Then, using $\psi_S$, a 2-qubit measurement, and clasically controlled Pauli $X/Z$ gates, 
+the $S$-gate is obtained as desired.
+\[\tikzfig{1a}\stackrel{\IdentityRule\PiRule}{=}\tikzfig{1aii}
+\stackrel{\SpiderRule\IdentityRule}{=}\tikzfig{1aiii}\stackrel{\SpiderRule\IdentityRule}{=}\tikzfig{1aiv}\]
+
+
+\paragraph{(b)}
+Let
+\[\psi_H= \tikzfig{psiH}\]
+Then, also using the $S$-gate from part (a),
+\[\tikzfig{1b}=\tikzfig{1bii}\stackrel{\HadamardRule}{=}\tikzfig{1biii}
+\stackrel{\SpiderRule\IdentityRule\HadamardRule}{=}\tikzfig{1biv}\stackrel{\SpiderRule\IdentityRule}{=}\tikzfig{1bv}\]
+
+\clearpage
+\paragraph{(c)}
+Let
+\[\psi_{CNOT}= \tikzfig{psiC}\]
+so we have, using 2 two-qubit measurements, and clasically controlled Pauli $X/Z$ gates,
+\begin{equation}
+\begin{aligned}
+&\tikzfig{1c}\stackrel{\IdentityRule}{=}\tikzfig{1cii}\stackrel{\SpiderRule}{=}\tikzfig{1ciii}\\
+&\stackrel{\PiRule}{=}\tikzfig{1civ}\stackrel{\PiRule}{=}\tikzfig{1cv}
+\stackrel{\SpiderRule\IdentityRule}{=}\tikzfig{1cvi}
+\end{aligned}
+\end{equation}
+
+\paragraph{(d)}
+No, since the Bell model only has $\circ$ $\frac{n\pi}{2}$-phase gates for some $n\in\{0,1,2,3\}$,
+$\circ$ $\frac{\pi}{4}$-phase gates cannot be constructed.
+
+First, we introduce some definitions from \cite{coecke2017picturing}.
+
+\begin{definition}[{\cite{coecke2017picturing} \textbf{Def 9.120.}}][Graph state]
+A graph state is a state whose $ZX$-diagram consists only of (0-phase) $\circ$-spiders and $H$-gates where:
+\begin{enumerate}
+    \item every $\circ$-spider has exactly one output, and
+    \item all non-output wires connect two $\circ$-spiders with a single $H$-gate.
+\end{enumerate}
+\label{def:1}
+\end{definition}
+
+\begin{definition}[{\cite{coecke2017picturing} \textbf{Def 9.103.}}][Clifford diagram]
+A Clifford diagram is a $ZX$-diagram where the phases are restricted to integer multiples of $\frac{\pi}{2}$.
+\label{def:2}
+\end{definition}
+
+\begin{definition}[{\cite{coecke2017picturing} \textbf{Def 9.129.}}][Clifford+T diagram]
+A Clifford+T diagram is a $ZX$-diagram where the phases are restricted to integer multiples of $\frac{\pi}{4}$.
+\label{def:3}
+\end{definition}
+
+\begin{definition}[{\cite{coecke2017picturing}}][Local Clifford unitaries]
+Local Clifford unitaries are unitaries expressible as parallel compositions of single-system Clifford diagrams.
+\label{def:4}
+\end{definition}
+
+\begin{proposition}[{\cite{coecke2017picturing} \textbf{Prop 9.122.}}]
+Every Clifford diagram can be turned into a Clifford state via process-state duality,
+then transformed using $ZX$-calculus into a graph state, followed by local Clifford unitaries.
+\label{prop:1}
+\end{proposition}
+
+\begin{corollary}
+A Clifford diagram is an extension of a graph state which 
+can contain integer multiples of $\frac{\pi}{2}$-phase spiders.
+\label{cor:1}
+\end{corollary}
+
+\begin{corollary}
+A Clifford+T diagram is an extension of a Clifford diagram which 
+can contain intger multiples of $\frac{\pi}{4}$-phase spiders.
+\label{cor:2}
+\end{corollary}
+
+\begin{theorem}[{\cite{coecke2017picturing} \textbf{Theorem 9.130.}}]
+Clifford+T diagrams are \textit{approximately universal}. 
+That is, any linear map can be approximated up to arbitrary precision by a Clifford+T diagram.
+\label{thm:1}
+\end{theorem}
+
+
+\begin{definition}[{\cite{coecke2017picturing} \textbf{Section 12.3.1.}}][$CZ$-gate]
+The $CZ$-gate can be easily constructed using a CNOT-gate and two Hadamard gates.
+\[CZ-gate:=D\quad\tikzfig{1da}\stackrel{\hadamardrule}{=}D\quad\tikzfig{1daii}\]
+\end{definition}
+
+\begin{definition}[{\cite{coecke2017picturing} \textbf{Section 12.3.1.}}]
+Graph states can be realised by using a simple circuit as follows:
+\begin{enumerate}
+    \item Prepare $n$ qubits in the $\circ$-state.
+    \item To introduce an edge between the $i$-th and $j$-th qubit, apply a $CZ$-gate.
+\end{enumerate}
+\label{def:5}
+\end{definition}
+
+\begin{proposition}
+The Bell model is universal for Clifford diagrams.
+\end{proposition}
+\begin{proof}
+Using Proposition \ref{prop:1}, any Clifford diagram 
+can be transformed to a graph state with local Clifford unitaries.
+Then, from Definition \ref{def:5}, the Bell model has the required CNOT-gates, Hadamard gates, 
+and $Z$-basis states (converted to $X$-basis states using the Hadamard) to realise a graph state,
+along with the local Clifford unitaries.
+\label{prop:2}
+\end{proof}
+
+However, Clifford diagrams are not known to be \textit{approximately universal}.
+We then require the $T$-gate for Clifford+T diagrams following Corollary \ref{cor:2} to obtain 
+\textit{approximate universality} as in Theorem \ref{thm:1}.
+\[T:=\tikzfig{pi4}\]
+
+Note for $k\in\{0,1\}$, 
+\[\frac{k\pi}{2} + (-1)^k \frac{\pi}{4} = \frac{\pi}{4}\]
+
+Let
+\[\psi_T= \tikzfig{psiT}\]
+Then we can use a two-qubit measurement, and classically controlled $S$ and Pauli $X/Z$ gates to have
+\[\tikzfig{1d}\stackrel{\IdentityRule\PiRule}{=}\tikzfig{1dii}
+\stackrel{\SpiderRule\IdentityRule}{=}\tikzfig{1diii}\stackrel{\SpiderRule\IdentityRule}{=}\tikzfig{1div}\]
+
+\paragraph{(e)}
+
+It is just as powerful as before.
+Simply use a two-qubit measurement on the $Z$-basis state 
+as follows to obtain the equivalent $Z$-basis measurement.
+The classical value of the first qubit $(j)$ is essentially discarded.
+
+\[\tikzfig{1e}\stackrel{\copyrule\SpiderRule}{=}\tikzfig{1ei}\]
+
+\clearpage
+\section*{Question 2}
+
+\clearpage
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\end{document}

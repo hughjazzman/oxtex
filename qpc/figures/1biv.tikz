@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (6) at (0, -2) {};
+		\node [style=none] (7) at (0, 5) {};
+		\node [style=small dhadamard] (8) at (0, 0) {};
+		\node [style=gray phase ddot] (9) at (0, 1.75) {$j\pi$};
+		\node [style=gray phase ddot] (11) at (0, 3.5) {$j\pi$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=thick] (11) to (7.center);
+		\draw [style=thick] (11) to (9);
+		\draw [style=thick] (8) to (9);
+		\draw [style=thick] (8) to (6.center);
+	\end{pgfonlayer}
+\end{tikzpicture}
