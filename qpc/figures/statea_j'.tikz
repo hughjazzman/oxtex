@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (2) at (0, 0.75) {};
+		\node [style=point] (3) at (0, -0.75) {$a\oplus j'$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=simple] (2.center) to (3);
+	\end{pgfonlayer}
+\end{tikzpicture}

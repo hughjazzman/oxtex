@@ -1,13 +1,43 @@
 \begin{thebibliography}{1}
 
+\bibitem{Bernstein_1997}
+Ethan Bernstein and Umesh Vazirani.
+\newblock Quantum complexity theory.
+\newblock {\em SIAM Journal on Computing}, 26(5):1411--1473, 1997.
+
 \bibitem{coecke2017picturing}
 Bob Coecke and Aleks Kissinger.
 \newblock {\em Picturing Quantum Processes}.
 \newblock Cambridge University Press, 2017.
 
+\bibitem{Deutsch_1992}
+D~Deutsch and R~Jozsa.
+\newblock Rapid solution of problems by quantum computation.
+\newblock Technical report, GBR, 1992.
+
+\bibitem{Du_2001}
+Jiangfeng Du, Mingjun Shi, Xianyi Zhou, Yangmei Fan, BangJiao Ye, Rongdian Han, and Jihui Wu.
+\newblock Implementation of a quantum algorithm to solve the bernstein-vazirani parity problem without entanglement on an ensemble quantum computer.
+\newblock {\em Physical Review A}, 64(4), September 2001.
+
+\bibitem{Grover_1996}
+Lov~K. Grover.
+\newblock A fast quantum mechanical algorithm for database search.
+\newblock In {\em Proceedings of the Twenty-Eighth Annual ACM Symposium on Theory of Computing}, STOC '96, page 212–219, New York, NY, USA, 1996. Association for Computing Machinery.
+
 \bibitem{Kissinger_2019}
 Aleks Kissinger and John van~de Wetering.
 \newblock Universal mbqc with generalised parity-phase interactions and pauli measurements.
 \newblock {\em Quantum}, 3:134, April 2019.
+
+\bibitem{Shukla_2023}
+Alok Shukla and Prakash Vedula.
+\newblock A generalization of bernstein–vazirani algorithm with multiple secret keys and a probabilistic oracle.
+\newblock {\em Quantum Information Processing}, 22(6), June 2023.
+
+\bibitem{Terhal_1998}
+Barbara~M. Terhal and John~A. Smolin.
+\newblock Single quantum querying of a database.
+\newblock {\em Physical Review A}, 58(3):1822–1826, September 1998.
 
 \end{thebibliography}

@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (1) at (0, -1.5) {};
+		\node [style=white ddot] (2) at (0, 0) {$\cdot$};
+		\node [style=dmap] (3) at (1.5, 1.5) {$\hat{f}_a$};
+		\node [style=white phase ddot] (4) at (1.5, 3.25) {$\pi$};
+		\node [style=none] (5) at (-1.5, 1.5) {};
+		\node [style=none] (6) at (-1.5, 3.75) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=thick] (2) to (1.center);
+		\draw [style=thick, bend left=45] (3.center) to (2);
+		\draw [style=thick, bend right=45] (5.center) to (2);
+		\draw [style=thick] (5.center) to (6.center);
+		\draw [style=thick] (4) to (3.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

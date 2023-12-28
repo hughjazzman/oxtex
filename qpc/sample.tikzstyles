@@ -4,63 +4,123 @@
 % \tikzstyle{NAME}=[PROPERTY LIST]
 
 % Node styles
-% ================
-% = VARIOUS DOTS =
-% ================  
-
-\tikzstyle{dot}=[inner sep=0mm,minimum width=2mm,minimum height=2mm,draw,shape=circle]  
+\tikzstyle{dot}=[inner sep=0mm, minimum width=2mm, minimum height=2mm, draw, shape=circle]
 \tikzstyle{Wsquare}=[white dot, shape=regular polygon, rounded corners=0.8 mm, minimum size=3.3 mm, regular polygon sides=3, outer sep=-0.2mm]
 \tikzstyle{Wsquareadj}=[white dot, shape=regular polygon, rounded corners=0.8 mm, minimum size=3.3 mm, regular polygon sides=3, outer sep=-0.2mm, regular polygon rotate=180]
-\tikzstyle{ddot}=[inner sep=0mm, doubled, minimum width=2.5mm,minimum height=2.5mm,draw,shape=circle]
-
-\tikzstyle{black dot}=[dot,fill=black]
-\tikzstyle{white dot}=[dot,fill=white,-,text depth=-0.2mm]
-\tikzstyle{white Wsquare}=[Wsquare,fill=white,-,text depth=-0.2mm]
-\tikzstyle{white Wsquareadj}=[Wsquareadj,fill=white,-,text depth=-0.2mm]
-\tikzstyle{green dot}=[white dot] % for backwards-compatibility
-\tikzstyle{gray dot}=[dot,fill=gray!40!white,-,text depth=-0.2mm]
-\tikzstyle{red dot}=[gray dot] % for backwards-compatibility
-
+\tikzstyle{ddot}=[inner sep=0mm, doubled, minimum width=2.5mm, minimum height=2.5mm, draw, shape=circle]
+\tikzstyle{black dot}=[dot, fill=black]
+\tikzstyle{green dot}=[white dot]
+\tikzstyle{red dot}=[gray dot]
 \tikzstyle{Z}=[white dot]
 \tikzstyle{X}=[gray dot]
-
-\tikzstyle{black ddot}=[ddot,fill=black]
-\tikzstyle{white ddot}=[ddot,fill=white]
-\tikzstyle{gray ddot}=[ddot,fill=gray!40!white]
+\tikzstyle{black ddot}=[ddot, fill=black]
+\tikzstyle{white ddot}=[ddot, fill=white]
+\tikzstyle{gray ddot}=[ddot, fill={gray!40!white}]
 \tikzstyle{grey ddot}=[gray ddot]
-\tikzstyle{doubled}=[line width=1.6pt] % set the line width for all doubled (quantum) maps/wires
-\tikzstyle{dot}=[inner sep=0mm,minimum width=2mm,minimum height=2mm,draw,shape=circle] 
-\tikzstyle{ddot}=[inner sep=0mm, doubled, minimum width=2.5mm,minimum height=2.5mm,draw,shape=circle]
-\tikzstyle{phase dimensions}=[minimum size=5mm,font=\footnotesize,rectangle,rounded corners=2mm,inner sep=0.2mm,outer sep=-2mm,scale=0.8]
-\tikzstyle{dphase dimensions}=[minimum size=5mm,font=\footnotesize,rectangle,rounded corners=2.5mm,inner sep=1mm,outer sep=-2mm]
-\tikzstyle{white phase dot}=[dot,fill=white,phase dimensions]
-\tikzstyle{white phase ddot}=[ddot,fill=white,dphase dimensions]
-\tikzstyle{gray phase dot}=[dot,fill=gray!40!white,phase dimensions]
-\tikzstyle{gray phase ddot}=[ddot,fill=gray!40!white,dphase dimensions]
+\tikzstyle{doubled}=[line width=1.6pt]
+\tikzstyle{dot}=[inner sep=0mm, minimum width=2mm, minimum height=2mm, draw, shape=circle]
+\tikzstyle{ddot}=[inner sep=0mm, doubled, minimum width=2.5mm, minimum height=2.5mm, draw, shape=circle]
+\tikzstyle{phase dimensions}=[minimum size=5mm, font={\footnotesize}, rectangle, rounded corners=2mm, inner sep=0.2mm, outer sep=-2mm, scale=0.8]
+\tikzstyle{dphase dimensions}=[minimum size=5mm, font={\footnotesize}, rectangle, rounded corners=2.5mm, inner sep=1mm, outer sep=-2mm]
+\tikzstyle{white phase dot}=[dot, fill=white, phase dimensions]
+\tikzstyle{white phase ddot}=[ddot, fill=white, dphase dimensions]
+\tikzstyle{gray phase dot}=[dot, fill={gray!40!white}, phase dimensions]
+\tikzstyle{gray phase ddot}=[ddot, fill={gray!40!white}, dphase dimensions]
 \tikzstyle{grey phase dot}=[gray phase dot]
 \tikzstyle{grey phase ddot}=[gray phase ddot]
+\tikzstyle{small map}=[draw, shape=rectangle, minimum height=4mm, minimum width=4mm, fill=white]
+\tikzstyle{cnot}=[fill=white, shape=circle, inner sep=-1.4pt]
+\tikzstyle{asym hadamard}=[fill=white, draw, shape=NEbox, inner sep=0.6mm, font={\footnotesize}, minimum height=4mm]
+\tikzstyle{asym hadamard conj}=[fill=white, draw, shape=NWbox, inner sep=0.6mm, font={\footnotesize}, minimum height=4mm]
+\tikzstyle{asym hadamard dag}=[fill=white, draw, shape=SEbox, inner sep=0.6mm, font={\footnotesize}, minimum height=4mm]
+\tikzstyle{hadamard}=[fill=white, draw, inner sep=0.6mm, font={\footnotesize}, minimum height=4mm, minimum width=4mm]
+\tikzstyle{small hadamard}=[fill=white, draw, inner sep=0.6mm, minimum height=1.5mm, minimum width=1.5mm]
+\tikzstyle{small hadamard rotate}=[small hadamard, rotate=45]
+\tikzstyle{dhadamard}=[hadamard, doubled]
+\tikzstyle{small dhadamard}=[small hadamard, doubled]
+\tikzstyle{small dhadamard rotate}=[small hadamard rotate, doubled]
+\tikzstyle{antipode}=[white dot, inner sep=0.3mm, font={\footnotesize}]
+\tikzstyle{point}=[regular polygon, regular polygon sides=3, draw, scale=0.75, inner sep=-0.5pt, minimum width=9mm, fill=white, regular polygon rotate=180]
+\tikzstyle{copoint}=[regular polygon, regular polygon sides=3, draw, scale=0.75, inner sep=-0.5pt, minimum width=9mm, fill=white]
+\tikzstyle{dpoint}=[point, doubled]
+\tikzstyle{dcopoint}=[copoint, doubled]
+\tikzstyle{wide copoint}=[fill=white, draw, shape=isosceles triangle, shape border rotate=90, isosceles triangle stretches=true, inner sep=0pt, minimum width=1.5cm, minimum height=6.12mm]
+\tikzstyle{wide point}=[fill=white, draw, shape=isosceles triangle, shape border rotate=-90, isosceles triangle stretches=true, inner sep=0pt, minimum width=1.5cm, minimum height=6.12mm, yshift=-0.0mm]
+\tikzstyle{wide point plus}=[fill=white, draw, shape=isosceles triangle, shape border rotate=-90, isosceles triangle stretches=true, inner sep=0pt, minimum width=1.74cm, minimum height=7mm, yshift=-0.0mm]
+\tikzstyle{wide dpoint}=[fill=white, doubled, draw, shape=isosceles triangle, shape border rotate=-90, isosceles triangle stretches=true, inner sep=0pt, minimum width=1.5cm, minimum height=6.12mm, yshift=-0.0mm]
+\tikzstyle{tinypoint}=[regular polygon, regular polygon sides=3, draw, scale=0.55, inner sep=-0.15pt, minimum width=6mm, fill=white, regular polygon rotate=180]
+\tikzstyle{white point}=[point]
+\tikzstyle{white dpoint}=[dpoint]
+\tikzstyle{green point}=[white point]
+\tikzstyle{white copoint}=[copoint]
+\tikzstyle{gray point}=[point, fill={gray!40!white}]
+\tikzstyle{gray dpoint}=[gray point, doubled]
+\tikzstyle{red point}=[gray point]
+\tikzstyle{gray copoint}=[copoint, fill={gray!40!white}]
+\tikzstyle{gray dcopoint}=[gray copoint, doubled]
 
-% =======================
-% = OTHER KINDS OF MAPS =
-% =======================
+\makeatletter
+\newcommand{\boxshape}[3]{%
+\pgfdeclareshape{#1}{
+\inheritsavedanchors[from=rectangle] % this is nearly a rectangle
+\inheritanchorborder[from=rectangle]
+\inheritanchor[from=rectangle]{center}
+\inheritanchor[from=rectangle]{north}
+\inheritanchor[from=rectangle]{south}
+\inheritanchor[from=rectangle]{west}
+\inheritanchor[from=rectangle]{east}
+% ... and possibly more
+\backgroundpath{% this is new
+% store lower right in xa/ya and upper right in xb/yb
+\southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+\northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
 
-\tikzstyle{small map}=[draw,shape=rectangle,minimum height=4mm,minimum width=4mm,fill=white]
+\@tempdima=#2
+\@tempdimb=#3
 
-\tikzstyle{cnot}=[fill=white,shape=circle,inner sep=-1.4pt]
+\pgfpathmoveto{\pgfpoint{\pgf@xa - 5pt + \@tempdima}{\pgf@ya}}
+\pgfpathlineto{\pgfpoint{\pgf@xa - 5pt - \@tempdima}{\pgf@yb}}
+\pgfpathlineto{\pgfpoint{\pgf@xb + 5pt + \@tempdimb}{\pgf@yb}}
+\pgfpathlineto{\pgfpoint{\pgf@xb + 5pt - \@tempdimb}{\pgf@ya}}
+\pgfpathlineto{\pgfpoint{\pgf@xa - 5pt + \@tempdima}{\pgf@ya}}
+\pgfpathclose
+}
+}}
 
-\tikzstyle{asym hadamard}=[fill=white,draw,shape=NEbox,inner sep=0.6mm,font=\footnotesize,minimum height=4mm]
-\tikzstyle{asym hadamard conj}=[fill=white,draw,shape=NWbox,inner sep=0.6mm,font=\footnotesize,minimum height=4mm]
-\tikzstyle{asym hadamard dag}=[fill=white,draw,shape=SEbox,inner sep=0.6mm,font=\footnotesize,minimum height=4mm]
+\boxshape{NEbox}{0pt}{5pt}
+\boxshape{SEbox}{0pt}{-5pt}
+\boxshape{NWbox}{5pt}{0pt}
+\boxshape{SWbox}{-5pt}{0pt}
+\boxshape{EBox}{-3pt}{3pt}
+\boxshape{WBox}{3pt}{-3pt}
+\makeatother
 
+\tikzstyle{cloud}=[shape=cloud,draw,minimum width=1.5cm,minimum height=1.5cm]
 
-\tikzstyle{hadamard}=[fill=white,draw,inner sep=0.6mm,font=\footnotesize,minimum height=4mm,minimum width=4mm]
-\tikzstyle{small hadamard}=[fill=white,draw,inner sep=0.6mm,minimum height=1.5mm,minimum width=1.5mm]
-\tikzstyle{small hadamard rotate}=[small hadamard,rotate=45]
-\tikzstyle{dhadamard}=[hadamard,doubled]
-\tikzstyle{small dhadamard}=[small hadamard,doubled]
-\tikzstyle{small dhadamard rotate}=[small hadamard rotate,doubled]
-\tikzstyle{antipode}=[white dot,inner sep=0.3mm,font=\footnotesize]
+\tikzstyle{map}=[draw,shape=NEbox,inner sep=2pt,minimum height=6mm,fill=white]
+\tikzstyle{dashedmap}=[draw,dashed,shape=NEbox,inner sep=2pt,minimum height=6mm,fill=white]
+\tikzstyle{mapdag}=[draw,shape=SEbox,inner sep=2pt,minimum height=6mm,fill=white]
+\tikzstyle{mapadj}=[draw,shape=SEbox,inner sep=2pt,minimum height=6mm,fill=white]
+\tikzstyle{maptrans}=[draw,shape=SWbox,inner sep=2pt,minimum height=6mm,fill=white]
+\tikzstyle{mapconj}=[draw,shape=NWbox,inner sep=2pt,minimum height=6mm,fill=white]
+
+\tikzstyle{box}=[draw,shape=rectangle,inner sep=2pt,minimum height=6mm,minimum width=6mm,fill=white]
+\tikzstyle{dbox}=[draw,doubled,shape=rectangle,inner sep=2pt,minimum height=6mm,minimum width=6mm,inline text,fill=white]
+\tikzstyle{dmap}=[draw,doubled,shape=NEbox,inner sep=2pt,minimum height=6mm,fill=white]
+\tikzstyle{dmapdag}=[draw,doubled,shape=SEbox,inner sep=2pt,minimum height=6mm,fill=white]
+\tikzstyle{dmapadj}=[draw,doubled,shape=SEbox,inner sep=2pt,minimum height=6mm,fill=white]
+\tikzstyle{dmaptrans}=[draw,doubled,shape=SWbox,inner sep=2pt,minimum height=6mm,fill=white]
+\tikzstyle{dmapconj}=[draw,doubled,shape=NWbox,inner sep=2pt,minimum height=6mm,fill=white]
+
+\tikzstyle{upground}=[circuit ee IEC,thick,ground,rotate=90,scale=1.5]
+\tikzstyle{downground}=[circuit ee IEC,thick,ground,rotate=-90,scale=1.5]
 
 % Edge styles
+\tikzstyle{white dot}=[dot, fill=white, -, text depth=-0.2mm]
+\tikzstyle{white Wsquare}=[Wsquare, fill=white, -, text depth=-0.2mm]
+\tikzstyle{white Wsquareadj}=[Wsquareadj, fill=white, -, text depth=-0.2mm]
+\tikzstyle{gray dot}=[dot, fill={gray!40!white}, -, text depth=-0.2mm]
 \tikzstyle{thick}=[-, fill=none, ultra thick]
-\tikzstyle{simple}=[]
+\tikzstyle{big dash}=[-, thick, dashed, dash pattern=on 2mm off 1mm, draw={rgb,255: red,191; green,191; blue,191}]
+\tikzstyle{small dash}=[-, dashed, dash pattern=on 2mm off 1mm, draw={rgb,255: red,191; green,191; blue,191}]
+\tikzstyle{simple}=[-]

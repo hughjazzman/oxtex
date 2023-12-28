@@ -1,0 +1,35 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=white ddot] (2) at (0, 0) {$\cdot$};
+		\node [style=dmap] (3) at (1.5, 1.5) {$\hat{f}_a$};
+		\node [style=white phase ddot] (4) at (4.5, -1.5) {$\pi$};
+		\node [style=none] (5) at (-1.5, 1.5) {};
+		\node [style=none] (6) at (-1.5, 5) {};
+		\node [style=dot] (8) at (-1.5, 4) {$\cdot$};
+		\node [style=gray ddot] (9) at (3, 3) {};
+		\node [style=none] (11) at (4.5, 1.5) {};
+		\node [style=upground] (12) at (3, 5) {};
+		\node [style=small dhadamard] (13) at (-1.5, 2.5) {$\cdot$};
+		\node [style=white ddot] (14) at (0, -1.5) {$\cdot$};
+		\node [style=none] (15) at (-2.5, 3.5) {};
+		\node [style=none] (16) at (6.25, 3.5) {};
+		\node [style=none] (17) at (5.5, -0.75) {};
+		\node [style=none] (18) at (-2.5, -0.75) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=thick, bend left=45] (3) to (2);
+		\draw [style=thick, bend right=45] (5.center) to (2);
+		\draw [style=simple] (6.center) to (8);
+		\draw [style=thick, bend left=45] (3) to (9);
+		\draw [style=thick, bend left=45] (9) to (11.center);
+		\draw [style=thick] (11.center) to (4);
+		\draw [style=thick] (12) to (9);
+		\draw [style=thick] (13) to (5.center);
+		\draw [style=thick] (8) to (13);
+		\draw [style=thick] (14) to (2);
+		\draw [style=small dash] (15.center) to (16.center);
+		\draw [style=small dash] (15.center) to (18.center);
+		\draw [style=small dash] (18.center) to (17.center);
+		\draw [style=small dash] (17.center) to (16.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

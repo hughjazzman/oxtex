@@ -7,8 +7,15 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage{tikzit}
+\usepackage{keycommand}
+
+
+\usetikzlibrary{circuits.ee.IEC}
 \input{sample.tikzstyles}
 \input{dots.tikzdefs}
+
+\newkeycommand{\pointmap}[style=point][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (0,-0.3) {$#1$};\node [style=none] (3) at (0, 0.9) {};\draw (x)--(0,0.7);}\,}
+
 
 \theoremstyle{definition}
 \newtheorem{theorem}{Theorem}[section]
@@ -33,6 +40,8 @@
 \date{Michaelmas Term 2023}
 %
 \begin{document}
+
+
 %
 \maketitle
 
@@ -143,17 +152,17 @@ then transformed using $ZX$-calculus into a graph state, followed by local Cliff
 \label{prop:1}
 \end{proposition}
 
-\begin{corollary}
-A Clifford diagram is an extension of a graph state which 
-can contain integer multiples of $\frac{\pi}{2}$-phase spiders.
-\label{cor:1}
-\end{corollary}
+% \begin{corollary}
+% A Clifford diagram is an extension of a graph state which 
+% can contain integer multiples of $\frac{\pi}{2}$-phase spiders.
+% \label{cor:1}
+% \end{corollary}
 
-\begin{corollary}
-A Clifford+T diagram is an extension of a Clifford diagram which 
-can contain intger multiples of $\frac{\pi}{4}$-phase spiders.
-\label{cor:2}
-\end{corollary}
+% \begin{corollary}
+% A Clifford+T diagram is an extension of a Clifford diagram which 
+% can contain intger multiples of $\frac{\pi}{4}$-phase spiders.
+% \label{cor:2}
+% \end{corollary}
 
 \begin{theorem}[{\cite{coecke2017picturing} \textbf{Theorem 9.130.}}]
 Clifford+T diagrams are \textit{approximately universal}. 
@@ -189,7 +198,7 @@ along with the local Clifford unitaries.
 \end{proof}
 
 However, Clifford diagrams are not known to be \textit{approximately universal}.
-We then require the $T$-gate for Clifford+T diagrams following Corollary \ref{cor:2} to obtain 
+We then require the $T$-gate for Clifford+T diagrams following Definition \ref{def:3} to obtain 
 \textit{approximate universality} as in Theorem \ref{thm:1}.
 \[T:=\tikzfig{pi4}\]
 
@@ -207,12 +216,238 @@ Then we can use a two-qubit measurement, and classically controlled $S$ and Paul
 It is just as powerful as before.
 Simply use a two-qubit measurement on the $Z$-basis state 
 as follows to obtain the equivalent $Z$-basis measurement.
+Any diagram which requires the single-qubit measurement can then be replaced.
 The classical value of the first qubit $(j)$ is essentially discarded.
 
 \[\tikzfig{1e}\stackrel{\copyrule\SpiderRule}{=}\tikzfig{1ei}\]
 
 \clearpage
 \section*{Question 2}
+\subsection*{Background}
+In the Deutsch-Josza algorithm, the goal is to differentiate between two classes of functions,
+using a single quantum query \cite{Deutsch_1992} - 
+namely, whether the function is \textit{constant}, or \textit{balanced}.
+
+What if, instead of two classes of functions, there were instead, 
+$2^n$ possible functions to differentiate between?
+More concretely, what if there were an $n$-bit string encoded in the oracle function we had access to,
+and we need to obtain the string using our quantum query?
+
+Mathematically, the problem is as follows \cite{Bernstein_1997}.
+
+\textbf{Given.} A function 
+\[f_a:\{0,1\}^n \rightarrow \{0,1\}\] 
+with the promise that, for some $n$-bit string $a\in\{0,1\}^n$,
+\[f_a(x)=a\cdot x \equiv \left(\sum_{i=1}^n a_i x_i\right) \mod 2,\]
+where $a_i,x_i$ are the $i$-th bits of $a,x$ respectively.
+
+\textbf{Problem.} What is the exact string $a$?
+
+Note the use of the $\cdot$ operator, which will continue to be used in the rest of this paper.
+
+In a way, the problem above can also be seen as a search algorithm, 
+where we are searching for the exact indices $k$ where the value of bit $a_k$ is 1.
+
+In \cite{Terhal_1998}, the problem is described as a coin weighing problem, 
+where the set of defective coins need to be found in the total set of coins.
+Here, a spring-scale is used and gives the Hamming weight instead,
+which is the total number of 1 bits in the the bitwise product of $a$ and $x$, $w_h(a\wedge x)$.
+However, this paper will only make use of the parity of the bitwise product, $a\cdot x$.
+
+\subsection*{Classical Solution}
+The classical solution to this problem would simply to figure out the string $a$ bit by bit.
+Each bit $a_k$ can be determined by using the query string $x^{(k)}$ of all 0's, except for bit $x_k=1$.
+\[\pointmap{x^{(k)}}=\pointmap{0}\dots\pointmap{1}\dots\pointmap{0}\]
+
+Each query $x^{(k)}$ will correspond to bit $a_k$
+\[\pointmap{a_k}=\tikzfig{2aa}\]
+so 
+\[\pointmap{a}=\tikzfig{2aa1}\dots\tikzfig{2aa}\dots\tikzfig{2aan}\]
+
+With $n$ queries, it is clear the classical solution requires $O(n)$ queries.
+
+\subsection*{Quantum Analysis}
+Owing to the problem's similarity to both the problem used in Deustch-Josza \cite{Deutsch_1992},
+as well as Grover's search algorithm \cite{Grover_1996}, 
+it is reasonable to start by analysing the methods used in those algorithms.
+
+The following fact is essential to both algorithms, as seen in \textbf{Section 12.2} of \cite{coecke2017picturing}.
+
+\[\tikzfig{0pi}=\tikzfig{one}  \quad\quad \tikzfig{1pi}=-1\tikzfig{one}\]
+
+\begin{corollary}
+\[\tikzfig{numa}\tikzfig{numb}=\tikzfig{numab}\]
+for $a,b\in\{0,1\}$, where $\oplus$ is the XOR operator.
+\label{cor:3}
+\end{corollary}
+
+We set the second input of the oracle to once again be the $\circ$-state with a $\pi$, 
+to make use of the above property.
+
+\[\tikzfig{2a}\]
+
+Like in \cite{coecke2017picturing}, if $f_a$ is applied to "all inputs together",
+then it results in the following, where we leave the number for later use.
+
+\[\tikzfig{2aii}=\sum_i\tikzfig{2aiii}\]
+
+It can be seen that measuring at this point does not help as much,
+since it is still a sum of different states that are not our target string $a$.
+We then have to find a unitary which maps the state to something more useful,
+which does not seem straightforward.
+So, we start by proving the following lemma, using the Hadamard gate.
+
+\begin{lemma}
+Applying the $n$-bit Hadamard gate (denoted $H^{(n)}$) in parallel to our $n$-bit input gives the following.
+\[\tikzfig{2b}=\frac{1}{\sqrt{2^n}}\sum_{j\in\{0,1\}^n} \tikzfig{2bii}\]
+\label{lem:1}
+\end{lemma}
+
+\begin{proof}
+First, we see the Hadamard applied on a single bit $i_k$ at index $k$.
+\[\tikzfig{2c}=\tikzfig{2cii}=\frac{1}{\sqrt{2}}\left(\tikzfig{state0}+(-1)^{i_k}\tikzfig{state1}\right)\]
+Then, we note that the $1$ and $-1$ can be rewritten.
+\[\tikzfig{one}=\tikzfig{2dii}= \tikzfig{2di} \]
+\[(-1)^{i_k \cdot 1} = \tikzfig{2diii} = \tikzfig{2div}\]
+Then, we have for all bits $i_k$,
+\[\tikzfig{2c}=\sum_{j_k\in\{0,1\}} \tikzfig{2diii}\tikzfig{2dv}\]
+Since we can see that
+\[\tikzfig{2e}=\tikzfig{2eii}\dots\tikzfig{2eiii}\]
+Then
+\[\tikzfig{2b}=\tikzfig{2fii}\dots\tikzfig{2fiii}=\frac{1}{\sqrt{2^n}}\sum_{j\in\{0,1\}^n} \tikzfig{2bii}\]
+\end{proof}
+
+So then what happens if we apply the Hadamard to the result we obtained earlier?
+
+\[\frac{1}{\sqrt{2^n}}\tikzfig{2g}=\frac{1}{\sqrt{2^n}}\sum_{i\in\{0,1\}^n}\tikzfig{2gii}
+\stackrel{\ref{lem:1}}{=}\frac{1}{2^n}\sum_{i,j\in\{0,1\}^n}\tikzfig{2giii}\]
+\[\stackrel{\ref{cor:3}}{=}\frac{1}{2^n}\sum_{i,j\in\{0,1\}^n}\tikzfig{2giv}\]
+
+To make the expression cleaner later, 
+we also add in the uniform distribution over all states factor $\frac{1}{\sqrt{2^n}}$.
+We get an expression of a state that looks like it could be simplified.
+Hence, we prove the following lemma to do just that.
+
+\begin{lemma}
+\[\frac{1}{2^n}\sum_{i\in\{0,1\}^n}\tikzfig{numfij}=
+\begin{cases}
+    \tikzfig{one} \quad\text{if} \tikzfig{statej}=\tikzfig{statea}\\
+    0 \quad\text{otherwise}
+\end{cases}
+\]
+\label{lem:2}
+\end{lemma}
+
+\begin{proof}
+
+First, we simplify the expression
+\[f_a(i)\oplus (i\cdot j)=(a\cdot i)\oplus (i \cdot j) = i\cdot (a \oplus j)\]
+where the $\oplus$ between $n$-bit strings $a,j$ is simply the bitwise XOR resulting in an $n$-bit string.
+This is true since for each bit index $k$,
+\[(a_k \cdot i_k) \oplus (i_k \cdot j_k) = i_k \cdot (a_k \oplus j_k)\]
+where if $i_k=0$, both sides are 0, and if $i_k=1$, both sides are equal to $a_k \oplus j_k$.
+
+If 
+\[\tikzfig{statej}=\tikzfig{statea}\]
+then $i_k \cdot (a_k \oplus j_k) = i_k \cdot 0 = 0$ so for all $i$,
+\[\tikzfig{numfij}=\tikzfig{0pi}=\tikzfig{one}\]
+Summing them all up, we still have
+\[\frac{1}{2^n}\sum_{i\in\{0,1\}^n}\tikzfig{one}=\tikzfig{one}\]
+
+On the other hand, we look at what happens when 
+\[\tikzfig{statej}\neq\tikzfig{statea}\]
+So it must be the case that
+\[\tikzfig{statea_j}=\tikzfig{stateb1}\dots\tikzfig{state1}\dots\tikzfig{statebn}\]
+where
+\[\tikzfig{statebk}=\tikzfig{state1}\]
+for some bit $b_k$ at index $k$.
+So we can find two inputs $i,i'\in\{0,1\}^n$ where
+\[\pointmap{i} = \tikzfig{stateb1}\dots\tikzfig{state1}\dots\tikzfig{statebn}\]
+\[\pointmap{i'} = \tikzfig{stateb1}\dots\tikzfig{state0}\dots\tikzfig{statebn}\]
+so that
+\[\tikzfig{ipi}+\tikzfig{i'pi} = 0\]
+We can then find all possible inputs pairs of $i,i'\in\{0,1\}^n$ corresponding to the
+$2^{n-1}$ choices for $b_1,...,b_n$ with $b_k=0$
+and the $2^{n-1}$ choices for $b_1,...,b_n$ with $b_k=1$,
+leading to all inputs having a corresponding pair. 
+Then when
+\[\tikzfig{statej}\neq\tikzfig{statea},\]
+we have, as required,
+\[\frac{1}{2^n}\sum_{i\in\{0,1\}^n}\tikzfig{numfij}=0\]
+
+\end{proof}
+
+Now, we can use the Lemma \ref{lem:2} above to show
+\[\frac{1}{2^n}\sum_{i,j\in\{0,1\}^n}\tikzfig{2giv}=\pointmap{a}\]
+
+We then just have to measure the result to obtain our string $a$.
+We have our quantum algorithm as desired.
+
+\subsection*{Quantum Algorithm}
+\textbf{Quantum Algorithm.} Perform:
+\[\tikzfig{2h}\]
+Then we will always find string $a$.
+The algorithm as shown is named the \textit{Bernstein–Vazirani algorithm}.
+
+In \cite{Du_2001}, the algorithm is refined to use $n$ bits instead of $n+1$, 
+and implemented on an ensemble quantum computer.
+
+\subsection*{Extension}
+A simple extension of the \textit{Bernstein–Vazirani algorithm} is shown in \cite{Shukla_2023}
+and extends the oracle function to having $k$ secret strings.
+
+\textbf{Given.} A function 
+\[f:\{0,1\}^n \rightarrow \{0,1\}\] 
+with the promise that, for $k$ $n$-bit strings $a_1,a_2,...,a_k\in\{0,1\}^n$, where $1\leq k \leq 2^n$,
+\[f_i(x)=a_i\cdot x \equiv \left(\sum_{i=1}^n a_i x_i\right) \mod 2,\]
+where $a_i,x_i$ are the $i$-th bits of $a,x$ respectively,
+and $f(x)=f_i(x)$ with equal probability of $\frac{1}{k}$ for each $i\in\{1,...,k\}$.
+
+\textbf{Problem.} What are the exact strings $a_1,...,a_k$?
+
+This paper will show the diagrammatic reasoning for $k=2$.
+
+It is assumed in \cite{Shukla_2023} that each unitary $U_i$ 
+corresponds to the function $f_i$ (and thus string $a_i$).
+Using \textbf{Section 12.1.3.2} from \cite{coecke2017picturing}, 
+we can construct controlled unitaries, pictured as follows.
+
+\[\tikzfig{2j}\]
+
+Since the input to the control qubit is 
+\[\tikzfig{whiteddot}=\text{double}\left(\tikzfig{state0}+\tikzfig{state1}\right)
+=\frac{1}{2}\left(\tikzfig{grayd0}+\tikzfig{graydpi}\right),\]
+both unitaries will be "fired" with equal probability of $\frac{1}{2}$.
+The resulting measurement will then give each string $a_1,a_2$ with probability $\frac{1}{2}$.
+The analysis is similar to before, where unitary $U_i$ firing for $i\in\{1,2\}$  will result in
+
+\[\tikzfig{2jii}=\sum_x\tikzfig{2jiii}\]
+
+and the subsequent $n$-bit Hadamard will allow the string $a_i$ to be easily measured.
+
+As shown in \cite{Shukla_2023}, there is no classical algorithm that can obtain even a single bit of any key,
+making the quantum algorithm superior. 
+\cite{Shukla_2023} goes on to generalize the algorithm for $k=2^r$, 
+which can be easily obtained. 
+Below, $k=4$ is shown, using 'controlled-controlled-$\hat{U}$' gates 
+as detailed in \textbf{Section 12.1.3.2} of \cite{coecke2017picturing}.
+Within the dotted lines contain the existing controlled-$\hat{U}$ gates for $k=2$ similar to before,
+and it is straightforward to apply the same principle of turning "on" and "off" entire sets of unitaries.
+
+\[\tikzfig{2k}\]
+
+When $k\neq2^r$, the uniform superposition state 
+requires the Quantum Fourier Transform and is outside the scope of this paper.
+
+\subsection*{Conclusion}
+
+The \textit{Bernstein–Vazirani algorithm} has been shown as presented in 
+\cite{Bernstein_1997}\cite{Terhal_1998}\cite{Du_2001}, as well as an extension found in \cite{Shukla_2023}.
+It has been proven diagrammatically, with techniques found in lectures and \cite{coecke2017picturing}.
+It is vastly superior to the classical algorithms, improving the number of queries from $O(n)$ to $O(1)$
+in the single string case, and obtaining each key with certainty as opposed to not even a single bit with certainty,
+in the multi string case.
+
 
 \clearpage
 \bibliographystyle{plain}

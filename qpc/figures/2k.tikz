@@ -1,0 +1,40 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (15) at (-1, -2) {};
+		\node [style=none] (16) at (7.75, -2) {};
+		\node [style=none] (17) at (7, -6.25) {};
+		\node [style=none] (18) at (-1, -6.25) {};
+		\node [style=none] (27) at (-1.25, 4.5) {};
+		\node [style=none] (28) at (7.5, 4.5) {};
+		\node [style=none] (29) at (6.75, 0.25) {};
+		\node [style=none] (30) at (-1.25, 0.25) {};
+		\node [style=none] (32) at (-1.25, 2.25) {};
+		\node [style=none] (33) at (-1, -4.25) {};
+		\node [style=white ddot] (34) at (-4, 2.25) {};
+		\node [style=white ddot] (35) at (-4, -4.25) {};
+		\node [style=gray phase ddot] (36) at (-4, -1) {$\pi$};
+		\node [style=gray phase ddot] (37) at (-4, -5.75) {$\pi$};
+		\node [style=white ddot] (38) at (-4, -7) {};
+		\node [style=upground] (39) at (-4, 6) {};
+		\node [style=none] (40) at (7.5, 2) {};
+		\node [style=none] (41) at (7.75, 2) {$\hat{U}_{3,4}$};
+		\node [style=none] (42) at (8, -4.5) {$\hat{U}_{1,2}$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=small dash] (15.center) to (16.center);
+		\draw [style=small dash] (15.center) to (18.center);
+		\draw [style=small dash] (18.center) to (17.center);
+		\draw [style=small dash] (17.center) to (16.center);
+		\draw [style=small dash] (27.center) to (28.center);
+		\draw [style=small dash] (27.center) to (30.center);
+		\draw [style=small dash] (30.center) to (29.center);
+		\draw [style=small dash] (29.center) to (28.center);
+		\draw [style=thick] (34) to (36);
+		\draw [style=thick] (36) to (35);
+		\draw [style=thick] (35) to (37);
+		\draw [style=thick] (37) to (38);
+		\draw [style=thick] (35) to (33.center);
+		\draw [style=thick] (34) to (32.center);
+		\draw [style=thick] (39) to (34);
+	\end{pgfonlayer}
+\end{tikzpicture}
