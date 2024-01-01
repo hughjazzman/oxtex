@@ -402,8 +402,8 @@ and extends the oracle function to having $k$ secret strings.
 \textbf{Given.} A function 
 \[f:\{0,1\}^n \rightarrow \{0,1\}\] 
 with the promise that, for $k$ $n$-bit strings $a_1,a_2,...,a_k\in\{0,1\}^n$, where $1\leq k \leq 2^n$,
-\[f_i(x)=a_i\cdot x \equiv \left(\sum_{i=1}^n a_i x_i\right) \mod 2,\]
-where $a_i,x_i$ are the $i$-th bits of $a,x$ respectively,
+\[f_i(x)=a_i\cdot x \equiv \left(\sum_{j=1}^n a_{ij} x_j\right) \mod 2,\]
+where $a_{ij},x_j$ are the $j$-th bits of $a_i,x$ respectively,
 and $f(x)=f_i(x)$ with equal probability of $\frac{1}{k}$ for each $i\in\{1,...,k\}$.
 
 \textbf{Problem.} What are the exact strings $a_1,...,a_k$?
