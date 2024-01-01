@@ -213,13 +213,16 @@ Then we can use a two-qubit measurement, and classically controlled $S$ and Paul
 
 \paragraph{(e)}
 
-It is just as powerful as before.
-Simply use a two-qubit measurement on the $Z$-basis state 
+If our compute system is not restricted to single-qubit measurements, it is just as powerful as before.
+We can use a two-qubit measurement on the $Z$-basis state 
 as follows to obtain the equivalent $Z$-basis measurement.
 Any diagram which requires the single-qubit measurement can then be replaced.
 The classical value of the first qubit $(j)$ is essentially discarded.
 
 \[\tikzfig{1e}\stackrel{\copyrule\SpiderRule}{=}\tikzfig{1ei}\]
+
+However, in the case where our hardware does not allow for more than single-qubit measurements,
+the model would not be able to express those single-qubit measurements directly.
 
 \clearpage
 \section*{Question 2}
