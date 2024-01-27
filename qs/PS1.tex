@@ -82,11 +82,13 @@
 
 \section*{Question 1}
 \addtocounter{section}{1}
-For any computable functions $f,g$ of $L$, their composition $g\circ f$ is also computable and hence in $L$.
+For any computable functions $f,g$ of $L$, where $\texttt{cod}(f)=\texttt{dom}(g)$, 
+their composition $g\circ f$ is also computable and hence in $L$.
 The identity function can be defined for each data type, so similar to the set-theoretic view of functions,
 the associativity and identity axioms hold for the composition of computable functions.
 
 \section*{Question 2}
+\addtocounter{section}{1}
 The collections $\text{Ob}(\mathcal{C}),\text{Ar}(\mathcal{C})$ are already defined,
 along with the domain and codomain as the sets in the binary relations.
 
@@ -120,6 +122,7 @@ along with the domain and codomain as the sets in the binary relations.
 \end{proof}
 
 \section*{Question 3}
+\addtocounter{section}{1}
 \begin{proposition}
     In \textbf{Set}, an arrow is epic if and only if it is surjective.
 \end{proposition}
@@ -150,11 +153,193 @@ along with the domain and codomain as the sets in the binary relations.
 
 \end{proof}
 
+\clearpage
 \section*{Question 4}
-\section*{Question 5}
-\section*{Question 6}
-\section*{Question 7}
+\addtocounter{section}{1}
+\paragraph{(a)}
+\begin{proposition}
+    If $f,g$ are arrows such that $g\circ f$ is monic, then $f$ is monic.
+\end{proposition}
+\begin{proof}
+    Suppose $g\circ f$ is monic and for arbitrary arrows $h',k'$ (where the codomain matches $f$),
+    \[f\circ h' = f\circ k'\]
+    Since $g\circ f$ is monic, we have
+    \[\forall h,k: g\circ f\circ h = g\circ f \circ k \implies h=k\]
+    Composing $g$ to the first equation,
+    \[g\circ f\circ h' = g\circ f\circ k'\]
+    Using $g\circ f$ being monic, then $h'=k'$.
+    Thus, with $h',k'$ being arbitrary, we have that
+    \[\forall h,k:  f\circ h = f \circ k \implies h=k\]
+    So $f$ is monic.
+\end{proof}
 
+\subsection*{(b)}
+\begin{proposition}
+    If $f$ is split epic, then it is epic.
+\end{proposition}
+\begin{proof}
+    Suppose $f$ is split epic, and for arbitrary arrows $h',k'$ (where the domain matches $f$),
+    \[h'\circ f = k'\circ f\]
+    Since $f$ is split epic,
+    \[\exists g: g\circ f=\text{id}\]
+    Precomposing $g$ to the first equation,
+    \[h'\circ f\circ g = k'\circ f\circ g\]
+    \[\implies h'\circ \text{id} = k'\circ \text{id}\]
+    \[\implies h' = k'\]
+    Since $h',k'$ are arbitrary, we have that
+    \[\forall h,k: k\circ f = h\circ f \implies h = k\]
+    So $f$ is epic.
+\end{proof}
+\subsection*{(c)}
+\begin{proposition}
+    If $f$ and $g\circ f$ are iso, then $g$ is iso.
+\end{proposition}
+\begin{proof}
+    Suppose $f$ and $g\circ f$ are iso. Let $f:A\rightarrow B,g:B\rightarrow C$.
+    Then
+    \[\exists h: h\circ f = \text{id}_A \wedge f\circ h = \text{id}_B\]
+    \[\exists h': h'\circ g\circ f = \text{id}_A \wedge g\circ f\circ h' = \text{id}_C\]
+    Then we can show that $h'\circ g = h$, by composing $h'\circ g\circ f = \text{id}_A$ with $h$,
+    \[h'\circ g\circ f \circ h = \text{id}_A \circ h\]
+    \[\implies h'\circ g\circ \text{id}_A = h\]
+    \[\implies h'\circ g= h\]
+    Define $h''=f\circ h'$. Then we have
+    \[h'' \circ g = f\circ h' \circ g = f\circ h = \text{id}_B\]
+    \[g \circ h'' = g\circ f\circ h' = \text{id}_C\]
+    So $g$ is iso.
+\end{proof}
+\subsection*{(d)}
+\begin{proposition}
+    If $f$ is monic and split epic, the it is iso.
+\end{proposition}
+\begin{proof}
+    Let $f:A\rightarrow B$ be monic and split epic. Since $f$ is split epic,
+    \[\exists k: f\circ k = \text{id}_B\]
+    Suppose $k\circ f\neq \text{id}_A$.
+    Let $g=k\circ f,h=\text{id}_A$ so $g\neq h$. Then
+    \[f\circ g = f\circ k\circ f = \text{id}_B \circ f = f\]
+    \[f\circ h = f\circ \text{id}_A = f\]
+    So $f\circ g = f\circ h = f$ but $g \neq h$.
+    Thus $f$ is not monic, a contradiction.
+    So we must have $k\circ f= \text{id}_A$.
+    As $k\circ f= \text{id}_A$ and $f\circ k = \text{id}_B$, $f$ is iso.
+\end{proof}
+\subsection*{(e)}
+\begin{corollary}
+    If $f$ and $f\circ g$ are iso, then $g$ is iso.
+\end{corollary}
+\begin{corollary}
+    If $f$ is epic and split monic, then it is iso.
+\end{corollary}
+
+\section*{Question 5}
+\addtocounter{section}{1}
+\subsection*{(a)}
+\begin{proposition}
+    $i$ is a monomorphism and an epimorphism.
+\end{proposition}
+\begin{proof}
+    Let $(G,\cdot,1_G)$ be an arbitrary monoid where we have arrows $g,h:(G,\cdot,1_G)\rightarrow(\mathbb{N},+,0)$,
+    and $i\circ g=i\circ h$.
+    Since $i$ is an inclusion map, its underlying function is the identity on $\mathbb{N},|i|=\text{id}_\mathbb{N}$.
+    We have
+    \[\forall k\in G:|i\circ g|(k)=|i\circ h|(k)\]
+    \[\implies\forall k\in G:|i| \circ |g|(k)=|i|\circ |h|(k)\]
+    \[\implies\forall k\in G: |g|(k)= |h|(k)\]
+    Then $g=h$, so $i$ is monic.
+
+    Similarly, let $(G',\cdot,1_{G'})$ be an arbitrary monoid 
+    where we have arrows $g',h':(\mathbb{Z},+,0)\rightarrow(G',\cdot,1_{G'})$,
+    and $g'\circ i=h'\circ i$. 
+    As before,
+    \[\forall n\in \mathbb{N}:|g\circ i|(n)=|h\circ i|(n)\]
+    \[\implies\forall n\in \mathbb{N}:|g| \circ |i|(n)=|h|\circ |i|(n)\]
+    \begin{equation}
+        \implies\forall n\in \mathbb{N}: |g|(n)= |h|(n)
+        \label{eq:1}
+    \end{equation}
+    To prove the equality for $n<0$, we use the structure preserving nature of monoid homomorphisms for $g',h'$.
+    By definition,
+    \[\forall n_1,n_2\in\mathbb{Z}:|g'|(n_1+n_2)=|g'|(n_1)\cdot |g'|(n_2) \wedge |g'|(0)=1_{G'}\]
+    \[\forall n_1,n_2\in\mathbb{Z}:|h'|(n_1+n_2)=|h'|(n_1)\cdot |h'|(n_2) \wedge |h'|(0)=1_{G'}\]
+    Then we see that $|g'|(0)=|h'|(0)=1_{G'}$, and if we set $n_2=-n_1$, we have
+    \begin{equation}
+        \forall n\in\mathbb{Z}:|g'|(0)=|g'|(n)\cdot |g'|(-n)=1_{G'}
+        \label{eq:2}
+    \end{equation}
+    \[\forall n\in\mathbb{Z}:|h'|(0)=|h'|(n)\cdot |h'|(-n)=1_{G'}\]
+    By symmetry, since $n\in\mathbb{Z}$, we also have 
+    \[\forall n\in\mathbb{Z}:|g'|(0)=|g'|(-n)\cdot |g'|(n)=1_{G'}\]
+    \begin{equation}
+        \forall n\in\mathbb{Z}:|h'|(0)=|h'|(-n)\cdot |h'|(n)=1_{G'}
+        \label{eq:3}
+    \end{equation}
+    \[\]
+    If $n>0$, then $|g|(n)= |h|(n)$ from (\ref{eq:1}), so using (\ref{eq:2}),
+    \[\forall n\in\mathbb{N}:|h'|(n)\cdot |g'|(-n)=1_{G'}\]
+    Preoperating with $|h'|(-n)$,
+    \[\forall n\in\mathbb{N}:|h'|(-n)\cdot |h'|(n)\cdot |g'|(-n)=|h'|(-n)\cdot 1_{G'}\]
+    \[\implies \forall n\in\mathbb{N}:1_{G'}\cdot |g'|(-n)=|h'|(-n) \quad\text{by (\ref{eq:3})}\]
+    \[\implies \forall n\in\mathbb{N}:|g'|(-n)=|h'|(-n)\]
+    Thus, we have
+    \[\forall n\in\mathbb{Z}:|g'|(n)=|h'|(n)\]
+    so $g'=h'$, and $i$ is epic.
+\end{proof}
+
+\subsection*{(b)}
+\begin{corollary}
+    $i$ is not an iso.
+\end{corollary}
+\begin{proof}
+    Let $j:(\mathbb{Z},+,0)\rightarrow (\mathbb{N},+,0)$ be an arbitrary arrow.
+    Since the underlying function $|i|$ is not surjective, 
+    we will always have 
+    \[|i|\circ|j|\neq\text{id}_{\mathbb{Z}}\]
+    so $i\circ j \neq \text{id}_{\mathbb{Z}}$.
+    $i$ is not an iso.
+\end{proof}
+
+
+\section*{Question 6}
+\addtocounter{section}{1}
+\subsection*{(a)}
+\begin{proof}
+    Suppose we have arrows $k_1:A'\rightarrow A,k_2:B \rightarrow B'$, which exist by definition.
+    Their unique inverses $k_1^{-1}:A\rightarrow A',k_2^{-1}:B' \rightarrow B$ also exist since the arrows are iso.
+
+    We can define a mapping between \textit{homsets} $h:\mathcal{G}(A,B)\rightarrow \mathcal{G}(A',B')$ where
+    \[\forall i\in\mathcal{G}(A,B):h(i)=k_2\circ i\circ k_1\]
+    This mapping is injective,
+    \[\forall i,j \in \mathcal{G}(A,B): h(i)=h(j)\]
+    \[\implies \forall i,j \in \mathcal{G}(A,B):  k_2\circ i \circ k_1 = k_2\circ j\circ k_1\]
+    \[\implies \forall i,j \in \mathcal{G}(A,B):  
+    k_2^{-1}\circ k_2\circ i \circ k_1 \circ k_1^{-1}= k_2^{-1}\circ k_2\circ j\circ k_1\circ k_1^{-1}\]
+    \[\implies \forall i,j \in \mathcal{G}(A,B):  
+    \text{id}_B\circ i \circ \text{id}_A = \text{id}_B\circ j\circ \text{id}_A\]
+    \[\implies \forall i,j \in \mathcal{G}(A,B):  i=j\]
+
+    For surjectivity, for each arrow $i'\in\mathcal{G}(A',B')$, define $i=k_2^{-1}\circ i' \circ k_1^{-1}$ so
+    \[h(i)=k_2\circ k_2^{-1}\circ i' \circ k_1^{-1} \circ k_1 
+    = \text{id}_{B'}\circ i' \circ \text{id}_A = i'\]
+
+    Thus, $h$ is bijective. All homsets have the same cardinality.
+
+
+\end{proof}
+
+\subsection*{(b)}
+Objects are permutations of lists of size $n$ where the entries are integers $n\in\mathbb{Z}$.
+Arrows are the $n!$ possible mappings between objects $A,B$, 
+corresponding to a mapping from the indices of $a\in A$ to the indices of the $b\in B$.
+
+For example, if $n=2$, we can have objects $A=\{(0,1),(1,0)\},B=\{(2,3),(3,2)\}$,
+with 2 arrows $f,g:A\rightarrow B$, 
+\[f(0,1)=g(1,0)=(2,3)\]
+\[f(1,0)=g(0,1)=(3,2)\]
+
+\section*{Question 7}
+\addtocounter{section}{1}
+0 is the zero object.
 
 
 
