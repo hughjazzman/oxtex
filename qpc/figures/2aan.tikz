@@ -1,0 +1,11 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=map] (3) at (0, 0.5) {$f_a$};
+		\node [style=point] (4) at (0, -1) {$x^{(n)}$};
+		\node [style=none] (5) at (0, 2) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=simple] (3) to (4);
+		\draw [style=simple] (5.center) to (3);
+	\end{pgfonlayer}
+\end{tikzpicture}

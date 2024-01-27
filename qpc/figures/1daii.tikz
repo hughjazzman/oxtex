@@ -1,0 +1,21 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (12) at (-1, -1.5) {};
+		\node [style=none] (13) at (1, -1.5) {};
+		\node [style=none] (14) at (1, 1.5) {};
+		\node [style=none] (15) at (-1, 1.5) {};
+		\node [style=grey ddot] (19) at (1, 0) {};
+		\node [style=white ddot] (22) at (-1, 0) {};
+		\node [style=small dhadamard] (23) at (1, 0.75) {};
+		\node [style=small dhadamard] (24) at (1, -0.75) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=thick] (22) to (12.center);
+		\draw [style=thick] (22) to (15.center);
+		\draw [style=thick] (22) to (19);
+		\draw [style=thick] (19) to (23);
+		\draw [style=thick] (14.center) to (23);
+		\draw [style=thick] (19) to (24);
+		\draw [style=thick] (24) to (13.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

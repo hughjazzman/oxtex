@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=white phase ddot] (0) at (0, -3) {$j\pi$};
+		\node [style=grey phase ddot] (1) at (0, 0) {$k\pi$};
+		\node [style=white phase ddot] (2) at (0, -1.5) {$(-1)^k \frac{\pi}{2}$};
+		\node [style=grey phase ddot] (4) at (0, 1.5) {$k\pi$};
+		\node [style=white phase ddot] (5) at (0, 3) {$|j-k|\pi$};
+		\node [style=none] (6) at (0, -4.5) {};
+		\node [style=none] (7) at (0, 4.25) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=thick] (0) to (6.center);
+		\draw [style=thick] (4) to (5);
+		\draw [style=thick] (5) to (7.center);
+		\draw [style=thick] (4) to (1);
+		\draw [style=thick] (1) to (2);
+		\draw [style=thick] (0) to (2);
+	\end{pgfonlayer}
+\end{tikzpicture}

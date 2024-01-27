@@ -1,0 +1,37 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=white phase ddot] (0) at (-7, 0) {$j\pi$};
+		\node [style=white phase ddot] (1) at (2, 0) {$(j+l)\pi$};
+		\node [style=white phase ddot] (2) at (5, 0) {$l\pi$};
+		\node [style=white ddot] (3) at (2, -2) {};
+		\node [style=white ddot] (4) at (-5, -2) {};
+		\node [style=white phase ddot] (5) at (-2, 2) {$j\pi$};
+		\node [style=gray phase ddot] (6) at (-5, 0) {$k\pi$};
+		\node [style=gray ddot] (7) at (-2, -2) {};
+		\node [style=gray phase ddot] (8) at (-2, 0) {$(k+m)\pi$};
+		\node [style=gray phase ddot] (9) at (2, 2) {$m\pi$};
+		\node [style=gray ddot] (10) at (5, -2) {};
+		\node [style=gray phase ddot] (11) at (7, 0) {$m\pi$};
+		\node [style=none] (12) at (-7, -3) {};
+		\node [style=none] (13) at (7, -3) {};
+		\node [style=none] (14) at (2, 4) {};
+		\node [style=none] (15) at (-2, 4) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=thick] (0) to (12.center);
+		\draw [style=thick] (0) to (6);
+		\draw [style=thick] (6) to (4);
+		\draw [style=thick] (4) to (7);
+		\draw [style=thick] (7) to (8);
+		\draw [style=thick] (8) to (5);
+		\draw [style=thick] (5) to (15.center);
+		\draw [style=thick] (14.center) to (9);
+		\draw [style=thick] (7) to (3);
+		\draw [style=thick] (3) to (1);
+		\draw [style=thick] (3) to (10);
+		\draw [style=thick] (9) to (1);
+		\draw [style=thick] (2) to (10);
+		\draw [style=thick] (2) to (11);
+		\draw [style=thick] (11) to (13.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

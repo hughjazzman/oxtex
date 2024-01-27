@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=point] (0) at (0, -1) {$i_k \cdot 0$};
+		\node [style=white phase dot] (1) at (0, 1) {$\pi$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=simple] (1) to (0);
+	\end{pgfonlayer}
+\end{tikzpicture}

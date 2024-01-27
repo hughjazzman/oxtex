@@ -1,0 +1,33 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=white phase ddot] (0) at (-1, -2.75) {$j\pi$};
+		\node [style=white phase ddot] (5) at (-1, 2.75) {$j\pi$};
+		\node [style=gray phase ddot] (9) at (1, 2.75) {$m\pi$};
+		\node [style=gray phase ddot] (11) at (1, -2.75) {$m\pi$};
+		\node [style=none] (12) at (-1, -4) {};
+		\node [style=none] (13) at (1, -4) {};
+		\node [style=none] (14) at (1, 4) {};
+		\node [style=none] (15) at (-1, 4) {};
+		\node [style=white ddot] (19) at (1, 0) {};
+		\node [style=gray ddot] (20) at (-1, 0) {};
+		\node [style=white phase ddot] (21) at (-1, 1.5) {$j\pi$};
+		\node [style=gray phase ddot] (22) at (1, -1.5) {$m\pi$};
+		\node [style=white phase ddot] (23) at (-1, -1.5) {$j\pi$};
+		\node [style=gray phase ddot] (24) at (1, 1.5) {$m\pi$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=thick] (0) to (12.center);
+		\draw [style=thick] (5) to (15.center);
+		\draw [style=thick] (14.center) to (9);
+		\draw [style=thick] (11) to (13.center);
+		\draw [style=thick] (9) to (24);
+		\draw [style=thick] (24) to (19);
+		\draw [style=thick] (19) to (22);
+		\draw [style=thick] (22) to (11);
+		\draw [style=thick] (5) to (21);
+		\draw [style=thick] (21) to (20);
+		\draw [style=thick] (20) to (23);
+		\draw [style=thick] (23) to (0);
+		\draw [style=thick] (20) to (19);
+	\end{pgfonlayer}
+\end{tikzpicture}

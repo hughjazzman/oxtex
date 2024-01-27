@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=gray ddot] (0) at (-1, -0.75) {};
+		\node [style=white phase ddot] (1) at (-1, 1) {$j\pi$};
+		\node [style=gray phase ddot] (2) at (1, 1) {$k\pi$};
+		\node [style=none] (3) at (1, -1) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=thick] (1) to (0);
+		\draw [style=thick] (1) to (2);
+		\draw [style=thick] (3.center) to (2);
+	\end{pgfonlayer}
+\end{tikzpicture}
