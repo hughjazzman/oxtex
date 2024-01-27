@@ -3,9 +3,10 @@
 *.fls
 *.log
 *.gz
-ProblemSheet*
+
 template.tex
 .DS_Store
+
 *.pdf
 !PnC/*.pdf
 !qpc/*.pdf
