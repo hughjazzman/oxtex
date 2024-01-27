@@ -19,6 +19,8 @@
 \newtheorem{conjecture}[theorem]{Conjecture}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
 
 \lstset{
   frame=none,
@@ -52,7 +54,7 @@
 \title{Categories, Proofs, and Processes: \\Assignment 1}
 %
 \author{Wira Azmoon Ahmad}
-\date{22 Jan 2024}
+\date{27 Jan 2024}
 %
 \begin{document}
 %
@@ -84,8 +86,10 @@
 \addtocounter{section}{1}
 For any computable functions $f,g$ of $L$, where $\texttt{cod}(f)=\texttt{dom}(g)$, 
 their composition $g\circ f$ is also computable and hence in $L$.
-The identity function can be defined for each data type, so similar to the set-theoretic view of functions,
-the associativity and identity axioms hold for the composition of computable functions.
+The identity function can be defined for each data type $A$, where $\forall x\in A: id_A(x)=x$,
+for which the identity axiom holds.
+Since functions always produce an output, the associativity axiom will also hold.
+Thus, this is an associated category of $L$.
 
 \section*{Question 2}
 \addtocounter{section}{1}
@@ -210,7 +214,7 @@ along with the domain and codomain as the sets in the binary relations.
 \end{proof}
 \subsection*{(d)}
 \begin{proposition}
-    If $f$ is monic and split epic, the it is iso.
+    If $f$ is monic and split epic, then it is iso.
 \end{proposition}
 \begin{proof}
     Let $f:A\rightarrow B$ be monic and split epic. Since $f$ is split epic,
@@ -260,8 +264,8 @@ along with the domain and codomain as the sets in the binary relations.
     \end{equation}
     To prove the equality for $n<0$, we use the structure preserving nature of monoid homomorphisms for $g',h'$.
     By definition,
-    \[\forall n_1,n_2\in\mathbb{Z}:|g'|(n_1+n_2)=|g'|(n_1)\cdot |g'|(n_2) \wedge |g'|(0)=1_{G'}\]
-    \[\forall n_1,n_2\in\mathbb{Z}:|h'|(n_1+n_2)=|h'|(n_1)\cdot |h'|(n_2) \wedge |h'|(0)=1_{G'}\]
+    \[\forall n_1,n_2\in\mathbb{Z}:|g'|(n_1+n_2)=|g'|(n_1)\cdot |g'|(n_2),\quad |g'|(0)=1_{G'}\]
+    \[\forall n_1,n_2\in\mathbb{Z}:|h'|(n_1+n_2)=|h'|(n_1)\cdot |h'|(n_2),\quad |h'|(0)=1_{G'}\]
     Then we see that $|g'|(0)=|h'|(0)=1_{G'}$, and if we set $n_2=-n_1$, we have
     \begin{equation}
         \forall n\in\mathbb{Z}:|g'|(0)=|g'|(n)\cdot |g'|(-n)=1_{G'}
@@ -292,7 +296,7 @@ along with the domain and codomain as the sets in the binary relations.
 \end{corollary}
 \begin{proof}
     Let $j:(\mathbb{Z},+,0)\rightarrow (\mathbb{N},+,0)$ be an arbitrary arrow.
-    Since the underlying function $|i|$ is not surjective, 
+    Since the underlying function of $i, |i|$, is not surjective, 
     we will always have 
     \[|i|\circ|j|\neq\text{id}_{\mathbb{Z}}\]
     so $i\circ j \neq \text{id}_{\mathbb{Z}}$.
@@ -303,44 +307,55 @@ along with the domain and codomain as the sets in the binary relations.
 \section*{Question 6}
 \addtocounter{section}{1}
 \subsection*{(a)}
+\begin{proposition}
+    For all objects $A,A',B,B'$ of a connected groupoid $\mathcal{G}$, 
+    there is a bijection $\mathcal{G}(A,B)\cong\mathcal{G}(A',B')$.
+\end{proposition}
 \begin{proof}
     Suppose we have arrows $k_1:A'\rightarrow A,k_2:B \rightarrow B'$, which exist by definition.
     Their unique inverses $k_1^{-1}:A\rightarrow A',k_2^{-1}:B' \rightarrow B$ also exist since the arrows are iso.
 
     We can define a mapping between \textit{homsets} $h:\mathcal{G}(A,B)\rightarrow \mathcal{G}(A',B')$ where
     \[\forall i\in\mathcal{G}(A,B):h(i)=k_2\circ i\circ k_1\]
-    This mapping is injective,
-    \[\forall i,j \in \mathcal{G}(A,B): h(i)=h(j)\]
-    \[\implies \forall i,j \in \mathcal{G}(A,B):  k_2\circ i \circ k_1 = k_2\circ j\circ k_1\]
-    \[\implies \forall i,j \in \mathcal{G}(A,B):  
-    k_2^{-1}\circ k_2\circ i \circ k_1 \circ k_1^{-1}= k_2^{-1}\circ k_2\circ j\circ k_1\circ k_1^{-1}\]
-    \[\implies \forall i,j \in \mathcal{G}(A,B):  
-    \text{id}_B\circ i \circ \text{id}_A = \text{id}_B\circ j\circ \text{id}_A\]
-    \[\implies \forall i,j \in \mathcal{G}(A,B):  i=j\]
 
-    For surjectivity, for each arrow $i'\in\mathcal{G}(A',B')$, define $i=k_2^{-1}\circ i' \circ k_1^{-1}$ so
+    Suppose we choose arbitrary $i,j \in \mathcal{G}(A,B)$ such that $h(i)=h(j)$. Then
+\begin{equation}
+\begin{aligned}
+    h(i)=h(j) &\implies k_2\circ i \circ k_1 = k_2\circ j\circ k_1\\
+    &\implies k_2^{-1}\circ k_2\circ i \circ k_1 \circ k_1^{-1}= k_2^{-1}\circ k_2\circ j\circ k_1\circ k_1^{-1}\\
+    &\implies \text{id}_B\circ i \circ \text{id}_A = \text{id}_B\circ j\circ \text{id}_A\\
+    &\implies i=j
+\end{aligned}
+\end{equation}
+    So $h$ is injective.
+    \[\forall i,j \in \mathcal{G}(A,B):h(i)=h(j) \implies i=j\]
+
+    To prove surjectivity, for each arrow $i'\in\mathcal{G}(A',B')$, define $i=k_2^{-1}\circ i' \circ k_1^{-1}$ so
     \[h(i)=k_2\circ k_2^{-1}\circ i' \circ k_1^{-1} \circ k_1 
-    = \text{id}_{B'}\circ i' \circ \text{id}_A = i'\]
+    = \text{id}_{B'}\circ i' \circ \text{id}_{A'} = i'\]
 
     Thus, $h$ is bijective. All homsets have the same cardinality.
-
-
 \end{proof}
 
 \subsection*{(b)}
-Objects are permutations of lists of size $n$ where the entries are integers $n\in\mathbb{Z}$.
-Arrows are the $n!$ possible mappings between objects $A,B$, 
+\begin{example}
+    
+Objects are permutations of lists of size $n$ where the entries are anything.
+Arrows are the $n!$ possible permutations of mappings between objects $A,B$, 
 corresponding to a mapping from the indices of $a\in A$ to the indices of the $b\in B$.
 
 For example, if $n=2$, we can have objects $A=\{(0,1),(1,0)\},B=\{(2,3),(3,2)\}$,
 with 2 arrows $f,g:A\rightarrow B$, 
 \[f(0,1)=g(1,0)=(2,3)\]
 \[f(1,0)=g(0,1)=(3,2)\]
+\end{example}
 
 \section*{Question 7}
 \addtocounter{section}{1}
-0 is the zero object.
-
-
+0 is the only zero object. 
+It is the initial object since for all objects $m\in\mathbb{N}$,
+there exists the unique arrow of the $0\times m$ matrix,
+and is the terminal object since for all objects $n\in\mathbb{N}$,
+there exists the unique arrow of the $n\times 0$ matrix.
 
 \end{document}
