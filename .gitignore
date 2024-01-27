@@ -6,3 +6,7 @@
 ProblemSheet*
 template.tex
 .DS_Store
+*.pdf
+!PnC/*.pdf
+!qpc/*.pdf
+!qs/PS1.pdf
