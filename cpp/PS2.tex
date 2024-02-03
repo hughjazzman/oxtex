@@ -106,28 +106,36 @@
 
 \section*{Question 2}
 \addtocounter{section}{1}
-Consider the category $\mathcal{C}$ of 3 objects $A,B,C$ where $\mathcal{C}(A,B)=\{f\},\mathcal{C}(A,C)=\{g\}$,
+Consider the category $\mathcal{C}$ of 3 objects $A,B,A\times B$ 
+where $\mathcal{C}(A\times B,A)=\{\pi_1\},\mathcal{C}(A\times B, B)=\{\pi_2\}$,
 and there are no other arrows other than the identities.
-Clearly, $A$ is the initial object.
-It has the product $B\times C$ (with the corresponding arrows),
-since only the $(A,f,g)\ A,B$-pairing exists with a unique morphism $\langle f, g\rangle$.
 
-However, it has no terminal objects, since $\mathcal{C}(B,A)=\mathcal{C}(C,B)=\mathcal{C}(B,C)=\emptyset$.
-It also has no coproducts since no object has arrows to at least 2 other objects,
-so there aren't any available $A,B$-pairings to exist with a unique morphism.
+Clearly, $A\times B$ is the initial object.
+
+It has products since the 3 object pairs $(A,B),(A,A\times B),(B, A\times B)$ have the respective products
+$(A\times B, \pi_1,\pi_2), (A\times B, \pi_1,\text{id}_{A\times B}),(A\times B,\text{id}_{A\times B},\pi_2)$
+in the category.
+
+However, it has no terminal objects, since 
+\[\mathcal{C}(A,A\times B)=\mathcal{C}(B,A\times B)=\mathcal{C}(A,B)=\mathcal{C}(B,A)=\emptyset\]
+so each object has another object it has no arrow from.
+
+It also has no coproducts since $A,B$ have no coproduct in $\mathcal{C}$, since 
+\[\forall C\in\text{Ob}(\mathcal{C}):\mathcal{C}(A,C)=\emptyset \vee \mathcal{C}(B,C)=\emptyset\]
+so there is no common object for both $A,B$ to have an arrow towards.
 
 \section*{Optional}
-If $P=NP$, the initial object is the empty language $\emptyset$, 
-% while terminal objects are $NP$-complete problems.
-
-% If $P\neq NP$, the initial object is the empty language
+If $P=NP$, every object is an initial and terminal object, product, and coproduct,
+since there is a reduction between every problem in $NP$.
+If $P\neq NP$, $P$ problems are initial objects and products, 
+and $NP$-complete problems are terminal objects and coproducts.
 
 \clearpage
 \section*{Question 3}
 \addtocounter{section}{1}
 \subsection*{(a)}
 The initial object is the empty category since there is a unique functor from itself to all other categories.
-The terminal object is any category with one object (and hence one identity arrow)
+The terminal object is any category with one object (and one identity arrow)
 since there is a unique functor from every other category to this category.
 
 \subsection*{(b)}
@@ -235,8 +243,14 @@ The projections $\pi_X: X\sqcup Y \rightarrow X, \pi_Y:X\sqcup Y \rightarrow Y$ 
   For all sets $A,B$ and all relations $\{(a_i,b_i)\}_i \subseteq A\times B$ 
   with $a_i \in A, b_i \in B$ in \textbf{Rel},
   define the functors such that
-  \[G:: \{(a_i, b_i)\}_i \mapsto \{(b_i, a_i)\}_i\]
-  \[F:: \{(b_i, a_i)\}_i \mapsto \{(a_i, b_i)\}_i\]
+  \[F:: A\mapsto A,\quad \{(a_i,b_i)\}_i \mapsto \{(b_i,a_i)\}_i\]
+  \[G:: A\mapsto A,\quad \{(b_i,a_i)\}_i \mapsto \{(a_i,b_i)\}_i\]
+  Then we have
+  \[G \circ F\ \{(a_i,b_i)\}_i = G\ \{(b_i,a_i)\}_i = \{(a_i,b_i)\}_i = \text{id}_{\textbf{Rel}}\ \{(a_i,b_i)\}_i\]
+  \[F \circ G\ \{(b_i,a_i)\}_i = F\ \{(a_i,b_i)\}_i = \{(b_i,a_i)\}_i 
+  = \text{id}_{\textbf{Rel}^{\text{op}}}\ \{(b_i,a_i)\}_i\]
+
+
   Then we have $G\circ F = \text{id}_{\textbf{Rel}}, F\circ G = \text{id}_{\textbf{Rel}^{\text{op}}}$ as desired.
 \end{proof}
 
