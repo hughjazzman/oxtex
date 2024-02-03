@@ -10,4 +10,4 @@ template.tex
 *.pdf
 !PnC/*.pdf
 !qpc/*.pdf
-!cpp/PS1.pdf
+!cpp/PS1*.pdf
