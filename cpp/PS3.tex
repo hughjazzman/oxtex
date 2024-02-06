@@ -1,0 +1,282 @@
+% Please do not change %
+\documentclass[11pt]{article} % font size
+\usepackage[margin=1in]{geometry} % margins
+\usepackage{amsmath,amsthm,amssymb,tikz-cd} % for the  common "math symbols"
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[shortlabels]{enumitem} % for enumeration
+\usepackage{booktabs} % if you need tables
+\usepackage{listings}
+\usepackage{color}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% \theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{definition}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+
+\lstset{
+  frame=none,
+  xleftmargin=2pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\ttfamily\tiny\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=haskell,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\small\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
+% Feel free to include additional packages (if needed), but make sure it does not override the margin/font requirements.
+%
+\setlength{\parindent}{0pt} % no indent for new paragraphs.
+\setlength{\parskip}{5pt} % distance between paragraphs, which will be used when you have a blank line in your LaTeX code.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Categories, Proofs, and Processes: \\Assignment 3}
+%
+\author{Wira Azmoon Ahmad}
+\date{11 Feb 2024}
+%
+\begin{document}
+%
+\maketitle
+
+%You may use the usual \LaTeX\ environments to structure your answers:
+%\begin{align}
+%        \label{basegnn}
+%        \mathbf{h}_u^{(t+1)} = \sigma \bigg( \mathbf{W}_\text{self}^{(t)} \mathbf{h}_u^{(t)}  + \mathbf{W}_\text{neigh}^{(t)} \sum_{v \in N(u)} \mathbf{h}_v^{(t)} + \mathbf{b}^{(t)} \bigg): 
+%\end{align}
+
+
+%\begin{table}[h]
+%\caption{A simple table.}
+%\centering
+%\begin{tabular}[t]{lrrrr}
+%\toprule
+%Graphs & Can & Be  & Fun & Too \\ 
+%\midrule 
+%$G_1$ & $1$  & $2$ & $3$ & $4$ \\ 
+%$G_2$ & $-1$  & $-2$ & $-3$ & $-4$ \\ 
+%$G_3$ & $0.1$  & $0.2$ & $0.3$ & $0.4$ \\ 
+%\bottomrule
+%\end{tabular}
+%\label{tab}
+%\end{table}
+
+\section*{Question 1}
+\addtocounter{section}{1}
+
+For each function $f:C\rightarrow D$ in \textbf{Set}, $S$ maps it to the functor
+\[S\ f:\mathcal{C} \rightarrow \mathcal{D}\]
+where $\mathcal{C},\mathcal{D}$ are discrete categories in \textbf{Cat} with $|C|,|D|$ objects respectively.
+
+Then for $a\in C, b\in D, S\ a\in \text{Ob}(\mathcal{C}), S\ b\in \text{Ob}(\mathcal{D})$, the mapping is
+\[S\ f::S\ a \mapsto S\ b \iff f::a\mapsto b\]
+
+\begin{proposition}
+    The functor $S:\textbf{Set}\rightarrow \textbf{Cat}$ is full and faithful.
+\end{proposition}
+
+\begin{proof}
+To show faithfulness, let $f,g:C\rightarrow D$ be arbitrary functions in \textbf{Set} 
+so $S\ f, S\ g: \mathcal{C} \rightarrow \mathcal{D}$.
+Suppose $S\ f=S\ g$. Then since
+\[S\ f::S\ a \mapsto S\ b \iff f::a\mapsto b\]
+\[S\ g::S\ a \mapsto S\ b \iff g::a\mapsto b\]
+we have 
+\[f::a\mapsto b \iff S\ f=S\ g::S\ a \mapsto S\ b \iff g::a\mapsto b\]
+and $f=g$. $S$ is faithful.
+
+For fullness, let $F:\mathcal{C}\rightarrow \mathcal{D}$ be an arbitrary functor in \textbf{Cat}.
+Then we can define $f:C\rightarrow D$ in \textbf{Set} 
+such that $|\text{Ob}(\mathcal{C})|=|C|,|\text{Ob}(\mathcal{D})|=|D|$,
+so $S\ f=F$. So $S$ is full.
+
+\end{proof}
+
+\clearpage
+\section*{Question 2}
+\addtocounter{section}{1}
+
+\begin{definition}
+The bivariant Hom-functor is given by
+\[\mathcal{C}(\_,\_)(A,B):=\mathcal{C}(A,B)\]
+\[\mathcal{C}(\_,\_)(A,f:B\rightarrow C):= \mathcal{C}(A,f),\quad
+\mathcal{C}(\_,\_)(h:C\rightarrow B,A):= \mathcal{C}(h,A)\]
+for all objects and arrows $A,B,C\in\text{Ob}(\mathcal{C}),
+f\in\text{Ar}(\mathcal{C}),h\in\text{Ar}(\mathcal{C}^{\text{op}})$.
+\end{definition}
+
+\begin{proposition}
+The bivariant Hom-functor is a functor.
+\end{proposition}
+
+\begin{proof}
+Let $A,B,C,D\in \text{Ob}(\mathcal{C})=\text{Ob}(\mathcal{C}^{\text{op}})$ be arbitrary objects.
+
+For any object pair $A,B$, the functor has a mapping to the set $\mathcal{C}(A,B)$.
+
+Let $f:B\rightarrow C, g:C\rightarrow D$ be arbitrary arrows in $\mathcal{C}$.
+\begin{equation}
+\begin{aligned}
+\mathcal{C}(\_,\_)(A,g\circ f)&= \mathcal{C}(A,g\circ f)\\
+&= h \mapsto g\circ f\circ h\\
+&= (h' \mapsto g\circ h')\circ (h'' \mapsto f\circ h'')\\
+&= \mathcal{C}(A,g)\circ\mathcal{C}(A,f)\\
+&= \mathcal{C}(\_,\_)(A,g)\circ\mathcal{C}(\_,\_)(A,f)\\
+\end{aligned}
+\end{equation}
+Let $f':C\rightarrow B, g':D\rightarrow C$ be arbitrary arrows in $\mathcal{C}^{\text{op}}$.
+
+\begin{equation}
+\begin{aligned}
+\mathcal{C}(\_,\_)(f'\circ g',A)&= \mathcal{C}(f'\circ g', A)\\
+&= h \mapsto h\circ f'\circ g'\\
+&= (h' \mapsto h'\circ g')\circ (h'' \mapsto h''\circ f')\\
+&= \mathcal{C}(A,g')\circ\mathcal{C}(A,f')\\
+&= \mathcal{C}(\_,\_)(A,g')\circ\mathcal{C}(\_,\_)(A,f')\\
+\end{aligned}
+\end{equation}
+
+For the identity laws,
+\begin{equation}
+\begin{aligned}
+\mathcal{C}(\_,\_)(A,1_B)&= \mathcal{C}(A,1_B)\\
+&= h\mapsto 1_B \circ h\\
+&= h \mapsto h\\
+&= 1_{\mathcal{C}(A,B)}\\
+&= 1_{\mathcal{C}(\_,\_)(A,B)}\\
+\end{aligned}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+\mathcal{C}(\_,\_)(1_B,A)&= \mathcal{C}(1_B, A)\\
+&= h\mapsto h\circ 1_B\\
+&= h \mapsto h\\
+&= 1_{\mathcal{C}(B,A)}\\
+&= 1_{\mathcal{C}(\_,\_)(B,A)}\\
+\end{aligned}
+\end{equation}
+Thus, the bivariant Hom-functor satisfies \textit{functoriality}.
+
+\end{proof}
+
+\section*{Question 3}
+\addtocounter{section}{1}
+\subsection*{(a)}
+\begin{fact}
+    Faithful functors do not, in general, reflect isomorphisms.
+\end{fact}
+
+\begin{example}
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXGJ1bGxldCJdLFsyLDAsIlxcYnVsbGV0Il0sWzYsMCwiXFxidWxsZXQiXSxbOCwwLCJcXGJ1bGxldCJdLFswLDEsImYiLDAseyJvZmZzZXQiOi0xfV0sWzIsMywiRlxcIGYiLDAseyJvZmZzZXQiOi0xfV0sWzMsMiwiKEZcXCBmKV57LTF9PUZcXCBnIiwwLHsib2Zmc2V0IjotMX1dLFswLDEsImciLDIseyJvZmZzZXQiOjF9XV0=
+\[\begin{tikzcd}
+	\bullet && \bullet &&&& \bullet && \bullet
+	\arrow["f", shift left, from=1-1, to=1-3]
+	\arrow["{F\ f}", shift left, from=1-7, to=1-9]
+	\arrow["{(F\ f)^{-1}=F\ g}", shift left, from=1-9, to=1-7]
+	\arrow["g"', shift right, from=1-1, to=1-3]
+\end{tikzcd}\]
+The diagram above shows two-object categories $\mathcal{C},\mathcal{D}$ respectively,
+with the identities assumed but not drawn.
+The functor $F:\mathcal{C}\rightarrow\mathcal{D}$ is clearly faithful.
+The arrows $F\ f,F\ g$ are isomorphic to each other, but $f,g$ are not iso.
+The functor does not reflect isomorphism.
+\end{example}
+
+\subsection*{(b)}
+\begin{proposition}
+    Every full and faithful functor reflects isomorphisms.
+\end{proposition}
+\begin{proof}
+    Let the functor $F:\mathcal{C}\rightarrow \mathcal{D}$ be full and faithful.
+    By faithfulness, for any arrow $g$ in $\mathcal{D}$, there exists an arrow $f$ in $\mathcal{C}$
+    such that $F\ f = g$.
+
+    Suppose we have two iso arrows $g,g^{-1}$ in $\mathcal{C}$.
+    % where $F\ A,F\ B$ exist so
+    Using faithfulness we find $f:A\rightarrow B,f':B' \rightarrow A'$ such that $F\ f=g,F\ f'=g^{-1}$.
+    Since $g,g^{-1}$ are iso, $F\ A=F\ A',F\ B=F\ B'$ so 
+    \[g:F\ A\rightarrow F\ B,\quad g^{-1}: F\ B \rightarrow F\ A\]
+    where
+    \[g^{-1}\circ g = 1_{F\ A},\quad g\circ g^{-1} = 1_{F\ B}\]
+    By functoriality, we have from composition that 
+    \[F(f\circ f')=F\ f\circ F\ f' = g \circ g^{-1}=1_{F\ B}\]
+    \[F(f'\circ f)=F\ f'\circ F\ f = g^{-1} \circ g=1_{F\ A}\]
+    We also have from the identity law that
+    \[F(1_A)=1_{F\ A},\quad F(1_B)=1_{F\ B}\]
+    By fullness,
+    \[F(1_A)=F(f'\circ f)=1_{F\ A} \implies f'\circ f = 1_A\]
+    \[F(1_b)=F(f\circ f')=1_{F\ B} \implies f\circ f' = 1_B\]
+    So $f'=f^{-1}$, and $f,f^{-1}$ are iso.
+
+    Given an iso arrow $F\ f$ in $\mathcal{D}$, we then have an iso arrow $f$ in $\mathcal{C}$.
+    The full and faithful functor reflects isomorphisms.
+
+\end{proof}
+
+\subsection*{(c)}
+\begin{proposition}
+    Every equivalence preserves monics.
+\end{proposition}
+
+\begin{proof}
+    Let $F:\mathcal{C}\rightarrow \mathcal{D}$ be an equivalence, 
+    and let $f:B\rightarrow C$ be a monic arrow in $\mathcal{C}$.
+    Then $F\ f:F\ B\rightarrow F\ C$.
+    Let $F\ g, F\ h:A'\rightarrow F\ B$ be arbitrary arrows in $\mathcal{D}$.
+
+    By equivalence, there exists an object $A$ of $\mathcal{C}$ such that $F(A)\cong A'$.
+
+    By faithfulness, let the arrows $g,h:A\rightarrow B$ be in $\mathcal{C}$.
+
+    Suppose $F\ f\circ F\ g = F\ f\circ F\ h$.
+    By functoriality,
+    \[F(f\circ g)=F(f\circ h)\]
+    By fullness,
+    \[f\circ g = f\circ h\]
+    Since $f$ is monic,
+    \[g=h\]
+    So
+    \[F\ g=F\ h\]
+    Then
+    \[\forall F\ g, F\ h:F\ f\circ F\ g = F\ f\circ F\ h\implies F\ g= F\ h\]
+    so the equivalence preserves monics.
+    
+\end{proof}
+
+\section*{Question 4}
+\addtocounter{section}{1}
+
+
+\section*{Question 5}
+\addtocounter{section}{1}
+
+
+\section*{Question 6}
+\addtocounter{section}{1}
+
+
+
+\end{document}
