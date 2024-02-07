@@ -190,17 +190,24 @@ Thus, the bivariant Hom-functor satisfies \textit{functoriality}.
 \end{fact}
 
 \begin{example}
-% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXGJ1bGxldCJdLFsyLDAsIlxcYnVsbGV0Il0sWzYsMCwiXFxidWxsZXQiXSxbOCwwLCJcXGJ1bGxldCJdLFswLDEsImYiLDAseyJvZmZzZXQiOi0xfV0sWzIsMywiRlxcIGYiLDAseyJvZmZzZXQiOi0xfV0sWzMsMiwiKEZcXCBmKV57LTF9PUZcXCBnIiwwLHsib2Zmc2V0IjotMX1dLFswLDEsImciLDIseyJvZmZzZXQiOjF9XV0=
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJBIl0sWzIsMCwiQiJdLFs2LDAsIkZcXCBBIl0sWzgsMCwiRlxcIEIiXSxbMCwxLCJmIiwwLHsib2Zmc2V0IjotMX1dLFsyLDMsIkZcXCBmIiwwLHsib2Zmc2V0IjotMX1dLFszLDIsIkZcXCBnPShGXFwgZileey0xfSIsMCx7Im9mZnNldCI6LTF9XSxbMSwwLCJnIiwwLHsib2Zmc2V0IjotMX1dXQ==
 \[\begin{tikzcd}
-	\bullet && \bullet &&&& \bullet && \bullet
+	A \arrow["h", loop left] && B \arrow["k", loop right] &&&& {F\ A} && {F\ B}
 	\arrow["f", shift left, from=1-1, to=1-3]
 	\arrow["{F\ f}", shift left, from=1-7, to=1-9]
-	\arrow["{(F\ f)^{-1}=F\ g}", shift left, from=1-9, to=1-7]
-	\arrow["g"', shift right, from=1-1, to=1-3]
+	\arrow["{F\ g=(F\ f)^{-1}}", shift left, from=1-9, to=1-7]
+	\arrow["g", shift left, from=1-3, to=1-1]
 \end{tikzcd}\]
 The diagram above shows two-object categories $\mathcal{C},\mathcal{D}$ respectively,
 with the identities assumed but not drawn.
-The functor $F:\mathcal{C}\rightarrow\mathcal{D}$ is clearly faithful.
+Note that $g\circ f=h\neq 1_A,f\circ g=k\neq 1_B$,
+and $F\ h = 1_{F\ A}, F\ k = 1_{F\ B}$.
+
+$F\ f,F\ g$ in $\mathcal{D}$, are clearly mapped from $f,g$ in $\mathcal{C}$.
+The functor $F:\mathcal{C}\rightarrow\mathcal{D}$ is faithful.
+It can be noted it is not full since $F\ h=F\ 1_A$ but $h\neq 1_A$.
+Fullness is the sufficient condition for reflecting isomorphism, proven in the next question.
+
 The arrows $F\ f,F\ g$ are isomorphic to each other, but $f,g$ are not iso.
 The functor does not reflect isomorphism.
 \end{example}
