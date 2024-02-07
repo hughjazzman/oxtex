@@ -270,12 +270,28 @@ The functor does not reflect isomorphism.
     Then
     \[\forall F\ g, F\ h:F\ f\circ F\ g = F\ f\circ F\ h\implies F\ g= F\ h\]
     so the equivalence preserves monics.
-    
 \end{proof}
 
 \section*{Question 4}
 \addtocounter{section}{1}
+\begin{proposition}
+    If a category $\mathcal{C}$ has a terminal object and pullbacks, it has binary products and equalisers.
+\end{proposition}
+\begin{proof}
+Let $T$ be the terminal object, and let $\tau_A:A\rightarrow T$ 
+denote the unique arrow from an object $A$ to $\tau$.
 
+The morphisms $A\xrightarrow[]{\tau_A}T \xleftarrow[]{\tau_B} B$ 
+then have the pullback $A\xleftarrow[]{p} D\xrightarrow[]{q} B$.
+
+For any morphisms $A\xleftarrow[]{p'} D'\xrightarrow[]{q'} B$, we have by composition,
+\[\tau_A\circ p'=\tau_{D'}=\tau_B \circ q' \implies h':D'\rightarrow D \text{ is unique}\]
+
+
+Then $D$ with morphisms $A\xleftarrow[]{p} D\xrightarrow[]{q} B$  is the product of $A$ and $B$,
+since for all pairs $A\xleftarrow[]{p'} D'\xrightarrow[]{q'} B$, there is the unique morphism
+$h'=\langle p', q'\rangle : D'\rightarrow D$ such that $p'=p\circ h$ and $q'=q\circ h$.
+\end{proof}
 
 \section*{Question 5}
 \addtocounter{section}{1}
