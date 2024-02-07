@@ -91,7 +91,7 @@ For each function $f:C\rightarrow D$ in \textbf{Set}, $S$ maps it to the functor
 \[S\ f:\mathcal{C} \rightarrow \mathcal{D}\]
 where $\mathcal{C},\mathcal{D}$ are discrete categories in \textbf{Cat} with $|C|,|D|$ objects respectively.
 
-Then for $a\in C, b\in D, S\ a\in \text{Ob}(\mathcal{C}), S\ b\in \text{Ob}(\mathcal{D})$, the mapping is
+Then $\forall a\in C, b\in D, S\ a\in \text{Ob}(\mathcal{C}), S\ b\in \text{Ob}(\mathcal{D})$, the mapping is
 \[S\ f::S\ a \mapsto S\ b \iff f::a\mapsto b\]
 
 \begin{proposition}
@@ -158,6 +158,7 @@ Let $f':C\rightarrow B, g':D\rightarrow C$ be arbitrary arrows in $\mathcal{C}^{
 &= \mathcal{C}(\_,\_)(A,g')\circ\mathcal{C}(\_,\_)(A,f')\\
 \end{aligned}
 \end{equation}
+So the composition laws are satisfied.
 
 For the identity laws,
 \begin{equation}
@@ -192,7 +193,7 @@ Thus, the bivariant Hom-functor satisfies \textit{functoriality}.
 \begin{example}
 % https://q.uiver.app/#q=WzAsNCxbMCwwLCJBIl0sWzIsMCwiQiJdLFs2LDAsIkZcXCBBIl0sWzgsMCwiRlxcIEIiXSxbMCwxLCJmIiwwLHsib2Zmc2V0IjotMX1dLFsyLDMsIkZcXCBmIiwwLHsib2Zmc2V0IjotMX1dLFszLDIsIkZcXCBnPShGXFwgZileey0xfSIsMCx7Im9mZnNldCI6LTF9XSxbMSwwLCJnIiwwLHsib2Zmc2V0IjotMX1dXQ==
 \[\begin{tikzcd}
-	A \arrow["h", loop left] && B \arrow["k", loop right] &&&& {F\ A} && {F\ B}
+	A \arrow["h", loop left] && B &&&& {F\ A} && {F\ B}
 	\arrow["f", shift left, from=1-1, to=1-3]
 	\arrow["{F\ f}", shift left, from=1-7, to=1-9]
 	\arrow["{F\ g=(F\ f)^{-1}}", shift left, from=1-9, to=1-7]
@@ -200,13 +201,12 @@ Thus, the bivariant Hom-functor satisfies \textit{functoriality}.
 \end{tikzcd}\]
 The diagram above shows two-object categories $\mathcal{C},\mathcal{D}$ respectively,
 with the identities assumed but not drawn.
-Note that $g\circ f=h\neq 1_A,f\circ g=k\neq 1_B$,
-and $F\ h = 1_{F\ A}, F\ k = 1_{F\ B}$.
+Note that $g\circ f=h\neq 1_A$, and $F\ h = 1_{F\ A}$.
 
 $F\ f,F\ g$ in $\mathcal{D}$, are clearly mapped from $f,g$ in $\mathcal{C}$.
 The functor $F:\mathcal{C}\rightarrow\mathcal{D}$ is faithful.
-It can be noted it is not full since $F\ h=F\ 1_A$ but $h\neq 1_A$.
-Fullness is the sufficient condition for reflecting isomorphism, proven in the next question.
+It can be noted it is not full since $F\ h=F\ 1_A= 1_{F\ A}$ but $h\neq 1_A$.
+Fullness with faithfulness is the sufficient condition for reflecting isomorphism, proven in the next question.
 
 The arrows $F\ f,F\ g$ are isomorphic to each other, but $f,g$ are not iso.
 The functor does not reflect isomorphism.
@@ -258,15 +258,15 @@ The functor does not reflect isomorphism.
 
     By faithfulness, let the arrows $g,h:A\rightarrow B$ be in $\mathcal{C}$.
 
-    Suppose $F\ f\circ F\ g = F\ f\circ F\ h$.
-    By functoriality,
-    \[F(f\circ g)=F(f\circ h)\]
-    By fullness,
-    \[f\circ g = f\circ h\]
-    Since $f$ is monic,
-    \[g=h\]
-    So
-    \[F\ g=F\ h\]
+    Suppose $F\ f\circ F\ g = F\ f\circ F\ h$. Then
+\begin{equation}
+\begin{aligned}
+    F\ f\circ F\ g = F\ f\circ F\ h &\implies F(f\circ g)=F(f\circ h) &&\quad \text{(by functoriality)}\\
+    &\implies f\circ g = f\circ h &&\quad\text{(by fullness)}\\
+    &\implies g=h &&\quad\text{(since $f$ is monic)}\\
+    &\implies F\ g=F\ h
+\end{aligned}
+\end{equation}
     Then
     \[\forall F\ g, F\ h:F\ f\circ F\ g = F\ f\circ F\ h\implies F\ g= F\ h\]
     so the equivalence preserves monics.
