@@ -1,13 +1,14 @@
 % Please do not change %
 \documentclass[11pt]{article} % font size
 \usepackage[margin=1in]{geometry} % margins
-\usepackage{amsmath,amsthm,amssymb,tikz-cd} % for the  common "math symbols"
+\usepackage{amsmath,amsthm,amssymb} % for the  common "math symbols"
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage[shortlabels]{enumitem} % for enumeration
 \usepackage{booktabs} % if you need tables
 \usepackage{listings}
 \usepackage{color}
+\usepackage{quiver}
 \DeclareMathOperator*{\argmax}{argmax}
 \DeclareMathOperator*{\argmin}{argmin}
 
@@ -272,6 +273,7 @@ The functor does not reflect isomorphism.
     so the equivalence preserves monics.
 \end{proof}
 
+\clearpage
 \section*{Question 4}
 \addtocounter{section}{1}
 \begin{proposition}
@@ -279,18 +281,71 @@ The functor does not reflect isomorphism.
 \end{proposition}
 \begin{proof}
 Let $T$ be the terminal object, and let $\tau_A:A\rightarrow T$ 
-denote the unique arrow from an object $A$ to $\tau$.
-
+denote the unique arrow from an object $A$ to $T$.
+% https://q.uiver.app/#q=WzAsNSxbMSwxLCJEIl0sWzAsMCwiRCciXSxbMiwxLCJCIl0sWzEsMiwiQSJdLFsyLDIsIlQiXSxbMSwwLCJoJyIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFswLDIsInEiXSxbMSwyLCJxJyIsMCx7ImN1cnZlIjotMn1dLFswLDMsInAiLDJdLFsxLDMsInAnIiwyLHsiY3VydmUiOjJ9XSxbMyw0LCJcXHRhdV9BIiwyXSxbMiw0LCJcXHRhdV9CIl1d
+\[\begin{tikzcd}
+	{D'} \\
+	& D & B \\
+	& A & T
+	\arrow["{h'}"', dashed, from=1-1, to=2-2]
+	\arrow["q", from=2-2, to=2-3]
+	\arrow["{q'}", curve={height=-12pt}, from=1-1, to=2-3]
+	\arrow["p"', from=2-2, to=3-2]
+	\arrow["{p'}"', curve={height=12pt}, from=1-1, to=3-2]
+	\arrow["{\tau_A}"', from=3-2, to=3-3]
+	\arrow["{\tau_B}", from=2-3, to=3-3]
+\end{tikzcd}\]
 The morphisms $A\xrightarrow[]{\tau_A}T \xleftarrow[]{\tau_B} B$ 
 then have the pullback $A\xleftarrow[]{p} D\xrightarrow[]{q} B$.
 
 For any morphisms $A\xleftarrow[]{p'} D'\xrightarrow[]{q'} B$, we have by composition,
 \[\tau_A\circ p'=\tau_{D'}=\tau_B \circ q' \implies h':D'\rightarrow D \text{ is unique}\]
-
-
 Then $D$ with morphisms $A\xleftarrow[]{p} D\xrightarrow[]{q} B$  is the product of $A$ and $B$,
 since for all pairs $A\xleftarrow[]{p'} D'\xrightarrow[]{q'} B$, there is the unique morphism
-$h'=\langle p', q'\rangle : D'\rightarrow D$ such that $p'=p\circ h$ and $q'=q\circ h$.
+$h'=\langle p', q'\rangle : D'\rightarrow D$ such that $p'=p\circ h'$ and $q'=q\circ h'$.
+
+Using the binary product, we can then show equalisers.
+Suppose we have the parallel morphisms $A\overset{f}{\underset{g}{\rightrightarrows}}B$.
+As shown before, the product $A\times B$ 
+with pullback morphisms $A\xleftarrow[]{\pi_1} D\xrightarrow[]{\pi_2} B$ exist.
+The following diagrams commute.
+% https://q.uiver.app/#q=WzAsNixbMCwyLCJBIl0sWzIsMCwiQiJdLFswLDAsIkFcXHRpbWVzIEIiXSxbNSwwLCJBXFx0aW1lcyBCIl0sWzcsMCwiXFxwaV8yIl0sWzUsMiwiQSJdLFswLDEsImYiLDJdLFswLDIsIlxcbGFuZ2xlMV9BLGZcXHJhbmdsZSIsMix7Im9mZnNldCI6MSwic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzIsMCwiXFxwaV8xIiwyLHsib2Zmc2V0IjoxfV0sWzIsMSwiXFxwaV8yIl0sWzMsNCwiXFxwaV8yIl0sWzMsNSwiXFxwaV8xIiwyLHsib2Zmc2V0IjoxfV0sWzUsMywiXFxsYW5nbGUgMV9BLGdcXHJhbmdsZSIsMix7Im9mZnNldCI6MSwic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzUsNCwiZyIsMl1d
+\[\begin{tikzcd}
+	{A\times B} && B &&& {A\times B} && {\pi_2} \\
+	\\
+	A\arrow["1_A", loop below] &&&&& A\arrow["1_A", loop below]
+	\arrow["f"', from=3-1, to=1-3]
+	\arrow["{\langle1_A,f\rangle}"', shift right, dashed, from=3-1, to=1-1]
+	\arrow["{\pi_1}"', shift right, from=1-1, to=3-1]
+	\arrow["{\pi_2}", from=1-1, to=1-3]
+	\arrow["{\pi_2}", from=1-6, to=1-8]
+	\arrow["{\pi_1}"', shift right, from=1-6, to=3-6]
+	\arrow["{\langle 1_A,g\rangle}"', shift right, dashed, from=3-6, to=1-6]
+	\arrow["g"', from=3-6, to=1-8]
+\end{tikzcd}\]
+
+Then we show that $\pi_1:A\times B\rightarrow A$ is the equaliser of $(f,g)$.
+By the product, we then have
+\[f\circ \pi_1 = \pi_2 = g \circ \pi_1\]
+Suppose we then have a morphism $h:C\rightarrow A$ such that $f\circ h=g\circ h$.
+Then by the product, there is a unique morphism $\hat{h}=\langle h, f\circ h\rangle:C\rightarrow A\times B$ 
+such that $h=\pi_1\circ \hat{h}$. 
+% https://q.uiver.app/#q=WzAsNCxbMiwwLCJBIl0sWzAsMiwiQyJdLFswLDAsIkFcXHRpbWVzIEIiXSxbNCwwLCJCIl0sWzEsMCwiaCJdLFsyLDAsIlxccGlfMSJdLFsxLDMsImZcXGNpcmMgaCA9IGdcXGNpcmMgaCIsMl0sWzAsMywiZiIsMCx7Im9mZnNldCI6LTF9XSxbMSwyLCJcXGxhbmdsZSBoLGZcXGNpcmMgaFxccmFuZ2xlIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzAsMywiZyIsMix7Im9mZnNldCI6MX1dLFsyLDMsIlxccGlfMiIsMCx7ImN1cnZlIjotNH1dXQ==
+\[\begin{tikzcd}
+	{A\times B} && A && B \\
+	\\
+	C
+	\arrow["h", from=3-1, to=1-3]
+	\arrow["{\pi_1}", from=1-1, to=1-3]
+	\arrow["{f\circ h = g\circ h}"', from=3-1, to=1-5]
+	\arrow["f", shift left, from=1-3, to=1-5]
+	\arrow["{\langle h,f\circ h\rangle}", dashed, from=3-1, to=1-1]
+	\arrow["g"', shift right, from=1-3, to=1-5]
+	\arrow["{\pi_2}", curve={height=-24pt}, from=1-1, to=1-5]
+\end{tikzcd}\]
+
+Thus, it is shown that the category $\mathcal{C}$ has binary products and equalisers.
+
 \end{proof}
 
 \section*{Question 5}
