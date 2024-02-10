@@ -85,8 +85,6 @@
 %\label{tab}
 %\end{table}
 
-Writing this here because I keep mixing them up.
-
 A functor $F:\mathcal{C} \rightarrow \mathcal{D}$ is
 \begin{itemize}
     \item \textbf{faithful} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is injective;
@@ -125,7 +123,7 @@ $(S\ f)$ will map every object $(S\ a)$ in $\mathcal{C}$ to an $(S\ b)$ in $\mat
 
 There are no arrows between objects in the discrete categories,
 only identity arrows. For any identity arrow $1_A$ in $\mathcal{C}$,
-\[(S\ f) (1_A\circ 1_A) = (S\ f)(1_A) = 1_{(S\ f) (1_A)}\]
+\[(S\ f) (1_A\circ 1_A) = (S\ f)(1_A) = 1_{(S\ f) (1_A)} = (S\ f) (1_A)\circ(S\ f) (1_A)\]
 \end{proof}
 
 \begin{proposition}
@@ -217,7 +215,7 @@ The diagram above shows two-object categories $\mathcal{C},\mathcal{D}$ respecti
 with the identities assumed but not drawn. 
 The arrow $g=(F\ f)^{-1}:F\ B\rightarrow F\ A$ in $\mathcal{D}$ has no mapping from an arrow in $\mathcal{C}$.
 
-Functoriality is preserved since
+Functoriality is satisfied since
 \[F(1_A) = 1_{F\ A},\quad F(1_B) = 1_{F\ B}\]
 \[F(f\circ 1_A)= F(f) = F(f) \circ 1_{F\ A} = F(f) \circ F(1_A)\]
 \[F(1_B\circ f)= F(f) = 1_{F\ B} \circ F(f) = F(1_B)\circ F(F)\]
@@ -269,7 +267,7 @@ The functor does not reflect isomorphism.
     Let $F:\mathcal{C}\rightarrow \mathcal{D}$ be an equivalence, 
     and let $f:B\rightarrow C$ be a monic arrow in $\mathcal{C}$.
     Then $F\ f:F\ B\rightarrow F\ C$.
-    Let $F\ g, F\ h:A'\rightarrow F\ B$ be arbitrary arrows in $\mathcal{D}$.
+    Using fullness, let $F\ g, F\ h:A'\rightarrow F\ B$ be arbitrary arrows in $\mathcal{D}$.
 
     By equivalence, there exists an object $A$ of $\mathcal{C}$ such that $F(A)\cong A'$.
 
@@ -286,7 +284,7 @@ The functor does not reflect isomorphism.
 \end{equation}
     Then
     \[\forall F\ g, F\ h:F\ f\circ F\ g = F\ f\circ F\ h\implies F\ g= F\ h\]
-    so the equivalence preserves monics.
+    so $F\ f$ is monic and the equivalence preserves monics.
 \end{proof}
 
 \clearpage
@@ -316,6 +314,7 @@ then have the pullback $A\xleftarrow[]{p} D\xrightarrow[]{q} B$.
 
 For any morphisms $A\xleftarrow[]{p'} D'\xrightarrow[]{q'} B$, we have by composition,
 \[\tau_A\circ p'=\tau_{D'}=\tau_B \circ q' \implies h':D'\rightarrow D \text{ is unique}\]
+such that $p'=p\circ h'$ and $q'=q\circ h'$.
 Then $D$ with morphisms $A\xleftarrow[]{p} D\xrightarrow[]{q} B$  is the product of $A$ and $B$,
 since for all pairs $A\xleftarrow[]{p'} D'\xrightarrow[]{q'} B$, there is the unique morphism
 $h'=\langle p', q'\rangle : D'\rightarrow D$ such that $p'=p\circ h'$ and $q'=q\circ h'$.
@@ -323,7 +322,7 @@ $h'=\langle p', q'\rangle : D'\rightarrow D$ such that $p'=p\circ h'$ and $q'=q\
 Using the binary product, we can then show equalisers.
 Suppose we have the parallel morphisms $A\overset{f}{\underset{g}{\rightrightarrows}}B$.
 As shown before, the product $A\times B$ 
-with pullback morphisms $A\xleftarrow[]{\pi_1} D\xrightarrow[]{\pi_2} B$ exist.
+with pullback morphisms $A\xleftarrow[]{\pi_1} A\times B\xrightarrow[]{\pi_2} B$ exist.
 The following diagram with $f$ commutes, and is similar if $g$ is used instead of $f$, 
 where $1_A$ is the identity on $A$.
 % https://q.uiver.app/#q=WzAsNCxbMiwyLCJBIl0sWzQsMCwiQiJdLFsyLDAsIkFcXHRpbWVzIEIiXSxbMCwwLCJBIl0sWzAsMSwiZiIsMl0sWzAsMiwiXFxsYW5nbGUxX0EsZlxccmFuZ2xlIiwyLHsib2Zmc2V0IjoxLCJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMiwxLCJcXHBpXzIiXSxbMiwzLCJcXHBpXzEiLDIseyJvZmZzZXQiOjF9XSxbMCwzLCIxX0EiXV0=
@@ -467,8 +466,8 @@ so $(D\ f)\circ\delta_n = \delta_m$.
 	\\
 	&& {([p],\leq)}
 	\arrow["{D\ f}", from=1-1, to=1-5]
-	\arrow["{\gamma_m}"', from=3-3, to=1-5]
-	\arrow["{\gamma_n}", from=3-3, to=1-1]
+	\arrow["{\delta_m}"', from=3-3, to=1-5]
+	\arrow["{\delta_n}", from=3-3, to=1-1]
 \end{tikzcd}\]
 The limit for $D$ is the object $(\mathbb{N},\leq)$ with its family of arrows 
 containing only the identity, $\{1_{\mathbb{N}}\}$.
