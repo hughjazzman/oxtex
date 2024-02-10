@@ -1,0 +1,461 @@
+% Please do not change %
+\documentclass[11pt]{article} % font size
+\usepackage[margin=1in]{geometry} % margins
+\usepackage{amsmath,amsthm,amssymb,tikz-cd} % for the  common "math symbols"
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[shortlabels]{enumitem} % for enumeration
+\usepackage{booktabs} % if you need tables
+\usepackage{listings}
+\usepackage{color}
+\usepackage{ulem}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% \theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+
+\lstset{
+  frame=none,
+  xleftmargin=2pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\ttfamily\tiny\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=haskell,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\small\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
+% Feel free to include additional packages (if needed), but make sure it does not override the margin/font requirements.
+%
+\setlength{\parindent}{0pt} % no indent for new paragraphs.
+\setlength{\parskip}{5pt} % distance between paragraphs, which will be used when you have a blank line in your LaTeX code.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Categories, Proofs, and Processes: \\Assignment 2}
+%
+\author{Wira Azmoon Ahmad}
+\date{4 Feb 2024}
+%
+\begin{document}
+%
+\maketitle
+
+%You may use the usual \LaTeX\ environments to structure your answers:
+%\begin{align}
+%        \label{basegnn}
+%        \mathbf{h}_u^{(t+1)} = \sigma \bigg( \mathbf{W}_\text{self}^{(t)} \mathbf{h}_u^{(t)}  + \mathbf{W}_\text{neigh}^{(t)} \sum_{v \in N(u)} \mathbf{h}_v^{(t)} + \mathbf{b}^{(t)} \bigg): 
+%\end{align}
+
+
+%\begin{table}[h]
+%\caption{A simple table.}
+%\centering
+%\begin{tabular}[t]{lrrrr}
+%\toprule
+%Graphs & Can & Be  & Fun & Too \\ 
+%\midrule 
+%$G_1$ & $1$  & $2$ & $3$ & $4$ \\ 
+%$G_2$ & $-1$  & $-2$ & $-3$ & $-4$ \\ 
+%$G_3$ & $0.1$  & $0.2$ & $0.3$ & $0.4$ \\ 
+%\bottomrule
+%\end{tabular}
+%\label{tab}
+%\end{table}
+
+\section*{Question 1}
+\addtocounter{section}{1}
+
+\begin{proof}
+\begin{equation}
+\begin{aligned}
+  (g_1 \times g_2)\circ (f_1 \times f_2) 
+  &= (g_1 \times g_2)\circ \langle f_1 \circ \pi_1, f_2 \circ \pi_2 \rangle\\
+  &= \langle g_1 \circ f_1 \circ \pi_1, g_2 \circ f_2 \circ \pi_2 \rangle\\
+  &= (g_1 \circ f_1) \times (g_2 \circ f_2)\\
+\end{aligned}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+  \text{id}_{A_1}\times \text{id}_{A_2} 
+  &= \langle \text{id}_{A_1} \circ \pi_1, \text{id}_{A_2} \circ \pi_2 \rangle\\
+  &= \langle \pi_1 \circ \text{id}_{A_1 \times A_2}, \pi_2 \circ \text{id}_{A_1 \times A_2} \rangle\\
+  &= \text{id}_{A_1 \times A_2}
+\end{aligned}
+\end{equation}
+\end{proof}
+
+{\color{teal}
+By universal property, only one unique arrow $h:A_1\times A_2 \rightarrow C_1\times C_2$.
+
+"Jointly monic"
+}
+
+\section*{Question 2}
+\addtocounter{section}{1}
+% https://q.uiver.app/#q=WzAsMyxbMSwwLCJBXFx0aW1lcyBCIl0sWzIsMCwiQiJdLFswLDAsIkEiXSxbMCwxLCJcXHBpXzIiXSxbMCwyLCJcXHBpXzEiLDJdXQ==
+\[\begin{tikzcd}
+	A & {A\times B} & B
+	\arrow["{\pi_2}", from=1-2, to=1-3]
+	\arrow["{\pi_1}"', from=1-2, to=1-1]
+\end{tikzcd}\]
+
+Consider the category $\mathcal{C}$ of 3 objects $A,B,A\times B$ 
+where $\mathcal{C}(A\times B,A)=\{\pi_1\},\mathcal{C}(A\times B, B)=\{\pi_2\}$,
+and there are no other arrows other than the identities.
+
+Clearly, $A\times B$ is the initial object.
+
+It has products since the 3 object pairs $(A,B),(A,A\times B),(B, A\times B)$ have the respective products
+$(A\times B, \pi_1,\pi_2), (A\times B, \pi_1,\text{id}_{A\times B}),(A\times B,\text{id}_{A\times B},\pi_2)$
+in the category.
+
+However, it has no terminal objects, since 
+\[\mathcal{C}(A,A\times B)=\mathcal{C}(B,A\times B)=\mathcal{C}(A,B)=\mathcal{C}(B,A)=\emptyset\]
+so each object has another object it has no arrow from.
+
+It also has no coproducts since $A,B$ have no coproduct in $\mathcal{C}$, since 
+\[\forall C\in\text{Ob}(\mathcal{C}):\mathcal{C}(A,C)=\emptyset \vee \mathcal{C}(B,C)=\emptyset\]
+so there is no common object for both $A,B$ to have an arrow towards.
+
+\section*{Optional}
+If $P=NP$, every object is an initial and terminal object, product, and coproduct,
+since there is a reduction between every problem in $NP$.
+If $P\neq NP$, $P$ problems are initial objects and products, 
+and $NP$-complete problems are terminal objects and coproducts.
+
+{\color{teal}
+Posets.
+\begin{itemize}
+    \item Binary products - Greatest lower bound / meet / $\wedge$
+    \item Initial object - Global minimal element = 0
+    \item No terminal object - Global maximal element
+    \item Not \textit{all} coproducts - Least upper bound / $\vee$
+\end{itemize}
+\[1\leftarrow 0 \rightarrow 2\]
+
+To build category without coproducts, use complicated inductive proof
+where every time there might be a coproduct, use a map.
+}
+
+\clearpage
+\section*{Question 3}
+\addtocounter{section}{1}
+\subsection*{(a)}
+The initial object is the empty category since there is a unique functor from itself to all other categories.
+The terminal object is any category with one object (and one identity arrow)
+since there is a unique functor from every other category to this category.
+
+{\color{teal}
+Unique function from empty set to any other set $\implies$ unique functor
+% https://q.uiver.app/#q=WzAsNixbMSwwLCJBciJdLFswLDAsIlxceypcXH0iXSxbMiwwLCJcXGVtcHR5c2V0Il0sWzEsMSwiT2IiXSxbMCwxLCJcXHsqXFx9Il0sWzIsMSwiXFxlbXB0eXNldCJdLFswLDFdLFsyLDAsIiIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFswLDMsImRvbSIsMix7Im9mZnNldCI6MX1dLFsxLDQsIiIsMCx7Im9mZnNldCI6LTF9XSxbMiw1LCIiLDIseyJvZmZzZXQiOi0xfV0sWzAsMywiY29kIiwwLHsib2Zmc2V0IjotMX1dLFsyLDUsIiIsMix7Im9mZnNldCI6MX1dLFsxLDQsIiIsMCx7Im9mZnNldCI6MX1dLFs1LDMsIiIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFszLDRdXQ==
+\[\begin{tikzcd}
+	{\{*\}} & Ar & \emptyset \\
+	{\{*\}} & Ob & \emptyset
+	\arrow[from=1-2, to=1-1]
+	\arrow[dashed, from=1-3, to=1-2]
+	\arrow["dom"', shift right, from=1-2, to=2-2]
+	\arrow[shift left, from=1-1, to=2-1]
+	\arrow[shift left, from=1-3, to=2-3]
+	\arrow["cod", shift left, from=1-2, to=2-2]
+	\arrow[shift right, from=1-3, to=2-3]
+	\arrow[shift right, from=1-1, to=2-1]
+	\arrow[dashed, from=2-3, to=2-2]
+	\arrow[from=2-2, to=2-1]
+\end{tikzcd}\]
+}
+
+\subsection*{(b)}
+The projection functors can be defined as
+\[\pi_{\mathcal{C}} :: (A,B) \mapsto A,\quad \pi_{\mathcal{D}} :: (A,B) \mapsto B\]
+\[\pi_{\mathcal{C}} :: (f,g) \mapsto f,\quad \pi_{\mathcal{D}} :: (f,g) \mapsto g\]
+\begin{proposition}
+For any category $\mathcal{E}$ in \textbf{Cat} with functors
+$F:\mathcal{E}\rightarrow \mathcal{C},G:\mathcal{E}\rightarrow \mathcal{D}$,
+there is a unique functor 
+\[\langle F,G\rangle : \mathcal{E} \rightarrow \mathcal{C}\times \mathcal{D}\]
+\end{proposition}
+\begin{proof}
+  Given an arbitrary category $\mathcal{E}$ in \textbf{Cat} 
+  with some object $C\in\text{Ob}(\mathcal{E})$, and some arrow $h\in\text{Ar}(\mathcal{E})$, 
+  as well as functors $F:\mathcal{E}\rightarrow \mathcal{C},G:\mathcal{E}\rightarrow \mathcal{D}$,
+  \[F:: C \mapsto F\ C,\quad h \mapsto F\ h\]
+  \[G:: C \mapsto G\ C,\quad h \mapsto G\ h\]
+  We can define the functor $\langle F,G\rangle:\mathcal{E}\rightarrow \mathcal{C}\times \mathcal{D}$ so
+\[\langle F,G\rangle :: C \mapsto (F\ C,G\ C),\quad h \mapsto (F\ h, G\ h)  \]
+  To show its uniqueness, suppose we have some functor $H:\mathcal{E}\rightarrow \mathcal{C}\times \mathcal{D}$.
+  By composition, we have that 
+  \[\pi_{\mathcal{C}} \circ H = F\]
+  \[\pi_{\mathcal{D}} \circ H = G\]
+  So for any object $C'\in\text{Ob}(\mathcal{E})$, and any arrow $h'\in\text{Ar}(\mathcal{E})$,
+  \[\pi_{\mathcal{C}} \circ H\ C' = F\ C'\]
+  \[\pi_{\mathcal{D}} \circ H\ C' = G\ C'\]
+  \[\pi_{\mathcal{C}} \circ H\ h' = F\ C'\]
+  \[\pi_{\mathcal{D}} \circ H\ h' = G\ C'\]
+  which imply that 
+  \[H\ C' = (F\ C', G\ C')\]
+  \[H\ h' = (F\ h', G\ h')\]
+  Thus, we have that the functor $H=\langle F,G\rangle$ is unique.
+\end{proof}
+{\color{teal}
+
+Prove functoriality for all functors constructed.
+
+\begin{enumerate}
+    \item Write down structure on $\mathcal{C}\times \mathcal{D}$
+    \item Assume I have another such object and build a map $\mathcal{E}\rightarrow\mathcal{C}\times \mathcal{D}$
+    \item Prove that if you had another map (satisfying same properties) then it was the one from 2.
+\end{enumerate}
+\begin{proof}
+    
+% https://q.uiver.app/#q=WzAsNyxbMSwwLCJDXFx0aW1lcyBEIl0sWzMsMCwiQyJdLFsxLDEsIihjLGQpIl0sWzEsMiwiKGMnLGQnKSJdLFszLDEsImMiXSxbMywyLCJjJyJdLFswLDAsIlxccGlfMToiXSxbMCwxXSxbMiwzLCIoZixnKSIsMl0sWzQsNSwiZiJdLFs4LDksIiIsMix7InNob3J0ZW4iOnsic291cmNlIjoyMCwidGFyZ2V0IjoyMH0sInN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=
+\[\begin{tikzcd}
+	{\pi_1:} & {C\times D} && C \\
+	& {(c,d)} && c \\
+	& {(c',d')} && {c'}
+	\arrow[from=1-2, to=1-4]
+	\arrow[""{name=0, anchor=center, inner sep=0}, "{(f,g)}"', from=2-2, to=3-2]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "f", from=2-4, to=3-4]
+	\arrow[shorten <=13pt, shorten >=13pt, Rightarrow, maps to, from=0, to=1]
+\end{tikzcd}\]
+
+% https://q.uiver.app/#q=WzAsMTMsWzAsNCwiXFxtYXRoY2Fse0V9Il0sWzIsNCwiXFxtYXRoY2Fse0N9XFx0aW1lc1xcbWF0aGNhbHtEfSJdLFswLDUsImUiXSxbMCw2LCJoIl0sWzIsNSwiKEZcXCBlLCBHXFwgZSkiXSxbMiw2LCIoRlxcIGUnLCBHXFwgZScpIl0sWzQsNCwiXFxtYXRoY2Fse0N9Il0sWzQsNSwiRlxcIGUiXSxbNCw2LCJGXFwgZSciXSxbMiwwLCJcXG1hdGhjYWx7RX0iXSxbMCwyLCJcXG1hdGhjYWx7Q30iXSxbMiwyLCJcXG1hdGhjYWx7Q31cXHRpbWVzXFxtYXRoY2Fse0R9Il0sWzQsMiwiXFxtYXRoY2Fse0R9Il0sWzAsMV0sWzIsMywiKGYsZykiLDJdLFsxLDZdLFs3LDgsIkZcXCBoIiwyXSxbNCw1LCIoRlxcIGgsIEdcXCBoKSIsMV0sWzksMTAsIkYiLDJdLFs5LDExLCJIIl0sWzksMTIsIkciXSxbMTEsMTBdLFsxMSwxMl0sWzE0LDE3LCIiLDIseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzE3LDE2LCIiLDIseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d
+\[\begin{tikzcd}
+	&& {\mathcal{E}} \\
+	\\
+	{\mathcal{C}} && {\mathcal{C}\times\mathcal{D}} && {\mathcal{D}} \\
+	\\
+	{\mathcal{E}} && {\mathcal{C}\times\mathcal{D}} && {\mathcal{C}} \\
+	e && {(F\ e, G\ e)} && {F\ e} \\
+	h && {(F\ e', G\ e')} && {F\ e'}
+	\arrow[from=5-1, to=5-3]
+	\arrow[""{name=0, anchor=center, inner sep=0}, "{(f,g)}"', from=6-1, to=7-1]
+	\arrow[from=5-3, to=5-5]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "{F\ h}"', from=6-5, to=7-5]
+	\arrow[""{name=2, anchor=center, inner sep=0}, "{(F\ h, G\ h)}"{description}, from=6-3, to=7-3]
+	\arrow["F"', from=1-3, to=3-1]
+	\arrow["H", from=1-3, to=3-3]
+	\arrow["G", from=1-3, to=3-5]
+	\arrow[from=3-3, to=3-1]
+	\arrow[from=3-3, to=3-5]
+	\arrow[shorten <=15pt, shorten >=15pt, Rightarrow, maps to, from=0, to=2]
+	\arrow[shorten <=15pt, shorten >=15pt, Rightarrow, maps to, from=2, to=1]
+\end{tikzcd}\]
+\end{proof}
+}
+
+\subsection*{(c)}
+\begin{proposition}
+  The product functor $-\times -:\mathcal{C}\times \mathcal{C} \rightarrow \mathcal{C}$ satisfies functoriality.
+\end{proposition}
+
+\begin{proof}
+  Suppose we let $F$ be the product functor. 
+  Satisfying \textit{functoriality} means that for any pairs of arrows $(f,g),(f',g')$ 
+  where domains and codomains are defined such that
+  $f\circ f',g\circ g'$ are meaningful, and objects $A,B$ in $\mathcal{C}$,
+  \[F(f,g)\circ F(f',g')=F(f\circ f', g\circ g')\]
+  \[F(\text{id}_A, \text{id}_B)= \text{id}_{F(A,B)}\]
+  From Exercise 1, we have
+  \[ (f\times g)\circ (f' \times g') = (f \circ f') \times (g \circ g')\]
+  \[ \text{id}_A \times \text{id}_B = \text{id}_{A\times B}\]
+  which are equivalent to the \textit{functoriality} axioms, 
+  so the product functor satisfies \textit{functoriality}.
+\end{proof}
+
+\clearpage
+\section*{Question 4}
+\addtocounter{section}{1}
+\subsection*{(a)}
+\begin{corollary}
+  The singleton $\{*\}$ is not a terminal object in \textbf{Rel}.
+\end{corollary}
+\begin{proof}
+{\color{red}\sout{Since any relation $R\subseteq A\times B$ of non-empty sets $A,B$ has size $|R|>1$ if $B=\{*\}\neq \emptyset$,
+the arrows will not be unique.} incorrect}
+
+For example, for the singleton $A=\{a\}$, there can be two relations $S,R:A\rightarrow \{*\}$,
+\[S=\{(a,*)\}\neq \emptyset= R\]
+So there is no unique arrow from object $A$ to $\{*\}$.
+
+The singleton $\{*\}$ cannot be a terminal object in \textbf{Rel}.
+\end{proof}
+
+\subsection*{(b)}
+The projections $\pi_X: X\sqcup Y \rightarrow X, \pi_Y:X\sqcup Y \rightarrow Y$ are
+\[\pi_X = \{((a,1),a)|(a,1) \in X\sqcup Y\}\cong \{a|(a,1) \in X\sqcup Y\}\]
+\[\pi_Y = \{((b,2),b)|(b,2) \in X\sqcup Y\}\cong \{b|(b,2) \in X\sqcup Y\}\]
+\begin{proposition}
+  The disjoint union is a product in \textbf{Rel}.
+\end{proposition}
+\begin{proof}
+  Given an arbitrary set $Z$ with relations $R:Z\rightarrow X, S:Z\rightarrow Y$,
+  we can define the relation $\langle R, S \rangle: Z\rightarrow X\sqcup Y$
+  \[\langle R, S \rangle = \{(a,(b,1))|(a,b)\in R\} \cup \{(c,(d,2))|(c,d)\in S\}\]
+% https://q.uiver.app/#q=WzAsNCxbMiwwLCJYXFxzcWN1cCBZIl0sWzIsMiwiWiJdLFs0LDAsIlkiXSxbMCwwLCJYIl0sWzEsMCwiXFxsYW5nbGUgUixTXFxyYW5nbGUiLDIseyJvZmZzZXQiOjF9XSxbMSwyLCJTIiwyXSxbMCwyLCJcXHBpX1kiXSxbMSwzLCJSIl0sWzAsMywiXFxwaV9YIiwyXSxbMSwwLCJRIiwwLHsib2Zmc2V0IjotMX1dXQ==
+\[\begin{tikzcd}
+	X && {X\sqcup Y} && Y \\
+	\\
+	&& Z
+	\arrow["{\langle R,S\rangle}"', shift right, from=3-3, to=1-3]
+	\arrow["S"', from=3-3, to=1-5]
+	\arrow["{\pi_Y}", from=1-3, to=1-5]
+	\arrow["R", from=3-3, to=1-1]
+	\arrow["{\pi_X}"', from=1-3, to=1-1]
+	\arrow["Q", shift left, from=3-3, to=1-3]
+\end{tikzcd}\]
+
+  Suppose we have some relation $Q:Z\rightarrow X\sqcup Y$. By composition, we have
+  \[\pi_X \circ Q = R\]
+  \[\pi_Y \circ Q = S\]
+  Then we have
+  \[\forall (a,b)\in R, \exists (b,1)\in X\sqcup Y:(a,(b,1))\in Q \wedge b\in \pi_X\]
+  \[\forall (a',b')\in S, \exists (b',2)\in X\sqcup Y:(a',(b',2))\in Q \wedge b'\in \pi_Y\]
+  \[\forall (b,n)\in X\sqcup Y, \exists a\in Z:(a,(b,n))\in Q 
+  \implies (n=1 \wedge (a,b)\in R) \vee (n=2 \wedge (a,b) \in S)\]
+  Respectively, we can then infer
+  \[Q\supseteq \{(a,(b,1))|(a,b)\in R\}\]
+  \[Q\supseteq \{(a',(b',2))|(a',b')\in S\}\]
+  \[Q\subseteq \{(a,(b,1))|(a,b)\in R\} \cup \{(a',(b',2))|(a',b')\in S\}\]
+  Thus, $Q=\langle R, S \rangle$ is the unique relation, and the disjoint union is a product in \textbf{Rel}.
+\end{proof}
+
+{\color{teal}
+Prove the projections are unique.
+\begin{enumerate}
+    \item Write down structure.
+    \item Assume have similar structure that has appropriate map.
+    \item Prove uniqueness of structure.
+\end{enumerate}
+
+
+
+}
+
+\subsection*{(c)}
+\begin{proposition}
+  \[\textbf{Rel}\cong\textbf{Rel}^{\text{op}}\]
+\end{proposition}
+
+\begin{proof}
+  For all sets $A,B$ and all relations $\{(a_i,b_i)\}_i \subseteq A\times B$ 
+  with $a_i \in A, b_i \in B$ in \textbf{Rel},
+  define the functors such that
+  \[F:: A\mapsto A,\quad \{(a_i,b_i)\}_i \mapsto \{(b_i,a_i)\}_i\]
+  \[G:: A\mapsto A,\quad \{(b_i,a_i)\}_i \mapsto \{(a_i,b_i)\}_i\]
+  Then we have
+  \[G \circ F\ \{(a_i,b_i)\}_i = G\ \{(b_i,a_i)\}_i = \{(a_i,b_i)\}_i = \text{id}_{\textbf{Rel}}\ \{(a_i,b_i)\}_i\]
+  \[F \circ G\ \{(b_i,a_i)\}_i = F\ \{(a_i,b_i)\}_i = \{(b_i,a_i)\}_i 
+  = \text{id}_{\textbf{Rel}^{\text{op}}}\ \{(b_i,a_i)\}_i\]
+
+
+  Then we have $G\circ F = \text{id}_{\textbf{Rel}}, F\circ G = \text{id}_{\textbf{Rel}^{\text{op}}}$ as desired.
+\end{proof}
+
+{\color{teal}
+Only one functor $F$ needed to be constructed, check functoriality of $F$.
+% https://q.uiver.app/#q=WzAsMixbMCwwLCJcXG1hdGhjYWx7Q309XFxtYXRoY2Fse0N9XntvcG9wfSJdLFsxLDAsIlxcbWF0aGNhbHtDfV57b3B9Il0sWzAsMSwiRiIsMCx7Im9mZnNldCI6LTF9XSxbMSwwLCJGXntvcH0iLDAseyJvZmZzZXQiOi0xfV1d
+\[\begin{tikzcd}
+	{\mathcal{C}=\mathcal{C}^{opop}} & {\mathcal{C}^{op}}
+	\arrow["F", shift left, from=1-1, to=1-2]
+	\arrow["{F^{op}}", shift left, from=1-2, to=1-1]
+\end{tikzcd}\]
+Functor $F:\mathcal{C}\rightarrow\mathcal{D}$ is pretty much a functor $F^{op}:\mathcal{C}\rightarrow\mathcal{D}$.
+}
+
+\subsection*{(d)}
+\begin{corollary}
+  The coproduct in \textbf{Rel} is the disjoint union.
+\end{corollary}
+\begin{proof}
+  Since the product in \textbf{Rel} is the disjoint union, and \textbf{Rel} $\cong\textbf{Rel}^{\text{op}}$,
+  the product in $\textbf{Rel}^{\text{op}}$ is also the disjoint union.
+  Thus, the coproduct in \textbf{Rel} is also the disjoint union.
+\end{proof}
+
+\section*{Question 5}
+\addtocounter{section}{1}
+\begin{proposition}
+  The functor $F:\textbf{Mat}_{\mathbb{R}}\rightarrow \textbf{FDVector}_{\mathbb{R}}$ is an equivalence.
+\end{proposition}
+
+\begin{proof}
+  Define the object mapping as 
+  \[F:: n \mapsto \mathbb{R}^n\]
+  and the arrow mapping
+  \[M:m\rightarrow n \in \mathbb{R}^{n\times m}\]
+  \[F\ M : \mathbb{R}^m \rightarrow \mathbb{R}^n := (x_1,...,x_m)^T \mapsto M(x_1,...,x_m)^T\]
+  for $M\in\mathbb{R}^{n\times m}$.
+  
+  The functor is full since for every arrow $M,M'$ in $\textbf{Mat}_{\mathbb{R}}$,
+\begin{equation}
+\begin{aligned}
+  F\ M = F\ M' &\implies \forall \vec{x}\in \mathbb{R}^m : M\vec{x} = M'\vec{x}\\
+  &\implies \forall \vec{x}\in \mathbb{R}^m : (M-M')\vec{x}=\vec{0}\\
+  &\implies \forall \vec{x}\in \mathbb{R}^m : M-M'=\vec{0}\\
+  &\implies M = M'
+\end{aligned}
+\end{equation}
+  and is faithful since for every arrow in $\textbf{FDVector}_{\mathbb{R}}$
+  \[N:\mathbb{R}^m \rightarrow \mathbb{R}^n:= (x_1,...,x_m)^T \mapsto M(x_1,...,x_m)^T\]
+  there exists the arrow $M\in \mathbb{R}^{n\times m}$ in $\textbf{Mat}_{\mathbb{R}}$.
+  The functor is essentially surjective since 
+  for every object $R^n\in\{\mathbb{R}^i\}_i,i\in\mathbb{N}$ of $\textbf{FDVector}_{\mathbb{R}}$,
+  there is an object $n\in\mathbb{N}$ of $\textbf{Mat}_{\mathbb{R}}$ where $F(n)\cong R^n$.
+  
+  Thus, the functor is an equivalence.
+\end{proof}
+
+\section*{Question 6}
+\addtocounter{section}{1}
+\begin{proposition}
+  The functor $F:\textbf{Set}\rightarrow \textbf{Mon}$ as defined is faithful but not full.
+\end{proposition}
+\begin{proof}
+The functor is faithful since for all arrows $f,g$ in \textbf{Set},
+\begin{equation}
+\begin{aligned}
+  F\ f = F\ g &\implies \forall x_i \in X: F\ f(x_1...x_n) = F\ g(x_1...x_n)\\
+  &\implies \forall x_i\in X:f(x_1)...f(x_n)=g(x_1)...g(x_n)\\
+  &\implies \forall x_i\in X:f(x_i)=g(x_i)\\
+  &\implies f=g
+\end{aligned}
+\end{equation}
+
+To show that the functor is not full, consider the free monoid on the singleton $\{1\}$, 
+isomorphic to $(\mathbb{N},+,0)$.
+Consider also the function between two singletons $f:\{1\}\rightarrow \{1\}$.
+
+Clearly, there is only one possible function between two singletons, since it is a terminal object.
+
+However, there exists multiple monoid homorphisms $h:(\mathbb{N},+,0)\rightarrow (\mathbb{N},+,0)$.
+Other than one where the underlying function $|h|=\text{id}_{\mathbb{N}}$, we could have $|h|(x)=2x$.
+Note that this is a valid monoid homomorphism which preserves the structure.
+
+Thus, there exists monoid homorphisms which cannot be mapped from any function using the functor.
+The functor is not full.
+
+\end{proof}
+
+
+\end{document}

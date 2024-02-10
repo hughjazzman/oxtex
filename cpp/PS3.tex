@@ -85,15 +85,46 @@
 %\label{tab}
 %\end{table}
 
+Writing this here because I keep mixing them up.
+
+A functor $F:\mathcal{C} \rightarrow \mathcal{D}$ is
+\begin{itemize}
+    \item \textbf{faithful} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is injective;
+    \item \textbf{full} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is surjective
+\end{itemize}
+
 \section*{Question 1}
 \addtocounter{section}{1}
 
 For each function $f:C\rightarrow D$ in \textbf{Set}, $S$ maps it to the functor
 \[S\ f:\mathcal{C} \rightarrow \mathcal{D}\]
 where $\mathcal{C},\mathcal{D}$ are discrete categories in \textbf{Cat} with $|C|,|D|$ objects respectively.
+% https://q.uiver.app/#q=WzAsNixbMCwwLCJcXHRleHRiZntTZXR9Il0sWzIsMCwiXFx0ZXh0YmZ7Q2F0fSJdLFswLDEsIkMiXSxbMCwyLCJEIl0sWzIsMSwiXFxtYXRoY2Fse0N9Il0sWzIsMiwiXFxtYXRoY2Fse0R9Il0sWzAsMSwiUyJdLFs0LDUsIlNcXCBmIl0sWzIsMywiZiIsMl0sWzgsNywiIiwyLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfSwibGV2ZWwiOjEsInN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=
+\[\begin{tikzcd}
+	{\textbf{Set}} && {\textbf{Cat}} \\
+	C && {\mathcal{C}} \\
+	D && {\mathcal{D}}
+	\arrow["S", from=1-1, to=1-3]
+	\arrow[""{name=0, anchor=center, inner sep=0}, "{S\ f}", from=2-3, to=3-3]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "f"', from=2-1, to=3-1]
+	\arrow[shorten <=13pt, shorten >=13pt, maps to, from=1, to=0]
+\end{tikzcd}\]
 
-Then $\forall a\in C, b\in D, S\ a\in \text{Ob}(\mathcal{C}), S\ b\in \text{Ob}(\mathcal{D})$, the mapping is
+Then $\forall a\in C, b\in D, (S\ a)\in \text{Ob}(\mathcal{C}), (S\ b)\in \text{Ob}(\mathcal{D})$, the mapping is
 \[S\ f::S\ a \mapsto S\ b \iff f::a\mapsto b\]
+\[S\ f::1_{(S\ a)} \mapsto 1_{(S\ b)}\iff f::a\mapsto b\]
+
+\begin{proposition}
+    $\forall f\in \text{Ar}(\textbf{Set}),(S\ f):\mathcal{C}\rightarrow \mathcal{D}$ satisfies functoriality.
+\end{proposition}
+\begin{proof}
+Since there is a valid function where $\forall a\in C,f(a)=b$,
+$(S\ f)$ will map every object $(S\ a)$ in $\mathcal{C}$ to an $(S\ b)$ in $\mathcal{D}$.
+
+There are no arrows between objects in the discrete categories,
+only identity arrows. For any identity arrow $1_A$ in $\mathcal{C}$,
+\[(S\ f) (1_A\circ 1_A) = (S\ f)(1_A) = 1_{(S\ f) (1_A)}\]
+\end{proof}
 
 \begin{proposition}
     The functor $S:\textbf{Set}\rightarrow \textbf{Cat}$ is full and faithful.
@@ -102,31 +133,30 @@ Then $\forall a\in C, b\in D, S\ a\in \text{Ob}(\mathcal{C}), S\ b\in \text{Ob}(
 \begin{proof}
 To show faithfulness, let $f,g:C\rightarrow D$ be arbitrary functions in \textbf{Set} 
 so $S\ f, S\ g: \mathcal{C} \rightarrow \mathcal{D}$.
-Suppose $S\ f=S\ g$. Then since
+Suppose $S\ f=S\ g$. Then since for all $a\in C$,
 \[S\ f::S\ a \mapsto S\ b \iff f::a\mapsto b\]
 \[S\ g::S\ a \mapsto S\ b \iff g::a\mapsto b\]
 we have 
-\[f::a\mapsto b \iff S\ f=S\ g::S\ a \mapsto S\ b \iff g::a\mapsto b\]
+\[\forall a\in C:f::a\mapsto b \iff S\ f=S\ g::S\ a \mapsto S\ b \iff g::a\mapsto b\]
 and $f=g$. $S$ is faithful.
 
-For fullness, let $F:\mathcal{C}\rightarrow \mathcal{D}$ be an arbitrary functor in \textbf{Cat}.
-Then we can define $f:C\rightarrow D$ in \textbf{Set} 
-such that $|\text{Ob}(\mathcal{C})|=|C|,|\text{Ob}(\mathcal{D})|=|D|$,
-so $S\ f=F$. So $S$ is full.
+For fullness, let $F:\mathcal{C}\rightarrow \mathcal{D}$ be an arbitrary functor in \textbf{Cat}$(S\ A, S\ B)$,
+where $A,B$ are sets in \textbf{Set}.
+Since there exists the function $f:A\rightarrow B$ in $\textbf{Set}$,
+then $S\ f=F$.
+So $S$ is full.
 
 \end{proof}
 
-\clearpage
 \section*{Question 2}
 \addtocounter{section}{1}
 
 \begin{definition}
 The bivariant Hom-functor is given by
 \[\mathcal{C}(\_,\_)(A,B):=\mathcal{C}(A,B)\]
-\[\mathcal{C}(\_,\_)(A,f:B\rightarrow C):= \mathcal{C}(A,f),\quad
-\mathcal{C}(\_,\_)(h:C\rightarrow B,A):= \mathcal{C}(h,A)\]
-for all objects and arrows $A,B,C\in\text{Ob}(\mathcal{C}),
-f\in\text{Ar}(\mathcal{C}),h\in\text{Ar}(\mathcal{C}^{\text{op}})$.
+\[\mathcal{C}(\_,\_)(g:B\rightarrow A,f:C\rightarrow D):= h\mapsto f\circ h\circ g,\forall h\in\mathcal{C}(A,C)\]
+
+for all objects and arrows $A,B,C,D\in\text{Ob}(\mathcal{C}),f,g\in\text{Ar}(\mathcal{C})$.
 \end{definition}
 
 \begin{proposition}
@@ -134,50 +164,32 @@ The bivariant Hom-functor is a functor.
 \end{proposition}
 
 \begin{proof}
-Let $A,B,C,D\in \text{Ob}(\mathcal{C})=\text{Ob}(\mathcal{C}^{\text{op}})$ be arbitrary objects.
+Let $A,B,C,D,E,F\in \text{Ob}(\mathcal{C})=\text{Ob}(\mathcal{C}^{\text{op}})$ be arbitrary objects.
 
 For any object pair $A,B$, the functor has a mapping to the set $\mathcal{C}(A,B)$.
 
-Let $f:B\rightarrow C, g:C\rightarrow D$ be arbitrary arrows in $\mathcal{C}$.
+Let $f:A\rightarrow B, g:B\rightarrow C$ be arbitrary arrows in $\mathcal{C}$,
+and $h:E\rightarrow D, k:F\rightarrow E$ be arbitrary arrows in $\mathcal{C}^{\text{op}}$.
 \begin{equation}
 \begin{aligned}
-\mathcal{C}(\_,\_)(A,g\circ f)&= \mathcal{C}(A,g\circ f)\\
-&= h \mapsto g\circ f\circ h\\
-&= (h' \mapsto g\circ h')\circ (h'' \mapsto f\circ h'')\\
-&= \mathcal{C}(A,g)\circ\mathcal{C}(A,f)\\
-&= \mathcal{C}(\_,\_)(A,g)\circ\mathcal{C}(\_,\_)(A,f)\\
+\mathcal{C}(\_,\_)(h,g)\circ\mathcal{C}(\_,\_)(k,f) 
+&= (p \mapsto g \circ p\circ h)\circ(p'\mapsto f \circ p'\circ k)\\
+&= (p \mapsto g \circ (f\circ p \circ k) \circ h)\\
+&= (p \mapsto (g \circ f)\circ p \circ (k \circ h))\\
+&= \mathcal{C}(\_,\_)(h\circ k,g\circ f)\\
+&= \mathcal{C}(\_,\_)((h,g)\circ(k,f))
 \end{aligned}
 \end{equation}
-Let $f':C\rightarrow B, g':D\rightarrow C$ be arbitrary arrows in $\mathcal{C}^{\text{op}}$.
-
-\begin{equation}
-\begin{aligned}
-\mathcal{C}(\_,\_)(f'\circ g',A)&= \mathcal{C}(f'\circ g', A)\\
-&= h \mapsto h\circ f'\circ g'\\
-&= (h' \mapsto h'\circ g')\circ (h'' \mapsto h''\circ f')\\
-&= \mathcal{C}(A,g')\circ\mathcal{C}(A,f')\\
-&= \mathcal{C}(\_,\_)(A,g')\circ\mathcal{C}(\_,\_)(A,f')\\
-\end{aligned}
-\end{equation}
-So the composition laws are satisfied.
+So the composition law is satisfied.
 
 For the identity laws,
 \begin{equation}
 \begin{aligned}
-\mathcal{C}(\_,\_)(A,1_B)&= \mathcal{C}(A,1_B)\\
-&= h\mapsto 1_B \circ h\\
+\mathcal{C}(\_,\_)(1_A,1_B)&= \mathcal{C}(1_A,1_B)\\
+&= h\mapsto 1_B \circ h \circ 1_A\\
 &= h \mapsto h\\
 &= 1_{\mathcal{C}(A,B)}\\
 &= 1_{\mathcal{C}(\_,\_)(A,B)}\\
-\end{aligned}
-\end{equation}
-\begin{equation}
-\begin{aligned}
-\mathcal{C}(\_,\_)(1_B,A)&= \mathcal{C}(1_B, A)\\
-&= h\mapsto h\circ 1_B\\
-&= h \mapsto h\\
-&= 1_{\mathcal{C}(B,A)}\\
-&= 1_{\mathcal{C}(\_,\_)(B,A)}\\
 \end{aligned}
 \end{equation}
 Thus, the bivariant Hom-functor satisfies \textit{functoriality}.
@@ -192,24 +204,27 @@ Thus, the bivariant Hom-functor satisfies \textit{functoriality}.
 \end{fact}
 
 \begin{example}
-% https://q.uiver.app/#q=WzAsNCxbMCwwLCJBIl0sWzIsMCwiQiJdLFs2LDAsIkZcXCBBIl0sWzgsMCwiRlxcIEIiXSxbMCwxLCJmIiwwLHsib2Zmc2V0IjotMX1dLFsyLDMsIkZcXCBmIiwwLHsib2Zmc2V0IjotMX1dLFszLDIsIkZcXCBnPShGXFwgZileey0xfSIsMCx7Im9mZnNldCI6LTF9XSxbMSwwLCJnIiwwLHsib2Zmc2V0IjotMX1dXQ==
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJBIl0sWzIsMCwiQiJdLFs2LDAsIkZcXCBBIl0sWzgsMCwiRlxcIEIiXSxbMCwxLCJmIl0sWzIsMywiRlxcIGYiLDAseyJvZmZzZXQiOi0xfV0sWzMsMiwiZz0oRlxcIGYpXnstMX0iLDAseyJvZmZzZXQiOi0xfV1d
 \[\begin{tikzcd}
-	A \arrow["h", loop left] && B &&&& {F\ A} && {F\ B}
-	\arrow["f", shift left, from=1-1, to=1-3]
+	A && B &&&& {F\ A} && {F\ B}
+	\arrow["f", from=1-1, to=1-3]
 	\arrow["{F\ f}", shift left, from=1-7, to=1-9]
-	\arrow["{F\ g=(F\ f)^{-1}}", shift left, from=1-9, to=1-7]
-	\arrow["g", shift left, from=1-3, to=1-1]
+	\arrow["{g=(F\ f)^{-1}}", shift left, from=1-9, to=1-7]
 \end{tikzcd}\]
 The diagram above shows two-object categories $\mathcal{C},\mathcal{D}$ respectively,
-with the identities assumed but not drawn.
-Note that $g\circ f=h\neq 1_A$, and $F\ h = 1_{F\ A}$.
+with the identities assumed but not drawn. 
+The arrow $g=(F\ f)^{-1}:F\ B\rightarrow F\ A$ in $\mathcal{D}$ has no mapping from an arrow in $\mathcal{C}$.
 
-$F\ f,F\ g$ in $\mathcal{D}$, are clearly mapped from $f,g$ in $\mathcal{C}$.
-The functor $F:\mathcal{C}\rightarrow\mathcal{D}$ is faithful.
-It can be noted it is not full since $F\ h=F\ 1_A= 1_{F\ A}$ but $h\neq 1_A$.
-Fullness with faithfulness is the sufficient condition for reflecting isomorphism, proven in the next question.
+Functoriality is preserved since
+\[F(1_A) = 1_{F\ A},\quad F(1_B) = 1_{F\ B}\]
+\[F(f\circ 1_A)= F(f) = F(f) \circ 1_{F\ A} = F(F) \circ F(1_A)\]
+\[F(1_B\circ f)= F(f) = 1_{F\ B} \circ F(f) = F(1_B)\circ F(F)\]
 
-The arrows $F\ f,F\ g$ are isomorphic to each other, but $f,g$ are not iso.
+The functor $F:\mathcal{C}\rightarrow\mathcal{D}$ is faithful since 
+\[F\ f\neq F\ 1_A = 1_{F\ A} \neq F\ 1_B = 1_{F\ B}\]
+It can be noted it is not full because of the arrow $g$ in $\mathcal{D}$.
+
+The arrow $F\ f$ is isomorphic (to $(F\ f)^{-1}$) but $f$ is not iso.
 The functor does not reflect isomorphism.
 \end{example}
 
@@ -219,12 +234,11 @@ The functor does not reflect isomorphism.
 \end{proposition}
 \begin{proof}
     Let the functor $F:\mathcal{C}\rightarrow \mathcal{D}$ be full and faithful.
-    By faithfulness, for any arrow $g$ in $\mathcal{D}$, there exists an arrow $f$ in $\mathcal{C}$
+    By fullness, for any arrow $g$ in $\mathcal{D}$, there exists an arrow $f$ in $\mathcal{C}$
     such that $F\ f = g$.
 
     Suppose we have two iso arrows $g,g^{-1}$ in $\mathcal{C}$.
-    % where $F\ A,F\ B$ exist so
-    Using faithfulness we find $f:A\rightarrow B,f':B' \rightarrow A'$ such that $F\ f=g,F\ f'=g^{-1}$.
+    Using fullness we find $f:A\rightarrow B,f':B' \rightarrow A'$ such that $F\ f=g,F\ f'=g^{-1}$.
     Since $g,g^{-1}$ are iso, $F\ A=F\ A',F\ B=F\ B'$ so 
     \[g:F\ A\rightarrow F\ B,\quad g^{-1}: F\ B \rightarrow F\ A\]
     where
@@ -234,9 +248,9 @@ The functor does not reflect isomorphism.
     \[F(f'\circ f)=F\ f'\circ F\ f = g^{-1} \circ g=1_{F\ A}\]
     We also have from the identity law that
     \[F(1_A)=1_{F\ A},\quad F(1_B)=1_{F\ B}\]
-    By fullness,
+    By faithfulness,
     \[F(1_A)=F(f'\circ f)=1_{F\ A} \implies f'\circ f = 1_A\]
-    \[F(1_b)=F(f\circ f')=1_{F\ B} \implies f\circ f' = 1_B\]
+    \[F(1_B)=F(f\circ f')=1_{F\ B} \implies f\circ f' = 1_B\]
     So $f'=f^{-1}$, and $f,f^{-1}$ are iso.
 
     Given an iso arrow $F\ f$ in $\mathcal{D}$, we then have an iso arrow $f$ in $\mathcal{C}$.
@@ -257,13 +271,13 @@ The functor does not reflect isomorphism.
 
     By equivalence, there exists an object $A$ of $\mathcal{C}$ such that $F(A)\cong A'$.
 
-    By faithfulness, let the arrows $g,h:A\rightarrow B$ be in $\mathcal{C}$.
+    By fullness, let the arrows $g,h:A\rightarrow B$ be in $\mathcal{C}$.
 
     Suppose $F\ f\circ F\ g = F\ f\circ F\ h$. Then
 \begin{equation}
 \begin{aligned}
     F\ f\circ F\ g = F\ f\circ F\ h &\implies F(f\circ g)=F(f\circ h) &&\quad \text{(by functoriality)}\\
-    &\implies f\circ g = f\circ h &&\quad\text{(by fullness)}\\
+    &\implies f\circ g = f\circ h &&\quad\text{(by faithfulness)}\\
     &\implies g=h &&\quad\text{(since $f$ is monic)}\\
     &\implies F\ g=F\ h
 \end{aligned}
@@ -308,7 +322,8 @@ Using the binary product, we can then show equalisers.
 Suppose we have the parallel morphisms $A\overset{f}{\underset{g}{\rightrightarrows}}B$.
 As shown before, the product $A\times B$ 
 with pullback morphisms $A\xleftarrow[]{\pi_1} D\xrightarrow[]{\pi_2} B$ exist.
-The following diagram with $f$ commutes, and is similar if $g$ is used instead of $f$.
+The following diagram with $f$ commutes, and is similar if $g$ is used instead of $f$, 
+where $1_A$ is the identity on $A$.
 % https://q.uiver.app/#q=WzAsNCxbMiwyLCJBIl0sWzQsMCwiQiJdLFsyLDAsIkFcXHRpbWVzIEIiXSxbMCwwLCJBIl0sWzAsMSwiZiIsMl0sWzAsMiwiXFxsYW5nbGUxX0EsZlxccmFuZ2xlIiwyLHsib2Zmc2V0IjoxLCJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMiwxLCJcXHBpXzIiXSxbMiwzLCJcXHBpXzEiLDIseyJvZmZzZXQiOjF9XSxbMCwzLCIxX0EiXV0=
 \[\begin{tikzcd}
 	A && {A\times B} && B \\
@@ -369,6 +384,8 @@ such that $h=e\circ \hat{h}$.
 	\arrow["h"', from=2-1, to=1-2]
 	\arrow["{\hat{h}}", dashed, from=2-1, to=1-1]
 \end{tikzcd}\]
+Then $e:E\rightarrow A$, the pullback of $(\langle 1_A, f\rangle,\langle 1_A, g\rangle)$,
+is the equaliser of $(f,g)$ where  $A\overset{f}{\underset{g}{\rightrightarrows}}B$.
 
 Thus, it is shown that the category $\mathcal{C}$ has binary products and equalisers.
 
@@ -376,10 +393,46 @@ Thus, it is shown that the category $\mathcal{C}$ has binary products and equali
 
 \section*{Question 5}
 \addtocounter{section}{1}
+\begin{proposition}
+    If $ABCD,BEDF$ are pullback squares, then so is $AECF$.
+\end{proposition}
 
+
+% https://q.uiver.app/#q=WzAsNyxbMSwyLCJBIl0sWzMsMiwiQiJdLFs1LDIsIkUiXSxbNSw0LCJGIl0sWzMsNCwiRCJdLFsxLDQsIkMiXSxbMCwwLCJHIl0sWzAsMSwiYSJdLFsxLDIsImIiXSxbMiwzLCJlIl0sWzEsNCwiZCJdLFswLDUsImMiLDJdLFs1LDQsImYiLDJdLFs0LDMsImciLDJdLFs2LDUsInAiLDIseyJjdXJ2ZSI6Mn1dLFs2LDIsInEiLDAseyJjdXJ2ZSI6LTF9XSxbNiwxLCJoJyIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFs2LDAsImgiLDIseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=
+\[\begin{tikzcd}
+	G \\
+	\\
+	& A && B && E \\
+	\\
+	& C && D && F
+	\arrow["a", from=3-2, to=3-4]
+	\arrow["b", from=3-4, to=3-6]
+	\arrow["e", from=3-6, to=5-6]
+	\arrow["d", from=3-4, to=5-4]
+	\arrow["c"', from=3-2, to=5-2]
+	\arrow["f"', from=5-2, to=5-4]
+	\arrow["g"', from=5-4, to=5-6]
+	\arrow["p"', curve={height=12pt}, from=1-1, to=5-2]
+	\arrow["q", curve={height=-6pt}, from=1-1, to=3-6]
+	\arrow["{h'}"', dashed, from=1-1, to=3-4]
+	\arrow["h"', dashed, from=1-1, to=3-2]
+\end{tikzcd}\]
+\begin{proof}
+Suppose we have morphisms $C\xleftarrow[]{p}G\xrightarrow[]{q}E$ such that $(g\circ f)\circ p=e\circ q$.
+
+By the pullback square $BEDF$,
+\[e\circ q = g\circ (f\circ p)\implies \exists! h':G\rightarrow B, q=b\circ h' \wedge f\circ p = d\circ h'\]
+By the pullback square $ABCD$ and using $h'$,
+\[d\circ h'=f\circ p \implies \exists! h:G\circ A, p=c\circ h \wedge h'=a\circ h\]
+From the unique $h,h'$ such that $q=b\circ h',h'=a\circ h$, 
+then $h$ is the unique morphism where $q=b\circ a\circ h$.
+Then combining $q=b\circ a\circ h$ with $p=c\circ h$ (from pullback square $ABCD$) where $h$ is unique, 
+$AECF$ is also a pullback square.
+\end{proof}
 
 \section*{Question 6}
 \addtocounter{section}{1}
+
 
 
 
