@@ -126,6 +126,26 @@ only identity arrows. For any identity arrow $1_A$ in $\mathcal{C}$,
 \[(S\ f) (1_A\circ 1_A) = (S\ f)(1_A) = 1_{(S\ f) (1_A)} = (S\ f) (1_A)\circ(S\ f) (1_A)\]
 \end{proof}
 
+\begin{fact}
+    The functor $S:\textbf{Set}\rightarrow \textbf{Cat}$ satisfies functoriality.
+\end{fact}
+
+\begin{proof}
+    Every object set $A$ in \textbf{Set} will get mapped to a discrete category $S\ A$ in \textbf{Cat}.
+    For every pairs of functions $f:A\rightarrow B,g:B\rightarrow C$ in \textbf{Set},
+    and $a\in A,c\in C$,
+\begin{equation}
+\begin{aligned}
+    (S (g\circ f)) :: S\ a \mapsto S\ c &\iff g\circ f(a) = c\\
+    &\iff \exists b\in B: f(a) = b \wedge g(b) = c\\
+    &\iff \exists b\in B: S\ f:: S\ a \mapsto S\ b \wedge S\ g:: S\ b \mapsto S\ c\\
+    &\iff (S\ g \circ S\ f):: S\ a \mapsto S\ c
+\end{aligned}
+\end{equation}
+    \[S\ 1_A :: S\ a \mapsto S\ a = 1_{S\ A}\]
+    Then functoriality is satisfied.
+\end{proof}
+
 \begin{proposition}
     The functor $S:\textbf{Set}\rightarrow \textbf{Cat}$ is full and faithful.
 \end{proposition}
@@ -142,12 +162,15 @@ and $f=g$. $S$ is faithful.
 
 For fullness, let $F:\mathcal{C}\rightarrow \mathcal{D}$ be an arbitrary functor in \textbf{Cat}$(S\ A, S\ B)$,
 where $A,B$ are sets in \textbf{Set}.
-Since there exists the function $f:A\rightarrow B$ in $\textbf{Set}$,
-then $S\ f=F$.
+Let $f:A\rightarrow B$.
+For each object $S\ a$ in $S\ A$ where $F :: S\ a \mapsto S\ b$, 
+we can have some $a\in A, f(a)=b$ since $S\ A$ has $|A|$ objects.
+Then $S\ f=F$.
 So $S$ is full.
 
 \end{proof}
 
+\clearpage
 \section*{Question 2}
 \addtocounter{section}{1}
 
@@ -196,6 +219,7 @@ Thus, the bivariant Hom-functor satisfies \textit{functoriality}.
 
 \end{proof}
 
+\clearpage
 \section*{Question 3}
 \addtocounter{section}{1}
 \subsection*{(a)}
