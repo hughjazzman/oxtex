@@ -12,4 +12,5 @@ template.tex
 !qpc/*.pdf
 !cpp/PS1*.pdf
 !cpp/PS2*.pdf
-!cpp/PS3.pdf
+!cpp/PS3*.pdf
+!cpp/PS4.pdf
