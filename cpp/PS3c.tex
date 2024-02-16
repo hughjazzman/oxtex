@@ -1,0 +1,634 @@
+% Please do not change %
+\documentclass[11pt]{article} % font size
+\usepackage[margin=1in]{geometry} % margins
+\usepackage{amsmath,amsthm,amssymb} % for the  common "math symbols"
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[shortlabels]{enumitem} % for enumeration
+\usepackage{booktabs} % if you need tables
+\usepackage{listings}
+\usepackage{color}
+\usepackage{quiver}
+\usepackage{ulem}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% \theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{definition}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+
+\lstset{
+  frame=none,
+  xleftmargin=2pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\ttfamily\tiny\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=haskell,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\small\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
+% Feel free to include additional packages (if needed), but make sure it does not override the margin/font requirements.
+%
+\setlength{\parindent}{0pt} % no indent for new paragraphs.
+\setlength{\parskip}{5pt} % distance between paragraphs, which will be used when you have a blank line in your LaTeX code.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Categories, Proofs, and Processes: \\Assignment 3}
+%
+\author{Wira Azmoon Ahmad}
+\date{11 Feb 2024}
+%
+\begin{document}
+%
+\maketitle
+
+%You may use the usual \LaTeX\ environments to structure your answers:
+%\begin{align}
+%        \label{basegnn}
+%        \mathbf{h}_u^{(t+1)} = \sigma \bigg( \mathbf{W}_\text{self}^{(t)} \mathbf{h}_u^{(t)}  + \mathbf{W}_\text{neigh}^{(t)} \sum_{v \in N(u)} \mathbf{h}_v^{(t)} + \mathbf{b}^{(t)} \bigg): 
+%\end{align}
+
+
+%\begin{table}[h]
+%\caption{A simple table.}
+%\centering
+%\begin{tabular}[t]{lrrrr}
+%\toprule
+%Graphs & Can & Be  & Fun & Too \\ 
+%\midrule 
+%$G_1$ & $1$  & $2$ & $3$ & $4$ \\ 
+%$G_2$ & $-1$  & $-2$ & $-3$ & $-4$ \\ 
+%$G_3$ & $0.1$  & $0.2$ & $0.3$ & $0.4$ \\ 
+%\bottomrule
+%\end{tabular}
+%\label{tab}
+%\end{table}
+
+A functor $F:\mathcal{C} \rightarrow \mathcal{D}$ is
+\begin{itemize}
+    \item \textbf{faithful} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is injective;
+    \item \textbf{full} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is surjective
+\end{itemize}
+
+\section*{Question 1}
+\addtocounter{section}{1}
+
+For each function $f:C\rightarrow D$ in \textbf{Set}, $S$ maps it to the functor
+\[S\ f:\mathcal{C} \rightarrow \mathcal{D}\]
+where $\mathcal{C},\mathcal{D}$ are discrete categories in \textbf{Cat} with $|C|,|D|$ objects respectively.
+% https://q.uiver.app/#q=WzAsNixbMCwwLCJcXHRleHRiZntTZXR9Il0sWzIsMCwiXFx0ZXh0YmZ7Q2F0fSJdLFswLDEsIkMiXSxbMCwyLCJEIl0sWzIsMSwiXFxtYXRoY2Fse0N9Il0sWzIsMiwiXFxtYXRoY2Fse0R9Il0sWzAsMSwiUyJdLFs0LDUsIlNcXCBmIl0sWzIsMywiZiIsMl0sWzIsNCwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFszLDUsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbOCw3LCIiLDIseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==
+\[\begin{tikzcd}
+	{\textbf{Set}} && {\textbf{Cat}} \\
+	C && {\mathcal{C}} \\
+	D && {\mathcal{D}}
+	\arrow["S", from=1-1, to=1-3]
+	\arrow[""{name=0, anchor=center, inner sep=0}, "{S\ f}", from=2-3, to=3-3]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "f"', from=2-1, to=3-1]
+	\arrow[maps to, from=2-1, to=2-3]
+	\arrow[maps to, from=3-1, to=3-3]
+	\arrow[shorten <=13pt, shorten >=13pt, maps to, from=1, to=0]
+\end{tikzcd}\]
+
+Then $\forall a\in C, b\in D, (S\ a)\in \text{Ob}(\mathcal{C}), (S\ b)\in \text{Ob}(\mathcal{D})$, the mapping is
+\[S\ f::S\ a \mapsto S\ b \iff f::a\mapsto b\]
+\[S\ f::1_{(S\ a)} \mapsto 1_{(S\ b)}\iff f::a\mapsto b\]
+
+\begin{proposition}
+    $\forall f\in \text{Ar}(\textbf{Set}),(S\ f):\mathcal{C}\rightarrow \mathcal{D}$ satisfies functoriality.
+\end{proposition}
+\begin{proof}
+Since there is a valid function where $\forall a\in C,f(a)=b$,
+$(S\ f)$ will map every object $(S\ a)$ in $\mathcal{C}$ to an $(S\ b)$ in $\mathcal{D}$.
+
+There are no arrows between objects in the discrete categories,
+only identity arrows. For any identity arrow $1_A$ in $\mathcal{C}$,
+\[(S\ f) (1_A\circ 1_A) = (S\ f)(1_A) = 1_{(S\ f) (1_A)} = (S\ f) (1_A)\circ(S\ f) (1_A)\]
+\end{proof}
+
+\begin{fact}
+    The functor $S:\textbf{Set}\rightarrow \textbf{Cat}$ satisfies functoriality.
+\end{fact}
+
+\begin{proof}
+    Every object set $A$ in \textbf{Set} will get mapped to a discrete category $S\ A$ in \textbf{Cat}.
+    For every pairs of functions $f:A\rightarrow B,g:B\rightarrow C$ in \textbf{Set},
+    and $a\in A,c\in C$,
+\begin{equation}
+\begin{aligned}
+    (S (g\circ f)) :: S\ a \mapsto S\ c &\iff g\circ f(a) = c\\
+    &\iff \exists b\in B: f(a) = b \wedge g(b) = c\\
+    &\iff \exists b\in B: S\ f:: S\ a \mapsto S\ b \wedge S\ g:: S\ b \mapsto S\ c\\
+    &\iff (S\ g \circ S\ f):: S\ a \mapsto S\ c
+\end{aligned}
+\end{equation}
+    \[S\ 1_A :: S\ a \mapsto S\ a = 1_{S\ A}\]
+    Then functoriality is satisfied.
+\end{proof}
+
+\begin{proposition}
+    The functor $S:\textbf{Set}\rightarrow \textbf{Cat}$ is full and faithful.
+\end{proposition}
+
+\begin{proof}
+To show faithfulness, let $f,g:C\rightarrow D$ be arbitrary functions in \textbf{Set} 
+so $S\ f, S\ g: \mathcal{C} \rightarrow \mathcal{D}$.
+Suppose $S\ f=S\ g$. Then since for all $a\in C$,
+\[S\ f::S\ a \mapsto S\ b \iff f::a\mapsto b\]
+\[S\ g::S\ a \mapsto S\ b \iff g::a\mapsto b\]
+we have 
+\[\forall a\in C:f::a\mapsto b \iff S\ f=S\ g::S\ a \mapsto S\ b \iff g::a\mapsto b\]
+and $f=g$. $S$ is faithful.
+
+For fullness, let $F:\mathcal{C}\rightarrow \mathcal{D}$ be an arbitrary functor in \textbf{Cat}$(S\ A, S\ B)$,
+where $A,B$ are sets in \textbf{Set}.
+Let $f:A\rightarrow B$.
+For each object $S\ a$ in $S\ A$ where $F :: S\ a \mapsto S\ b$, 
+we can have some $a\in A, f(a)=b$ since $S\ A$ has $|A|$ objects.
+Then $S\ f=F$.
+So $S$ is full.
+
+\end{proof}
+
+{\color{teal}
+Isomorphism 
+\[\phi:X\cong |X|\]
+Define the category $S\ X \cong |X|$
+\begin{itemize}
+    \item Objects
+    \item Arrows
+    \item Composition 
+    \item Unit
+    \item Associativity Axiom
+    \item Unit Axiom
+\end{itemize}
+\[S\ f: |X| \rightarrow |Y|\]
+\[S\ f :: a \mapsto \phi_Y(f(\phi^{-1}_X(a)))\]
+\[S\ f :: 1_a \mapsto 1_{(...)}\]
+Faithful
+\[\phi_Y (f(\phi^{-1}_X(a))) = \phi_Y (g(\phi^{-1}_X(a))) \implies f = g\]
+}
+
+\clearpage
+\section*{Question 2}
+\addtocounter{section}{1}
+
+\begin{definition}
+The bivariant Hom-functor is given by
+\[\mathcal{C}(\_,\_)(A,B):=\mathcal{C}(A,B)\]
+\[\mathcal{C}(\_,\_)(g:B\rightarrow A,f:C\rightarrow D):= h\mapsto f\circ h\circ g,\forall h\in\mathcal{C}(A,C)\]
+
+for all objects and arrows $A,B,C,D\in\text{Ob}(\mathcal{C}),f,g\in\text{Ar}(\mathcal{C})$.
+\end{definition}
+
+\begin{proposition}
+The bivariant Hom-functor is a functor.
+\end{proposition}
+
+\begin{proof}
+Let $A,B,C,D,E,F\in \text{Ob}(\mathcal{C})=\text{Ob}(\mathcal{C}^{\text{op}})$ be arbitrary objects.
+
+For any object pair $A,B$, the functor has a mapping to the set $\mathcal{C}(A,B)$.
+
+Let $f:A\rightarrow B, g:B\rightarrow C$ be arbitrary arrows in $\mathcal{C}$,
+and $h:E\rightarrow D, k:F\rightarrow E$ be arbitrary arrows in $\mathcal{C}^{\text{op}}$.
+\begin{equation}
+\begin{aligned}
+\mathcal{C}(\_,\_)(h,g)\circ\mathcal{C}(\_,\_)(k,f) 
+&= (p \mapsto g \circ p\circ h)\circ(p'\mapsto f \circ p'\circ k)\\
+&= (p \mapsto g \circ (f\circ p \circ k) \circ h)\\
+&= (p \mapsto (g \circ f)\circ p \circ (k \circ h))\\
+&= \mathcal{C}(\_,\_)(h\circ k,g\circ f)\\
+&= \mathcal{C}(\_,\_)((h,g)\circ(k,f))
+\end{aligned}
+\end{equation}
+So the composition law is satisfied.
+
+For the identity laws,
+\begin{equation}
+\begin{aligned}
+\mathcal{C}(\_,\_)(1_A,1_B)&= \mathcal{C}(1_A,1_B)\\
+&= h\mapsto 1_B \circ h \circ 1_A\\
+&= h \mapsto h\\
+&= 1_{\mathcal{C}(A,B)}\\
+&= 1_{\mathcal{C}(\_,\_)(A,B)}\\
+\end{aligned}
+\end{equation}
+Thus, the bivariant Hom-functor satisfies \textit{functoriality}.
+
+\end{proof}
+
+\clearpage
+\section*{Question 3}
+\addtocounter{section}{1}
+\subsection*{(a)}
+\begin{fact}
+    Faithful functors do not, in general, reflect isomorphisms.
+\end{fact}
+
+\begin{example}
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJBIl0sWzIsMCwiQiJdLFs2LDAsIkZcXCBBIl0sWzgsMCwiRlxcIEIiXSxbMCwxLCJmIl0sWzIsMywiRlxcIGYiLDAseyJvZmZzZXQiOi0xfV0sWzMsMiwiZz0oRlxcIGYpXnstMX0iLDAseyJvZmZzZXQiOi0xfV1d
+\[\begin{tikzcd}
+	A && B &&&& {F\ A} && {F\ B}
+	\arrow["f", from=1-1, to=1-3]
+	\arrow["{F\ f}", shift left, from=1-7, to=1-9]
+	\arrow["{g=(F\ f)^{-1}}", shift left, from=1-9, to=1-7]
+\end{tikzcd}\]
+The diagram above shows two-object categories $\mathcal{C},\mathcal{D}$ respectively,
+with the identities assumed but not drawn. 
+The arrow $g=(F\ f)^{-1}:F\ B\rightarrow F\ A$ in $\mathcal{D}$ has no mapping from an arrow in $\mathcal{C}$.
+
+Functoriality is satisfied since
+\[F(1_A) = 1_{F\ A},\quad F(1_B) = 1_{F\ B}\]
+\[F(f\circ 1_A)= F(f) = F(f) \circ 1_{F\ A} = F(f) \circ F(1_A)\]
+\[F(1_B\circ f)= F(f) = 1_{F\ B} \circ F(f) = F(1_B)\circ F(F)\]
+
+The functor $F:\mathcal{C}\rightarrow\mathcal{D}$ is faithful since 
+\[F\ f\neq F\ 1_A = 1_{F\ A} \neq F\ 1_B = 1_{F\ B}\]
+It can be noted it is not full because of the arrow $g$ in $\mathcal{D}$.
+
+The arrow $F\ f$ is isomorphic (to $(F\ f)^{-1}$) but $f$ is not iso.
+The functor does not reflect isomorphism.
+\end{example}
+
+\subsection*{(b)}
+\begin{proposition}
+    Every full and faithful functor reflects isomorphisms.
+\end{proposition}
+\begin{proof}
+    Let the functor $F:\mathcal{C}\rightarrow \mathcal{D}$ be full and faithful.
+    By fullness, for any arrow $g$ in $\mathcal{D}$, there exists an arrow $f$ in $\mathcal{C}$
+    such that $F\ f = g$.
+
+    Suppose we have two iso arrows $g,g^{-1}$ in $\mathcal{C}$.
+    Using fullness we find $f:A\rightarrow B$,{\color{red}\sout{$f':B' \rightarrow A'$}}
+    $f':B \rightarrow A$ such that $F\ f=g,F\ f'=g^{-1}$.
+    {\color{red}\sout{Since $g,g^{-1}$ are iso, $F\ A=F\ A',F\ B=F\ B'$}} so 
+    \[g:F\ A\rightarrow F\ B,\quad g^{-1}: F\ B \rightarrow F\ A\]
+    where
+    \[g^{-1}\circ g = 1_{F\ A},\quad g\circ g^{-1} = 1_{F\ B}\]
+    By functoriality, we have from composition that 
+    \[F(f\circ f')=F\ f\circ F\ f' = g \circ g^{-1}=1_{F\ B}\]
+    \[F(f'\circ f)=F\ f'\circ F\ f = g^{-1} \circ g=1_{F\ A}\]
+    We also have from the identity law that
+    \[F(1_A)=1_{F\ A},\quad F(1_B)=1_{F\ B}\]
+    By faithfulness,
+    \[F(1_A)=F(f'\circ f)=1_{F\ A} \implies f'\circ f = 1_A\]
+    \[F(1_B)=F(f\circ f')=1_{F\ B} \implies f\circ f' = 1_B\]
+    So $f'=f^{-1}$, and $f,f^{-1}$ are iso.
+
+    Given an iso arrow $F\ f$ in $\mathcal{D}$, we then have an iso arrow $f$ in $\mathcal{C}$.
+    The full and faithful functor reflects isomorphisms.
+
+\end{proof}
+
+{\color{teal}
+Full and faithful functor:
+% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXGJ1bGxldCJdLFsxLDAsIlxcYnVsbGV0Il0sWzAsMiwiXFxidWxsZXQiXSxbMSwyLCJcXGJ1bGxldCJdLFsyLDFdLFs0LDEsIlxcYnVsbGV0Il0sWzUsMSwiXFxidWxsZXQiXSxbMywxXSxbMCwxXSxbMiwzXSxbNSw2XSxbNCw3LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d
+\[\begin{tikzcd}
+	\bullet & \bullet \\
+	&& {} & {} & \bullet & \bullet \\
+	\bullet & \bullet
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=3-1, to=3-2]
+	\arrow[from=2-5, to=2-6]
+	\arrow[maps to, from=2-3, to=2-4]
+\end{tikzcd}\]
+}
+
+\subsection*{(c)}
+\begin{proposition}
+    Every equivalence preserves monics.
+\end{proposition}
+
+\begin{proof}
+    Let $F:\mathcal{C}\rightarrow \mathcal{D}$ be an equivalence, 
+    and let $f:B\rightarrow C$ be a monic arrow in $\mathcal{C}$.
+    Then $F\ f:F\ B\rightarrow F\ C$.
+    Using fullness, let $F\ g, F\ h:A'\rightarrow F\ B$ be arbitrary arrows in $\mathcal{D}$.
+
+    By equivalence, there exists an object $A$ of $\mathcal{C}$ such that $F(A)\cong A'$.
+
+    By fullness, let the arrows $g,h:A\rightarrow B$ be in $\mathcal{C}$.
+
+    Suppose $F\ f\circ F\ g = F\ f\circ F\ h$. Then
+\begin{equation}
+\begin{aligned}
+    F\ f\circ F\ g = F\ f\circ F\ h &\implies F(f\circ g)=F(f\circ h) &&\quad \text{(by functoriality)}\\
+    &\implies f\circ g = f\circ h &&\quad\text{(by faithfulness)}\\
+    &\implies g=h &&\quad\text{(since $f$ is monic)}\\
+    &\implies F\ g=F\ h
+\end{aligned}
+\end{equation}
+    Then
+    \[\forall F\ g, F\ h:F\ f\circ F\ g = F\ f\circ F\ h\implies F\ g= F\ h\]
+    so $F\ f$ is monic and the equivalence preserves monics.
+\end{proof}
+{\color{teal}
+\[F:\mathcal{C}\rightarrow \mathcal{D}, G: \mathcal{D} \rightarrow \mathcal{C}\]
+\[F\circ G \cong 1_{\mathcal{C}},\quad \eta: G\circ F \cong 1_{\mathcal{D}}\]
+Assume $F$ equivalent, $f$ monic
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJ4Il0sWzEsMCwiR0ZcXCB4Il0sWzAsMSwieSJdLFsxLDEsIkdGXFwgeSJdLFswLDEsIlxcZXRhX3giXSxbMCwyLCJmIiwyXSxbMSwzLCJHRlxcIGYiXSxbMiwzLCJcXGV0YV95IiwyXV0=
+\[\begin{tikzcd}
+	x & {GF\ x} \\
+	y & {GF\ y}
+	\arrow["{\eta_x}", from=1-1, to=1-2]
+	\arrow["f"', from=1-1, to=2-1]
+	\arrow["{GF\ f}", from=1-2, to=2-2]
+	\arrow["{\eta_y}"', from=2-1, to=2-2]
+\end{tikzcd}\]
+\begin{equation}
+\begin{aligned}
+    G(F\ f\circ g) = G(F\ f\circ h) &\implies GF\ f\circ G\ g = GF\ f \circ G\ h\\
+    &\implies (\eta_y\circ f\circ\eta_x^{-1} \circ G\ g) = (\eta_y\circ f\circ\eta_x^{-1} \circ G\ h)\\
+    &\implies G\ g = G\ h\\
+    &\implies g = h
+\end{aligned}
+\end{equation}
+}
+
+\clearpage
+\section*{Question 4}
+\addtocounter{section}{1}
+\begin{proposition}
+    If a category $\mathcal{C}$ has a terminal object and pullbacks, it has binary products and equalisers.
+\end{proposition}
+\begin{proof}
+Let $T$ be the terminal object, and let $\tau_A:A\rightarrow T$ 
+denote the unique arrow from an object $A$ to $T$.
+% https://q.uiver.app/#q=WzAsNSxbMSwxLCJEIl0sWzAsMCwiRCciXSxbMiwxLCJCIl0sWzEsMiwiQSJdLFsyLDIsIlQiXSxbMSwwLCJoJyIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFswLDIsInEiXSxbMSwyLCJxJyIsMCx7ImN1cnZlIjotMn1dLFswLDMsInAiLDJdLFsxLDMsInAnIiwyLHsiY3VydmUiOjJ9XSxbMyw0LCJcXHRhdV9BIiwyXSxbMiw0LCJcXHRhdV9CIl1d
+\[\begin{tikzcd}
+	{D'} \\
+	& D & B \\
+	& A & T
+	\arrow["{h'}"', dashed, from=1-1, to=2-2]
+	\arrow["q", from=2-2, to=2-3]
+	\arrow["{q'}", curve={height=-12pt}, from=1-1, to=2-3]
+	\arrow["p"', from=2-2, to=3-2]
+	\arrow["{p'}"', curve={height=12pt}, from=1-1, to=3-2]
+	\arrow["{\tau_A}"', from=3-2, to=3-3]
+	\arrow["{\tau_B}", from=2-3, to=3-3]
+\end{tikzcd}\]
+The morphisms $A\xrightarrow[]{\tau_A}T \xleftarrow[]{\tau_B} B$ 
+then have the pullback $A\xleftarrow[]{p} D\xrightarrow[]{q} B$.
+
+For any morphisms $A\xleftarrow[]{p'} D'\xrightarrow[]{q'} B$, we have by composition,
+\[\tau_A\circ p'=\tau_{D'}=\tau_B \circ q' \implies h':D'\rightarrow D \text{ is unique}\]
+such that $p'=p\circ h'$ and $q'=q\circ h'$.
+Then $D$ with morphisms $A\xleftarrow[]{p} D\xrightarrow[]{q} B$  is the product of $A$ and $B$,
+since for all pairs $A\xleftarrow[]{p'} D'\xrightarrow[]{q'} B$, there is the unique morphism
+$h'=\langle p', q'\rangle : D'\rightarrow D$ such that $p'=p\circ h'$ and $q'=q\circ h'$.
+
+Using the binary product, we can then show equalisers.
+Suppose we have the parallel morphisms $A\overset{f}{\underset{g}{\rightrightarrows}}B$.
+As shown before, the product $A\times B$ 
+with pullback morphisms $A\xleftarrow[]{\pi_1} A\times B\xrightarrow[]{\pi_2} B$ exist.
+The following diagram with $f$ commutes, and is similar if $g$ is used instead of $f$, 
+where $1_A$ is the identity on $A$.
+% https://q.uiver.app/#q=WzAsNCxbMiwyLCJBIl0sWzQsMCwiQiJdLFsyLDAsIkFcXHRpbWVzIEIiXSxbMCwwLCJBIl0sWzAsMSwiZiIsMl0sWzAsMiwiXFxsYW5nbGUxX0EsZlxccmFuZ2xlIiwyLHsib2Zmc2V0IjoxLCJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMiwxLCJcXHBpXzIiXSxbMiwzLCJcXHBpXzEiLDIseyJvZmZzZXQiOjF9XSxbMCwzLCIxX0EiXV0=
+\[\begin{tikzcd}
+	A && {A\times B} && B \\
+	\\
+	&& A
+	\arrow["f"', from=3-3, to=1-5]
+	\arrow["{\langle1_A,f\rangle}"', shift right, dashed, from=3-3, to=1-3]
+	\arrow["{\pi_2}", from=1-3, to=1-5]
+	\arrow["{\pi_1}"', shift right, from=1-3, to=1-1]
+	\arrow["{1_A}", from=3-3, to=1-1]
+\end{tikzcd}\]
+
+Let $A\xleftarrow[]{p} E\xrightarrow[]{q} A$ be the pullback of 
+$A\xrightarrow[]{\langle 1_A,f\rangle}A\times B\xleftarrow[]{\langle 1_A,g\rangle} A$.
+So $ \langle 1_A,f\rangle \circ p =  \langle 1_A, g\rangle \circ q$.
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJFIl0sWzAsMSwiQSJdLFsxLDEsIkFcXHRpbWVzIEIiXSxbMSwwLCJBIl0sWzAsMSwicCIsMl0sWzEsMiwiXFxsYW5nbGUgMV9BLCBmXFxyYW5nbGUiLDJdLFszLDIsIlxcbGFuZ2xlIDFfQSwgZ1xccmFuZ2xlIl0sWzAsMywicSJdXQ==
+\[\begin{tikzcd}
+	E & A \\
+	A & {A\times B}
+	\arrow["p"', from=1-1, to=2-1]
+	\arrow["{\langle 1_A, f\rangle}"', from=2-1, to=2-2]
+	\arrow["{\langle 1_A, g\rangle}", from=1-2, to=2-2]
+	\arrow["q", from=1-1, to=1-2]
+\end{tikzcd}\]
+Then we show that $e=p=q:E\rightarrow A$ is the equaliser of $(f,g)$.
+First, we show $p=q$ using the product,
+\begin{equation}
+\begin{aligned}
+    p&=\pi_1 \circ \langle 1_A,f\rangle \circ p\\
+    &= \pi_1 \circ \langle 1_A, g\rangle \circ q\\
+    &= q 
+\end{aligned}
+\end{equation}
+Then we have
+\begin{equation}
+\begin{aligned}
+    f\circ e &= \pi_2\circ \langle 1_A, f\rangle \circ e\\
+    &= \pi_2 \circ \langle 1_A, g\rangle \circ e\\
+    &= g \circ e
+\end{aligned}
+\end{equation}
+Suppose we then have a morphism $h:C\rightarrow A$ such that $f \circ h = g \circ h$. Then
+\begin{equation}
+\begin{aligned}
+    \langle 1_A, f \rangle \circ h &= \langle 1_A \circ h, f \circ h\rangle\\
+    &= \langle 1_A \circ h, g \circ h\rangle\\
+    &= \langle 1_A, g\rangle \circ h
+\end{aligned}
+\end{equation}
+Then by the pullback, there is a unique morphism $\hat{h}:C\rightarrow E$ 
+such that $h=e\circ \hat{h}$. 
+% https://q.uiver.app/#q=WzAsNCxbMSwwLCJBIl0sWzIsMCwiQiJdLFswLDAsIkUiXSxbMCwxLCJDIl0sWzAsMSwiZiIsMCx7Im9mZnNldCI6LTF9XSxbMCwxLCJnIiwyLHsib2Zmc2V0IjoxfV0sWzIsMCwiZSJdLFszLDAsImgiLDJdLFszLDIsIlxcaGF0e2h9IiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d
+\[\begin{tikzcd}
+	E & A & B \\
+	C
+	\arrow["f", shift left, from=1-2, to=1-3]
+	\arrow["g"', shift right, from=1-2, to=1-3]
+	\arrow["e", from=1-1, to=1-2]
+	\arrow["h"', from=2-1, to=1-2]
+	\arrow["{\hat{h}}", dashed, from=2-1, to=1-1]
+\end{tikzcd}\]
+Then $e:E\rightarrow A$, the pullback of $(\langle 1_A, f\rangle,\langle 1_A, g\rangle)$,
+is the equaliser of $(f,g)$ where  $A\overset{f}{\underset{g}{\rightrightarrows}}B$.
+
+Thus, it is shown that the category $\mathcal{C}$ has binary products and equalisers.
+
+\end{proof}
+
+{\color{teal}
+In \textbf{Set}, equalisers $e:E\rightarrow A$ have mapping to
+\[\{a\in A | f(a)=g(a)\}\]
+But this is not good enough
+\[\{(a_1,a_2)\subseteq A\times A | f(a_1)=g(a_2)\}\]
+Refine to have $a_1=a_2$
+\[\{(a_1,a_2)\subseteq A\times A | a_1\wedge f(a_1)=g(a_2)\} \cong \{a\in A | f(a)=g(a)\}\]
+Also equaliser
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJFIl0sWzEsMCwiQiJdLFsxLDEsIkJcXHRpbWVzIEIiXSxbMCwxLCJBIl0sWzAsMV0sWzEsMiwiXFxsYW5nbGUgMV9CLDFfQlxccmFuZ2xlIiwyXSxbMywyLCJcXGxhbmdsZSBmLCBnXFxyYW5nbGUiXSxbMCwzXV0=
+\[\begin{tikzcd}
+	E & B \\
+	A & {B\times B}
+	\arrow[from=1-1, to=1-2]
+	\arrow["{\langle 1_B,1_B\rangle}"', from=1-2, to=2-2]
+	\arrow["{\langle f, g\rangle}", from=2-1, to=2-2]
+	\arrow[from=1-1, to=2-1]
+\end{tikzcd}\]
+}
+
+
+\section*{Question 5}
+\addtocounter{section}{1}
+\begin{proposition}
+    If $ABCD,BEDF$ are pullback squares, then so is $AECF$.
+\end{proposition}
+
+
+% https://q.uiver.app/#q=WzAsNyxbMSwyLCJBIl0sWzMsMiwiQiJdLFs1LDIsIkUiXSxbNSw0LCJGIl0sWzMsNCwiRCJdLFsxLDQsIkMiXSxbMCwwLCJHIl0sWzAsMSwiYSJdLFsxLDIsImIiXSxbMiwzLCJlIl0sWzEsNCwiZCJdLFswLDUsImMiLDJdLFs1LDQsImYiLDJdLFs0LDMsImciLDJdLFs2LDUsInAiLDIseyJjdXJ2ZSI6Mn1dLFs2LDIsInEiLDAseyJjdXJ2ZSI6LTF9XSxbNiwxLCJoJyIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFs2LDAsImgiLDIseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=
+\[\begin{tikzcd}
+	G \\
+	\\
+	& A && B && E \\
+	\\
+	& C && D && F
+	\arrow["a", from=3-2, to=3-4]
+	\arrow["b", from=3-4, to=3-6]
+	\arrow["e", from=3-6, to=5-6]
+	\arrow["d", from=3-4, to=5-4]
+	\arrow["c"', from=3-2, to=5-2]
+	\arrow["f"', from=5-2, to=5-4]
+	\arrow["g"', from=5-4, to=5-6]
+	\arrow["p"', curve={height=12pt}, from=1-1, to=5-2]
+	\arrow["q", curve={height=-6pt}, from=1-1, to=3-6]
+	\arrow["{h'}"', dashed, from=1-1, to=3-4]
+	\arrow["h"', dashed, from=1-1, to=3-2]
+\end{tikzcd}\]
+\begin{proof}
+Suppose we have morphisms $C\xleftarrow[]{p}G\xrightarrow[]{q}E$ such that $(g\circ f)\circ p=e\circ q$.
+
+By the pullback square $BEDF$,
+\[e\circ q = g\circ (f\circ p)\implies \exists! h':G\rightarrow B, q=b\circ h' \wedge f\circ p = d\circ h'\]
+By the pullback square $ABCD$ and using $h'$,
+\[d\circ h'=f\circ p \implies \exists! h:G\rightarrow A, p=c\circ h \wedge h'=a\circ h\]
+From the unique $h,h'$ such that $q=b\circ h',h'=a\circ h$, 
+then $h$ is the unique morphism where $q=b\circ a\circ h$.
+Then combining $q=(b\circ a)\circ h$ with $p=c\circ h$ (from pullback square $ABCD$) where $h$ is unique, 
+$AECF$ is also a pullback square.
+\end{proof}
+
+\section*{Question 6}
+\addtocounter{section}{1}
+The diagram $D$ maps as follows:
+\[D:: n \mapsto ([n],\leq),\quad (f:n\rightarrow m) \mapsto (g:([n],\leq) \hookrightarrow ([m],\leq))\]
+where $g$ is the inclusion map from $[n]$ to $[m]$.
+% https://q.uiver.app/#q=WzAsNixbMCwwLCJcXG1hdGhjYWx7Sn0iXSxbMiwwLCJcXHRleHRiZntOYXR1cmFsfSJdLFswLDEsIm4iXSxbMCwyLCJtIl0sWzIsMSwiKFtuXSxcXGxlcSkiXSxbMiwyLCIoW21dLFxcbGVxKSJdLFswLDEsIkQiXSxbNCw1LCJnIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbMiwzLCJmIiwyXSxbMiw0LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzMsNSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs4LDcsIiIsMix7InNob3J0ZW4iOnsic291cmNlIjoyMCwidGFyZ2V0IjoyMH0sImxldmVsIjoxLCJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d
+\[\begin{tikzcd}
+	{\mathcal{J}} && {\textbf{Natural}} \\
+	n && {([n],\leq)} \\
+	m && {([m],\leq)}
+	\arrow["D", from=1-1, to=1-3]
+	\arrow[""{name=0, anchor=center, inner sep=0}, "g", hook, from=2-3, to=3-3]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "f"', from=2-1, to=3-1]
+	\arrow[maps to, from=2-1, to=2-3]
+	\arrow[maps to, from=3-1, to=3-3]
+	\arrow[shorten <=14pt, shorten >=14pt, maps to, from=1, to=0]
+\end{tikzcd}\]
+
+Each cone to $D$ is an object $([n],\leq)$ in \textbf{Natural}
+and the family of arrows $\gamma$,
+\[\{\gamma_I:([n],\leq)\rightarrow (D\ I)\}_{I\in \text{Ob}(\mathcal{J})}
+=\{\gamma_m:([n],\leq)\hookrightarrow ([m],\leq)\}_{m\in \mathbb{N},m\geq n}\]
+Let $([p],\leq)$ with its family of arrows $\delta$ be an arbitrary cone to $D$.
+Since inclusion maps from $[p]$ to $[q]$ are only defined when $p\leq q$,
+consider $f:n\rightarrow m$ in $\mathcal{J}$, where $p\leq n \leq m$.
+We can see that 
+\[\forall i \in [p]: (D\ f)\circ\delta_n(i)=(D\ f)(i)=\delta_m(i)=i\]
+so $(D\ f)\circ\delta_n = \delta_m$.
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCIoW25dLFxcbGVxKSJdLFs0LDAsIihbbV0sXFxsZXEpIl0sWzIsMiwiKFtwXSxcXGxlcSkiXSxbMCwxLCJEXFwgZiJdLFsyLDEsIlxcZ2FtbWFfbSIsMl0sWzIsMCwiXFxnYW1tYV9uIl1d
+\[\begin{tikzcd}
+	{([n],\leq)} &&&& {([m],\leq)} \\
+	\\
+	&& {([p],\leq)}
+	\arrow["{D\ f}", from=1-1, to=1-5]
+	\arrow["{\delta_m}"', from=3-3, to=1-5]
+	\arrow["{\delta_n}", from=3-3, to=1-1]
+\end{tikzcd}\]
+{\color{red}\sout{The limit for $D$ is the object $(\mathbb{N},\leq)$ with its family of arrows 
+containing only the identity, $\{1_{\mathbb{N}}\}$.
+For any other posets $([n],\leq),n\in\mathbb{N}$ in \textbf{Natural}, $[n]\subset \mathbb{N}$,
+so there is no mapping from $(\mathbb{N},\leq)$ other than to itself.}
+% https://q.uiver.app/#q=WzAsMyxbMCwyLCIoW25dLFxcbGVxKSJdLFsyLDAsIihcXG1hdGhiYntOfSxcXGxlcSkiXSxbNCwyLCIoXFxtYXRoYmJ7Tn0sXFxsZXEpIl0sWzAsMSwiXFxnYW1tYV97XFxtYXRoYmJ7Tn19Il0sWzAsMiwiXFxnYW1tYV97XFxtYXRoYmJ7Tn19IiwyXSxbMiwxLCIxX3tcXG1hdGhiYntOfX0iLDJdXQ==
+\[\begin{tikzcd}
+	&& {(\mathbb{N},\leq)} \\
+	\\
+	{([n],\leq)} &&&& {(\mathbb{N},\leq)}
+	\arrow["{\gamma_{\mathbb{N}}}", from=3-1, to=1-3]
+	\arrow["{\gamma_{\mathbb{N}}}"', from=3-1, to=3-5]
+	\arrow["{1_{\mathbb{N}}}"', from=3-5, to=1-3]
+\end{tikzcd}\]}
+
+The {\color{red}\sout{co}}limit for $D$ is the object $([0],\leq)$ with its family of arrows
+\[\{\gamma_n:([0],\leq)\hookrightarrow ([n],\leq)\}_{n\in \mathbb{N}}\]
+For any other posets $([n],\leq),n\in\mathbb{N}^+$ in \textbf{Natural}, $[0]\subset [n]$,
+so there is no mapping to $([0],\leq)$ other than from itself.
+
+{\color{teal}
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXERlbHRhX3ggaSJdLFsxLDAsIkpcXCBpIl0sWzAsMSwiXFxEZWx0YV94IGoiXSxbMSwxLCJKXFwgeSJdLFswLDEsIlxccGlfeCJdLFswLDIsIlxcRGVsdGFfeCBmIiwyXSxbMSwzLCJKXFwgZiJdLFsyLDMsIlxccGlfaiIsMl1d
+\[\begin{tikzcd}
+	{\Delta_x i} & {J\ i} \\
+	{\Delta_x j} & {J\ y}
+	\arrow["{\pi_x}", from=1-1, to=1-2]
+	\arrow["{\Delta_x f}"', from=1-1, to=2-1]
+	\arrow["{J\ f}", from=1-2, to=2-2]
+	\arrow["{\pi_j}"', from=2-1, to=2-2]
+\end{tikzcd}\]
+% https://q.uiver.app/#q=WzAsNCxbMSwxLCJcXGxpbV9JIEoiXSxbMCwyLCJKXFwgaSJdLFsyLDIsIkpcXCBqIl0sWzEsMCwiVyJdLFswLDFdLFswLDJdLFsxLDIsIkpcXCBmIiwyXSxbMywxLCIiLDIseyJjdXJ2ZSI6MX1dLFszLDIsIiIsMix7ImN1cnZlIjotMX1dLFszLDBdXQ==
+\[\begin{tikzcd}
+	& W \\
+	& {\lim_I J} \\
+	{J\ i} && {J\ j}
+	\arrow[from=2-2, to=3-1]
+	\arrow[from=2-2, to=3-3]
+	\arrow["{J\ f}"', from=3-1, to=3-3]
+	\arrow[curve={height=6pt}, from=1-2, to=3-1]
+	\arrow[curve={height=-6pt}, from=1-2, to=3-3]
+	\arrow[from=1-2, to=2-2]
+\end{tikzcd}\]
+Using $\implies$ as natural transformation
+\[\Delta_X \implies J\]
+\[W\rightarrow X\]
+\[\Delta_W \implies J\]
+
+
+There are many maps to 0 which makes it not commute.
+
+There is a unique map from 0 to each set.
+% https://q.uiver.app/#q=WzAsNixbMCwwLCIoXFxtYXRoYmJ7Tn0sIFxcbGVxKSJdLFsxLDAsIlxcdGV4dGJme1Bvc30iXSxbMCwxLCJuIl0sWzAsMiwibSJdLFsxLDEsIltuXSJdLFsxLDIsIlttXSJdLFswLDFdLFsyLDMsIlxcbGVxIl0sWzQsNV1d
+\[\begin{tikzcd}
+	{(\mathbb{N}, \leq)} & {\textbf{Pos}} \\
+	n & {[n]} \\
+	m & {[m]}
+	\arrow[from=1-1, to=1-2]
+	\arrow["\leq", from=2-1, to=3-1]
+	\arrow[from=2-2, to=3-2]
+\end{tikzcd}\]
+
+}
+\end{document}

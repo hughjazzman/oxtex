@@ -255,10 +255,6 @@ Then $\forall A, \Gamma_A = \Delta_A$, so $\Delta$ is the unique natural transfo
 \clearpage
 \section*{Question 3}
 \addtocounter{section}{1}
-\begin{proposition}
-	Func$(\mathcal{C},\mathcal{D})$ is an exponential object in \textbf{Cat}.
-\end{proposition}
-\begin{proof}
 Define 
 \[\texttt{eval}:\mathcal{D}^{\mathcal{C}}\times \mathcal{C} \rightarrow \mathcal{D}\]
 \[\texttt{eval}::(F:\mathcal{C}\rightarrow\mathcal{D},C) \mapsto F\ C, \quad
@@ -275,7 +271,12 @@ Define
 	\arrow[maps to, from=3-1, to=3-3]
 	\arrow[shorten <=17pt, shorten >=17pt, maps to, from=0, to=1]
 \end{tikzcd}\]
-We use the lemma to show that eval is a functor.
+\begin{lemma}
+	$\texttt{eval}:\mathcal{D}^{\mathcal{C}}\times \mathcal{C} \rightarrow \mathcal{D}$ is a functor.
+	\label{lem:1}
+\end{lemma}
+\begin{proof}
+We use the lemma to show that \texttt{eval} is a functor.
 Fix an object $F:\mathcal{C} \rightarrow \mathcal{D}$ in $\mathcal{D}^{\mathcal{C}}$ so 
 \[\texttt{eval}(F,-):\mathcal{C}\rightarrow\mathcal{D}\]
 \[\texttt{eval}(F,-):: C\mapsto \texttt{eval}(F,C), \quad f \mapsto F\ f\]
@@ -345,26 +346,17 @@ Then the diagram commutes since the naturality square commutes with $\Delta$ bei
 The second part of the lemma is satisfied, and 
 $\texttt{eval}:\mathcal{D}^{\mathcal{C}}\times \mathcal{C} \rightarrow \mathcal{D}$
 is a functor.
+\end{proof}
 
 Let $G: \mathcal{E} \times \mathcal{C} \rightarrow \mathcal{D}$ be an arbitrary functor.
 Define 
 \[\tilde{G} : \mathcal{E} \rightarrow \mathcal{D}^{\mathcal{C}}\]
 \[\tilde{G} :: A \mapsto G(A, -),\quad (f:A\rightarrow B) \mapsto (\Delta: G(A,-) \rightarrow G(B,-))\]
 where $G(A,-):\mathcal{C} \rightarrow \mathcal{D}$ is a functor for each $A$ in $\mathcal{E}$.
-
-Any object $A$ in $\mathcal{E}$ will get mapped to $G(A,-)$ in $\mathcal{D}^{\mathcal{C}}$.
-Suppose $A\xrightarrow[]{f}A'\xrightarrow[]{g}A''$ in $\mathcal{E}$. Then
-\begin{equation}
-\begin{aligned}
-	\forall C\in\text{Ob}(\mathcal{C}), (\tilde{G}\ g) \circ (\tilde{G}\ f)(C)
-	&= (\Delta'_C:G(A',C)\rightarrow G(A'',C)) \circ (\Delta_C: G(A,C)\rightarrow G(A',C))\\
-	&= \Gamma_C: G(A,C) \rightarrow G(A'',C)\\
-	&= \tilde{G} (g\circ f)(C)
-\end{aligned}
-\end{equation}
-\[\tilde{G}\ 1_A = 1_{G(A,-)}=1_{\tilde{G}\ A}\]
-So $\tilde{G} : \mathcal{E} \rightarrow \mathcal{D}^{\mathcal{C}}$ is a functor.
-We show that the following diagram commutes.
+\begin{lemma}
+For a given $G: \mathcal{E} \times \mathcal{C} \rightarrow \mathcal{D}$,
+$\tilde{G} : \mathcal{E} \rightarrow \mathcal{D}^{\mathcal{C}}$ is the unique functor
+where the following diagram commutes.
 % https://q.uiver.app/#q=WzAsMyxbMCwxLCJcXG1hdGhjYWx7RX1cXHRpbWVzIFxcbWF0aGNhbHtDfSJdLFswLDAsIlxcbWF0aGNhbHtEfV57XFxtYXRoY2Fse0N9fVxcdGltZXMgXFxtYXRoY2Fse0N9Il0sWzEsMCwiXFxtYXRoY2Fse0R9Il0sWzAsMSwiXFx0aWxkZXtHfVxcdGltZXMgMV97XFxtYXRoY2Fse0N9fSJdLFswLDIsIkciLDJdLFsxLDIsIlxcdGV4dHtldmFsfSJdXQ==
 \[\begin{tikzcd}
 	{\mathcal{D}^{\mathcal{C}}\times \mathcal{C}} & {\mathcal{D}} \\
@@ -373,6 +365,24 @@ We show that the following diagram commutes.
 	\arrow["G"', from=2-1, to=1-2]
 	\arrow["{\texttt{eval}}", from=1-1, to=1-2]
 \end{tikzcd}\]
+\label{lem:2}
+\end{lemma}
+
+\begin{proof}
+Any object $A$ in $\mathcal{E}$ will get mapped to $G(A,-)$ in $\mathcal{D}^{\mathcal{C}}$.
+Suppose $A\xrightarrow[]{f}A'\xrightarrow[]{g}A''$ in $\mathcal{E}$. Then
+\begin{equation}
+\begin{aligned}
+	\forall C\in\text{Ob}(\mathcal{C}), ((\tilde{G}\ g) \circ (\tilde{G}\ f))(C)
+	&= (\tilde{G}\ g)(C) \circ (\tilde{G}\ f)(C)\\
+	&= (\Delta'_C:G(A',C)\rightarrow G(A'',C)) \circ (\Delta_C: G(A,C)\rightarrow G(A',C))\\
+	&= \Gamma_C: G(A,C) \rightarrow G(A'',C)\\
+	&= \tilde{G} (g\circ f)(C)
+\end{aligned}
+\end{equation}
+\[\tilde{G}\ 1_A = 1_{G(A,-)}=1_{\tilde{G}\ A}\]
+So $\tilde{G} : \mathcal{E} \rightarrow \mathcal{D}^{\mathcal{C}}$ is a functor.
+
 
 Let $(E,C)$ be an object in $\mathcal{E}\times \mathcal{C}$.
 \[\texttt{eval}\circ (\tilde{G}\times 1_{\mathcal{C}})(E,C)=\texttt{eval}(G(E,-),C) = G(E,C)\]
@@ -403,8 +413,13 @@ Then for each arrow $(f,g)$ in $\mathcal{E}\times \mathcal{C}$,
 \end{equation}
 So $\forall (f,g)\in\text{Ob}(\mathcal{E}\times\mathcal{C}), H(f)(g)=G(f,g)$.
 Thus, $H=\tilde{G}$ is unique. 
+\end{proof}
 
-Then there is an object $\mathcal{D}^{\mathcal{C}}$ 
+\begin{proposition}
+	Func$(\mathcal{C},\mathcal{D})$ is an exponential object in \textbf{Cat}.
+\end{proposition}
+\begin{proof}
+By Lemmas \ref{lem:1}, \ref{lem:2}, there is an object $\mathcal{D}^{\mathcal{C}}$ 
 and morphism \texttt{eval}$:\mathcal{D}^{\mathcal{C}}\times \mathcal{C} \rightarrow \mathcal{D}$,
 where for every $G: \mathcal{E} \times \mathcal{C} \rightarrow \mathcal{D}$,
 there is a unique morphism $\tilde{G} : \mathcal{E} \rightarrow \mathcal{D}^{\mathcal{C}}$
