@@ -530,8 +530,23 @@ We have for all $A, t_A$ is an isomorphism, so $t$ is a natural isomorphism.
 	
 \end{proof}
 
-% \section*{Optional}
-% \addtocounter{section}{1}
+\section*{Optional}
+\addtocounter{section}{1}
+\subsection*{(a)}
+Suppose we have a function $f:A\rightarrow B$.
+Then $[f]\circ \texttt{flatten}_A=\texttt{flatten}_B\circ (\texttt{Tree}\ f)$
+since each element in the underlying tree will get mapped to the same element in the resulting list.
+
+\subsection*{(b)}
+If we have the following where \texttt{undef1 . id = undef2},
+\begin{lstlisting}[language=Haskell]
+undef1 = undefined :: a -> b
+undef2 = \_ -> undefined
+seq undef1 () = undefined
+seq undef2 () = ()
+\end{lstlisting}
+Different values are given with \texttt{seq}. 
+The identity axiom is not satisfied so \textbf{Hask} is not a category.
 
 
 \end{document}
