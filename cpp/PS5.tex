@@ -342,6 +342,33 @@ The embedding preserves set-indexed products when they exist.
 
 \section*{Question 2}
 \addtocounter{section}{1}
+Note that for all objects $A,B$ in $\mathcal{P}$,
+\[ \mathcal{P}(A,B) = 
+\begin{cases}
+    \emptyset & \text{if } A\nleq B\\
+    \{\leq\} & \text{if } A\leq B
+\end{cases}
+\]
+Then for each object $\mathcal{P}(-, A)$ in $[\mathcal{P},\textbf{Set}]$, $\forall A,B,C,D\in P$,
+\[\mathcal{P}(-, A)(B) \in \{\emptyset, \{\leq\}\}\]
+\[\mathcal{P}(-, A)(f:B\rightarrow C) 
+\in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{B\leq A\}, \{C\leq A\} \rightarrow \{B\leq A\}\}\]
+And for all arrows $\mathcal{P}(-, f: A\rightarrow B)$,
+\[\mathcal{P}(-, f)(g) 
+\in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{C\leq B\}, \{D\leq A\} \rightarrow \{C\leq B\}\}\]
+\[ \mathcal{P}(-, f)(C) 
+\in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{C\leq B\}, \{C\leq A\} \rightarrow \{C\leq B\}\}\]
+These only consist of either the empty set $\emptyset$, or singleton sets $\{*\}$ and arrows between them.
+Then the objects in the subcategory of \textbf{Set} mapped to 
+are just the empty set $\emptyset$ and the singleton set $\{*\}$
+with the arrows $1_{\emptyset}, 1_{\{*\}},\emptyset\rightarrow\{*\}$,
+corresponding to the full subcategory $\mathcal{B}$.
+
+The functor is full since for any arrow $\mathcal{P}(-, f: A\rightarrow B)$,
+there is an arrow $f:A\rightarrow B$ in $\mathcal{P}$.
+It is full since if two arrows $F,G:\mathcal{P}(-, A)\rightarrow\mathcal{P}(-, B)$ are such that $F=G$,
+so $F = \mathcal{P}(-, f:A\rightarrow B),G = \mathcal{P}(-, g:A\rightarrow B)$,
+then $f=g$ since $P$ is a preorder.
 
 \subsection*{(a)}
 \subsection*{(b)}
