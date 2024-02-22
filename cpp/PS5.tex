@@ -109,8 +109,20 @@ For each $j\in I$, and for all $c\in C$,
     &= f_j(c)
 \end{aligned}
 \end{equation}
-so $\pi_j \circ \langle f_i \rangle_{i\in I} = f_j$.
-
+so $\forall j\in I, \pi_j \circ \langle f_i \rangle_{i\in I} = f_j$.
+% https://q.uiver.app/#q=WzAsNSxbMSwwLCJcXHByb2RfaSBBX2kiXSxbMCwxLCJcXGRvdHMiXSxbMSwxLCJBX2oiXSxbMywyLCJDIl0sWzIsMSwiXFxkb3RzIl0sWzAsMiwiXFxwaV9qIiwxXSxbMywwLCJcXGxhbmdsZSBmX2lcXHJhbmdsZV9pIiwyLHsiY3VydmUiOjMsInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFszLDIsImZfaSIsMV0sWzMsNCwiXFxkb3RzIiwxXSxbMCw0LCJcXGRvdHMiLDFdLFswLDEsIlxcZG90cyIsMV0sWzMsMSwiXFxkb3RzIiwxXV0=
+\[\begin{tikzcd}
+	& {\prod_i A_i} \\
+	\dots & {A_j} & \dots \\
+	&&& C
+	\arrow["{\pi_j}"{description}, from=1-2, to=2-2]
+	\arrow["{\langle f_i\rangle_i}"', curve={height=18pt}, dashed, from=3-4, to=1-2]
+	\arrow["{f_i}"{description}, from=3-4, to=2-2]
+	\arrow["\dots"{description}, from=3-4, to=2-3]
+	\arrow["\dots"{description}, from=1-2, to=2-3]
+	\arrow["\dots"{description}, from=1-2, to=2-1]
+	\arrow["\dots"{description}, from=3-4, to=2-1]
+\end{tikzcd}\]
 Suppose there is another arrow $h: C\rightarrow\prod_{i\in I}A_i$ 
 such that $\forall j\in I, \pi_j \circ h = f_j$.
 Then $\forall c\in C$,
@@ -118,8 +130,8 @@ Then $\forall c\in C$,
 \begin{aligned}
     \pi_j \circ h (c) &= \pi_j(h(c))\\
     &= h(c)(j)\\
-    &= f_j(c)\\
-    &\implies h(c) :: j \mapsto f_j(c)
+    h(c)(j)&= f_j(c)\\
+    \implies h(c) &:: j \mapsto f_j(c)
 \end{aligned}
 \end{equation}
 So $h=\langle f_i \rangle_{i\in I}$ and the arrow is unique.
@@ -136,7 +148,7 @@ When $|I|=1$, we get terminal objects.
 The product of 1 object $A_i$ for $i\in I$ is the terminal object $A_i$
 with the identity $1_{A_i}$
 such that for any object $C$, the arrow $f_i:C\rightarrow A_i$,
-is the unique arrow to $A_i$.
+is the unique arrow from $C$ to $A_i$.
 
 \subsection*{(c)}
 Let $(L, \gamma)$ be the limit of $D:\mathcal{I}\rightarrow \mathcal{C}$.
@@ -146,7 +158,15 @@ where the only arrows in $\mathcal{J}$ are identities $1_J$ so $D\ 1_J = 1_{D\ J
 Since $(L, \gamma)$ is the terminal object in \textbf{Cone}$(D)$,
 for every other cone to $D, (A, \delta)$,
 there is a unique arrow 
-$g : A\rightarrow L$ such that $\forall I\in \text{Ob}(\mathcal{I}), \gamma_I \circ g = \delta_I$.
+$g : A\rightarrow L$ such that $\forall J\in \text{Ob}(\mathcal{I}), \gamma_J \circ g = \delta_J$.
+% https://q.uiver.app/#q=WzAsMyxbMCwxLCJBIl0sWzEsMCwiRFxcIEoiXSxbMSwxLCJMIl0sWzAsMSwiXFxkZWx0YV9KIl0sWzIsMSwiXFxnYW1tYV9KIiwyXSxbMCwyLCJnIiwyXV0=
+\[\begin{tikzcd}
+	& {D\ J} \\
+	A & L
+	\arrow["{\delta_J}", from=2-1, to=1-2]
+	\arrow["{\gamma_J}"', from=2-2, to=1-2]
+	\arrow["g"', from=2-1, to=2-2]
+\end{tikzcd}\]
 
 By using the functor $S: \textbf{Set} \rightarrow \textbf{Cat}$ from Assignment 3 Exercise 1,
 let $S\ I = \mathcal{I}$, so there's an isomorphism $\phi: I \cong \text{Ob}(\mathcal{I})$.
@@ -160,8 +180,26 @@ Then set $\forall j\in I$,
     \item $g:=\langle f_j\rangle_{j\in I}$
 \end{itemize}
 so the limit of the diagram matches the defintion of the set-indexed products.
+% https://q.uiver.app/#q=WzAsNSxbMSwwLCJMIl0sWzAsMSwiXFxkb3RzIl0sWzEsMSwiRFxcIFxccGhpKGopIl0sWzMsMiwiQSJdLFsyLDEsIlxcZG90cyJdLFswLDIsIlxcZ2FtbWFfe1xccGhpKGopfSIsMV0sWzMsMCwiZyIsMix7ImN1cnZlIjozLCJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMywyLCJcXGRlbHRhX3tcXHBoaShqKX0iLDFdLFszLDQsIlxcZG90cyIsMV0sWzAsNCwiXFxkb3RzIiwxXSxbMCwxLCJcXGRvdHMiLDFdLFszLDEsIlxcZG90cyIsMV1d
+\[\begin{tikzcd}
+	& L \\
+	\dots & {D\ \phi(j)} & \dots \\
+	&&& A
+	\arrow["{\gamma_{\phi(j)}}"{description}, from=1-2, to=2-2]
+	\arrow["g"', curve={height=18pt}, dashed, from=3-4, to=1-2]
+	\arrow["{\delta_{\phi(j)}}"{description}, from=3-4, to=2-2]
+	\arrow["\dots"{description}, from=3-4, to=2-3]
+	\arrow["\dots"{description}, from=1-2, to=2-3]
+	\arrow["\dots"{description}, from=1-2, to=2-1]
+	\arrow["\dots"{description}, from=3-4, to=2-1]
+\end{tikzcd}\]
 
 \subsection*{(d)}
+\begin{proposition}
+    If $\mathcal{D}$ has all set-indexed products, then so too does the functor category
+    $[\mathcal{C},\mathcal{D}]$.
+\end{proposition}
+\begin{proof}
 Suppose $\mathcal{D}$ has all set-indexed products.
 
 Let $I$ be the set of indices, and $\{F_i:\mathcal{C}\rightarrow \mathcal{D}\}_{i\in I}$ 
@@ -195,17 +233,35 @@ Let $C\xrightarrow[]{f} C'\xrightarrow[]{g} C''$ be arrows.
 \end{equation}
 So the product functor satisfies functoriality.
 
-Next, we show the naturality of the functor projections.
+Next, we define and show the naturality of the functor projections.
+For an arbitrary natural transformation $t_j: \prod_i F_i \rightarrow F_j$, 
+define $\forall C$ in $\mathcal{C}$, 
+\[t_{j,C} = \pi_{j,C} : \prod_i F_i\ C \rightarrow F_j\ C\]
+which exists as a projection in $\mathcal{D}$.
 Let $f: C\rightarrow C'$ be an arrow in $\mathcal{C}$, 
 and $f_j: F_j\ C \rightarrow F_j\ C'$ be an arrow in $\mathcal{D}$.
-For an arbitrary natural transformation $t_j: \prod_i F_i \rightarrow F_j$, 
-define $t_{j,C} = \pi_j : \prod_i F_i\ C \rightarrow F_j\ C$,
-and $t_{j,C'} = \pi'_j : \prod_i F_i\ C' \rightarrow F_j\ C'$,
-which both exist as projections in $\mathcal{D}$.
 Then by the property of the product, we have
-\[f_j \circ \pi_j = \pi'_j \circ \langle f_i\circ \pi_i\rangle_i\]
+\[f_j \circ \pi_{j,C} = \pi_{j,C'} \circ \langle f_i\circ \pi_i\rangle_i\]
 So naturality is satisfied.
 
+% https://q.uiver.app/#q=WzAsOSxbMiwxLCJcXHByb2RfaSBGX2lcXCBDIl0sWzMsMSwiXFxwcm9kX2kgRl9pXFwgQyciXSxbMiwyLCJGX2pcXCBDIl0sWzMsMiwiRl9qXFwgQyciXSxbMCwxLCJcXHByb2RfaSBGX2kiXSxbMCwyLCJGX2oiXSxbMCwwLCJHIl0sWzIsMCwiR1xcIEMiXSxbMywwLCJHXFwgQyciXSxbMCwxLCJcXGxhbmdsZSBmX2lcXGNpcmMgXFxwaV9pXFxyYW5nbGVfaSJdLFswLDIsIlxccGlfe2osQ30iLDFdLFsxLDMsIlxccGlfe2osQyd9IiwxXSxbMiwzLCJmX2oiLDJdLFs0LDUsInQiLDJdLFs2LDQsIlxcbGFuZ2xlIHNfaVxccmFuZ2xlX2kiLDFdLFs3LDAsIlxcbGFuZ2xlIHNfe2ksQ31cXHJhbmdsZV9pIiwxXSxbNyw4LCJHXFwgZiJdLFs4LDEsIlxcbGFuZ2xlIHNfe2ksQ31cXHJhbmdsZV9pIiwxXSxbNiw1LCJzX2oiLDIseyJjdXJ2ZSI6NH1dLFs3LDIsInNfe2osQ30iLDIseyJjdXJ2ZSI6NX1dLFs4LDMsInNfe2osQyd9IiwwLHsiY3VydmUiOi01fV1d
+\[\begin{tikzcd}
+	G && {G\ C} & {G\ C'} \\
+	{\prod_i F_i} && {\prod_i F_i\ C} & {\prod_i F_i\ C'} \\
+	{F_j} && {F_j\ C} & {F_j\ C'}
+	\arrow["{\langle f_i\circ \pi_i\rangle_i}", from=2-3, to=2-4]
+	\arrow["{\pi_{j,C}}"{description}, from=2-3, to=3-3]
+	\arrow["{\pi_{j,C'}}"{description}, from=2-4, to=3-4]
+	\arrow["{f_j}"', from=3-3, to=3-4]
+	\arrow["t"', from=2-1, to=3-1]
+	\arrow["{\langle s_i\rangle_i}"{description}, from=1-1, to=2-1]
+	\arrow["{\langle s_{i,C}\rangle_i}"{description}, from=1-3, to=2-3]
+	\arrow["{G\ f}", from=1-3, to=1-4]
+	\arrow["{\langle s_{i,C}\rangle_i}"{description}, from=1-4, to=2-4]
+	\arrow["{s_j}"', curve={height=24pt}, from=1-1, to=3-1]
+	\arrow["{s_{j,C}}"', curve={height=30pt}, from=1-3, to=3-3]
+	\arrow["{s_{j,C'}}", curve={height=-30pt}, from=1-4, to=3-4]
+\end{tikzcd}\]
 Let again $f: C\rightarrow C'$ be an arrow in $\mathcal{C}$, 
 % and $f_j: F_j\ C \rightarrow F_j\ C'$ be an arrow in $\mathcal{D}$.
 Suppose we have some functor $G$ and a set of natural transformations $s_i: G\rightarrow F_i$.
@@ -214,18 +270,19 @@ Define the natural transformation $\langle s_i \rangle_i: G\rightarrow \prod_i F
 By naturality of $s_i$, we have 
 \[f_i \circ s_{i,C} = s_{i,C'}\circ G\ f\]
 From the property of the product, we have that 
-\[\pi_j \circ \langle s_i\rangle_{i, C} = s_{j, C},\quad
-\pi'_j \circ \langle s_i\rangle_{i, C'} = s_{j, C'}\]
+\[\pi_{j,C} \circ \langle s_i\rangle_{i, C} = s_{j, C},\quad
+\pi_{j,C'} \circ \langle s_i\rangle_{i, C'} = s_{j, C'}\]
 Then these imply that
-\[f_j \circ \pi_j \circ \langle s_i\rangle_{i, C} = \pi'_j \circ \langle s_i\rangle_{i, C'} \circ G\ f\]
-\[\pi'_j \circ \langle f_i\circ \pi_i\rangle_i \circ \langle s_i\rangle_{i, C} 
-= \pi'_j \circ \langle s_i\rangle_{i, C'} \circ G\ f\]
-Since this is true for all $i\in I$, then by the property of the product, 
-\[\langle f_i\circ \pi_i\rangle_i \circ \langle s_i\rangle_{i, C} =\langle s_i\rangle_{i, C'} \circ G\ f\]
+\[f_j \circ \pi_{j,C} \circ \langle s_i\rangle_{i, C} = \pi'_j \circ \langle s_i\rangle_{i, C'} \circ G\ f\]
+\[\pi_{j,C'} \circ \langle f_i\circ \pi_i\rangle_i \circ \langle s_i\rangle_{i, C} 
+= \pi_{j,C'} \circ \langle s_i\rangle_{i, C'} \circ G\ f\]
+Since this is true $\forall j\in I$, then by the property of the product, there is the unique arrow
+\[\langle f_i\circ \pi_i\rangle_i \circ \langle s_i\rangle_{i, C} =\langle s_i\rangle_{i, C'} \circ G\ f
+:G\ C\rightarrow \prod_i F_i\ C'\]
 So the naturality of $\langle s_i \rangle_i$ is satisfied.
-Since $\forall C$ in $\mathcal{C}$, and $\forall i\in I$, we have some $\pi_i$ that 
-\[\pi_j \circ \langle s_i\rangle_{i, C} = s_{j, C}\]
-where $t_j=\pi_j$, then
+Since $\forall C$ in $\mathcal{C}$, and $\forall j\in I$, we have some $\pi_{j,C}$ that 
+\[\pi_{j,C} \circ \langle s_i\rangle_{i, C} = s_{j, C}\]
+where $t_j=\pi_{j,C}$, then
 \[\forall j \in I: t_j \circ \langle s_i\rangle_i = s_j\]
 
 Now, we show the uniqueness of the natural transformation. 
@@ -233,23 +290,55 @@ Suppose there is some other natural transformation $u:G\rightarrow \prod_i F_i$
 such that $\forall j\in I,t_j \circ u = s_j$.
 Then for all $C$ in $\mathcal{C}$, $\forall j\in I, \pi_j \circ u_C = s_{j,C}$ for some $\pi_j$.
 Then there is a set of mappings 
-\[\pi_j \circ u_c = s_{j,c} : G\ C \rightarrow F_j\ C\]
+\[\pi_j \circ u_C = s_{j,C} : G\ C \rightarrow F_j\ C\]
 By property of the product, there is a unique mapping
 \[\langle\pi_i \circ u_C\rangle_i = \langle s_{i,C}\rangle_i: G\ C\rightarrow \prod_i F_i\ C\]
 such that $\forall j\in I, \pi_j \circ \langle\pi_i \circ u_C\rangle_i = s_{j,C}$.
 Then for all $C$ in $\mathcal{C}$,
 \begin{equation}
 \begin{aligned}
-    \langle\pi_i \circ u_C\rangle_i &= \langle s_{i,C}\rangle_i\\
-    \langle\pi_i\rangle_i \circ u_C &= \langle s_i\rangle_{i,C}\\
-    1_{\prod_i F_i\ C}\circ u_C &= \langle s_i\rangle_{i,C}\\
-    u_C &= \langle s_i\rangle_{i,C}\\
-    u &= \langle s_i\rangle_i
+    s_{j,C} &= \pi_j\circ \langle\pi_i \circ u_C\rangle_i\\
+    &= \pi_j\circ\langle\pi_i\rangle_i \circ u_C\\
+    &= \pi_j\circ 1_{\prod_i F_i\ C} \circ u_C\\
+    &= \pi_j \circ u_C\\
 \end{aligned}
 \end{equation}
-Thus, $\langle s_i\rangle_i$ is the unique arrow.
-
+By property of the product, there is the unique arrow 
+\[\langle s_{i,C}\rangle_i = \langle \pi_i \circ u_C\rangle_i = u_C: G\ C \rightarrow \prod_i F_i\ C\]
+So $\forall C$ in $\mathcal{C},u_C=\langle s_{i,C}\rangle_i$.
+Thus, $\langle s_i\rangle_i: G \rightarrow \prod_i F_i$ is the unique natural transformation
+that satisfies the properties defined above.
+\end{proof}
 \subsection*{(e)}
+\begin{proposition}
+    The Yoneda embedding $Y : \mathcal{C} \rightarrow [\mathcal{C}^{op}, \textbf{Set}]$
+    preserves set-indexed products, when they exist.
+\end{proposition}
+\begin{proof}
+Suppose $\mathcal{C}$ has set-indexed products.
+Let $\{C_i\}_i$ be a set of objects in $\mathcal{C}$ with the product, object $\prod_i C_i$,
+with arrows $\pi_j:\prod_i C_i \rightarrow C_j$.
+We show that for the set of objects $\{Y\ C_i\}_i := {\mathcal{C}(-,C_i)}_i$ in $[\mathcal{C}^{op}, \textbf{Set}]$,
+the object with arrows
+\[Y\ \prod_i C_i:= \mathcal{C}(-,\prod_i C_i)\]
+\[\forall j\in I, Y\ \pi_j := \mathcal{C}(-,\pi_j) : \mathcal{C}(-,\prod_i C_i) \rightarrow \mathcal{C}(-,C_j)\]
+is their set-indexed product.
+
+By theorem from lectures, $Y$ is full and faithful.
+Hence, there is an bijection between sets of arrows 
+\[\phi_{A,B} : \mathcal{C}(A,B) \cong [\mathcal{C}^{op}, \textbf{Set}](Y\ A, Y\ B)\]
+Then by the property of the product, 
+since for any object $C'$ and set of arrows $f_i:C'\rightarrow C_i$ in $\mathcal{C}$,
+there is the unique arrow $\langle f_i\rangle_i : C'\rightarrow \prod_i C_i$ 
+such that $\forall j\in I, \pi_j \circ \langle f_i\rangle_i = f_j$,
+for the corresponding objects $Y\ C', \{Y\ C_i\}_i, Y\ \prod_i C_i$,
+with the set of arrows $\{Y\ f_i\}_i=\{\phi_{C',C_i}(f_i)\}_i $ in $[\mathcal{C}^{op}, \textbf{Set}]$, 
+there must be the unique arrow 
+\[Y\ \langle f_i\rangle_i=(\phi_{C',\prod_i C_i})(\langle f_i\rangle_i) : Y\ C'\rightarrow Y\ \prod_i C_i\]
+such that $\forall j\in I, (Y\ \pi_j) \circ (Y\ \langle f_i\rangle_i) = (Y\ f_j)$.
+The embedding preserves set-indexed products when they exist.
+
+\end{proof}
 
 \section*{Question 2}
 \addtocounter{section}{1}
