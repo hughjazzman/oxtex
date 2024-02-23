@@ -1,0 +1,643 @@
+% Please do not change %
+\documentclass[11pt]{article} % font size
+\usepackage[margin=1in]{geometry} % margins
+\usepackage{amsmath,amsthm,amssymb} % for the  common "math symbols"
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[shortlabels]{enumitem} % for enumeration
+\usepackage{booktabs} % if you need tables
+\usepackage{listings}
+\usepackage{color}
+\usepackage{quiver}
+\usepackage{ulem}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% \theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{definition}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+
+\lstset{
+  frame=none,
+  xleftmargin=2pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\ttfamily\tiny\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=haskell,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\small\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
+% Feel free to include additional packages (if needed), but make sure it does not override the margin/font requirements.
+%
+\setlength{\parindent}{0pt} % no indent for new paragraphs.
+\setlength{\parskip}{5pt} % distance between paragraphs, which will be used when you have a blank line in your LaTeX code.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Categories, Proofs, and Processes: \\Assignment 4}
+%
+\author{Wira Azmoon Ahmad}
+\date{19 Feb 2024}
+%
+\begin{document}
+%
+\maketitle
+
+%You may use the usual \LaTeX\ environments to structure your answers:
+%\begin{align}
+%        \label{basegnn}
+%        \mathbf{h}_u^{(t+1)} = \sigma \bigg( \mathbf{W}_\text{self}^{(t)} \mathbf{h}_u^{(t)}  + \mathbf{W}_\text{neigh}^{(t)} \sum_{v \in N(u)} \mathbf{h}_v^{(t)} + \mathbf{b}^{(t)} \bigg): 
+%\end{align}
+
+
+%\begin{table}[h]
+%\caption{A simple table.}
+%\centering
+%\begin{tabular}[t]{lrrrr}
+%\toprule
+%Graphs & Can & Be  & Fun & Too \\ 
+%\midrule 
+%$G_1$ & $1$  & $2$ & $3$ & $4$ \\ 
+%$G_2$ & $-1$  & $-2$ & $-3$ & $-4$ \\ 
+%$G_3$ & $0.1$  & $0.2$ & $0.3$ & $0.4$ \\ 
+%\bottomrule
+%\end{tabular}
+%\label{tab}
+%\end{table}
+
+% A functor $F:\mathcal{C} \rightarrow \mathcal{D}$ is
+% \begin{itemize}
+%     \item \textbf{faithful} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is injective;
+%     \item \textbf{full} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is surjective
+% \end{itemize}
+
+{\color{teal}
+The following statements are \textbf{false} in general
+{\color{red}
+\begin{itemize}
+    \item A functor $F :\mathcal{C}\rightarrow \mathcal{D}$ preserves limits iff $F$ preserves products and limits.
+    \item A functor $F$ preserves products iff $F$ preserves binary products and terminal objects.
+\end{itemize}
+}
+Only true if $\mathcal{C}$ is.
+
+Functors preserve all commutative diagrams.
+Functors preserve all cones.
+Preserves limits $\implies$ sends universal cones to universal cones.
+
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJcXG1hdGhjYWx7SX0iXSxbMSwwLCJcXG1hdGhjYWx7Q30iXSxbMiwwLCJcXG1hdGhjYWx7RH0iXSxbMCwxLCJKIiwyLHsiY3VydmUiOjF9XSxbMSwyLCJGIl0sWzAsMSwiXFxEZWx0YSBMIiwxLHsiY3VydmUiOi0xfV0sWzAsMiwiXFxEZWx0YSBGTCIsMCx7ImN1cnZlIjotM31dLFs1LDMsIiIsMCx7InNob3J0ZW4iOnsic291cmNlIjoyMCwidGFyZ2V0IjoyMH19XV0=
+\[\begin{tikzcd}
+	{\mathcal{I}} & {\mathcal{C}} & {\mathcal{D}}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "J"', curve={height=6pt}, from=1-1, to=1-2]
+	\arrow["F", from=1-2, to=1-3]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "{\Delta L}"{description}, curve={height=-6pt}, from=1-1, to=1-2]
+	\arrow["{\Delta FL}", curve={height=-18pt}, from=1-1, to=1-3]
+	\arrow[shorten <=2pt, shorten >=2pt, Rightarrow, from=1, to=0]
+\end{tikzcd}\]
+}
+
+\section*{Question 1}
+\addtocounter{section}{1}
+\begin{proposition}
+    The covariant Hom-functor $\mathcal{C}(A,-):\mathcal{C}\rightarrow$ \textbf{Set} preserves all finite limits.
+\end{proposition}
+
+\begin{proof}
+Let $D: \mathcal{J} \rightarrow \mathcal{C}$ be a diagram where $\mathcal{J}$ is a finite category.
+Suppose the cone $(C, (c_1,c_2,...,c_N))$ to $D$ is a finite limit.
+By being a cone, for any $f:I\rightarrow J$ in $\mathcal{J}$, we have
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJEXFwgSSJdLFsyLDAsIkRcXCBKIl0sWzEsMSwiQyJdLFswLDEsIkRcXCBmIl0sWzIsMCwiY19JIl0sWzIsMSwiY19KIiwyXV0=
+\[\begin{tikzcd}
+	{D\ I} && {D\ J} \\
+	& C
+	\arrow["{D\ f}", from=1-1, to=1-3]
+	\arrow["{c_I}", from=2-2, to=1-1]
+	\arrow["{c_J}"', from=2-2, to=1-3]
+\end{tikzcd}\]
+\[D\ f\circ c_I = c_J\]
+
+We show that $(\mathcal{C}(A,C), (\mathcal{C}(A,c_1), ,...,\mathcal{C}(A,c_N)))$ is a cone 
+and a limit to $\mathcal{C}(A,-) \circ D: \mathcal{J}\rightarrow \textbf{Set}$.
+
+% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXG1hdGhjYWx7Q30iXSxbMiwwLCJcXHRleHRiZntTZXR9Il0sWzAsMSwiQyJdLFswLDIsIkRcXCBJIl0sWzIsMSwiXFxtYXRoY2Fse0N9KEEsQykiXSxbMiwyLCJcXG1hdGhjYWx7Q30oQSwgRFxcIEkpIl0sWzAsMywiRFxcIEoiXSxbMiwzLCJcXG1hdGhjYWx7Q30oQSwgRFxcIEopIl0sWzAsMSwiXFxtYXRoY2Fse0N9KEEsLSkiXSxbMiwzLCJjX0kiLDJdLFs0LDUsIlxcbWF0aGNhbHtDfShBLGNfSSkiXSxbMiw0LCIiLDEseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzMsNSwiIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFszLDYsIkRcXCBmIiwyXSxbNSw3LCJcXG1hdGhjYWx7Q30oQSwgRFxcIGYpIl0sWzYsNywiIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs5LDEwLCIiLDIseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFsxMywxNCwiIiwyLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfSwibGV2ZWwiOjEsInN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=
+\[\begin{tikzcd}
+	{\mathcal{C}} && {\textbf{Set}} \\
+	C && {\mathcal{C}(A,C)} \\
+	{D\ I} && {\mathcal{C}(A, D\ I)} \\
+	{D\ J} && {\mathcal{C}(A, D\ J)}
+	\arrow["{\mathcal{C}(A,-)}", from=1-1, to=1-3]
+	\arrow[""{name=0, anchor=center, inner sep=0}, "{c_I}"', from=2-1, to=3-1]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "{\mathcal{C}(A,c_I)}", from=2-3, to=3-3]
+	\arrow[maps to, from=2-1, to=2-3]
+	\arrow[maps to, from=3-1, to=3-3]
+	\arrow[""{name=2, anchor=center, inner sep=0}, "{D\ f}"', from=3-1, to=4-1]
+	\arrow[""{name=3, anchor=center, inner sep=0}, "{\mathcal{C}(A, D\ f)}", from=3-3, to=4-3]
+	\arrow[maps to, from=4-1, to=4-3]
+	\arrow[shorten <=15pt, shorten >=15pt, maps to, from=0, to=1]
+	\arrow[shorten <=15pt, shorten >=15pt, maps to, from=2, to=3]
+\end{tikzcd}\]
+Suppose we have an arbitrary $f:I\rightarrow J$ in $\mathcal{J}$,
+so we get
+\[\mathcal{C}(A,(D\ f)): \mathcal{C}(A,(D\ I)) \rightarrow\mathcal{C}(A,(D\ J))\]
+Consider the morphisms $D\ I \xleftarrow[]{c_I}C\xrightarrow[]{c_J} D\ J$, so
+\[\mathcal{C}(A,c_I):\mathcal{C}(A,C)\rightarrow \mathcal{C}(A, (D\ I)):= h\mapsto c_I \circ h\]
+\[\mathcal{C}(A,c_J):\mathcal{C}(A,C)\rightarrow \mathcal{C}(A, (D\ J)):= h'\mapsto c_J \circ h'\]
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJcXG1hdGhjYWx7Q30oQSwgRFxcIEkpIl0sWzIsMCwiXFxtYXRoY2Fse0N9KEEsIERcXCBJKSJdLFsxLDEsIlxcbWF0aGNhbHtDfShBLCBDKSJdLFswLDEsIlxcbWF0aGNhbHtDfShBLERcXCBmKSJdLFsyLDAsIlxcbWF0aGNhbHtDfShBLCBjX0kpIl0sWzIsMSwiXFxtYXRoY2Fse0N9KEEsIGNfSSkiLDJdXQ==
+\[\begin{tikzcd}
+	{\mathcal{C}(A, D\ I)} && {\mathcal{C}(A, D\ J)} \\
+	& {\mathcal{C}(A, C)}
+	\arrow["{\mathcal{C}(A,D\ f)}", from=1-1, to=1-3]
+	\arrow["{\mathcal{C}(A, c_I)}", from=2-2, to=1-1]
+	\arrow["{\mathcal{C}(A, c_J)}"', from=2-2, to=1-3]
+\end{tikzcd}\]
+Then the diagram commutes since
+\begin{equation}
+\begin{aligned}
+    \mathcal{C}(A,(D\ f)) \circ \mathcal{C}(A,c_I) &= (h \mapsto (D\ f)\circ h) \circ (h' \mapsto c_I \circ h')\\
+    &= h \mapsto (D\ f)\circ c_I \circ h\\
+    &= h \mapsto c_J \circ h\\
+    &= \mathcal{C}(A,c_J)
+\end{aligned}
+\end{equation}
+So $(\mathcal{C}(A,C), (\mathcal{C}(A,c_1), ,...,\mathcal{C}(A,c_N)))$ is a cone to $\mathcal{C}(A,-) \circ D$.
+    
+To show the limit, consider $\mathcal{C}(A,C)$ in \textbf{Set} and let $(B,\gamma)$ 
+be some other cone to  $\mathcal{C}(A,-) \circ D$, where $\gamma$ is
+\[\{\gamma_I:B\rightarrow \mathcal{C}(A,(D\ I))\}_{I\in\text{Ob}(\mathcal{J})}\]
+Since $(C, (c_1,c_2,...,c_N))$ is a limit to $D$, for any cone $(A, \delta)$ to $D$, 
+there is a unique arrow $a:A\rightarrow C$ such that $\forall I\in\text{Ob}(\mathcal{J}),c_I \circ a = \delta_I$.
+
+Note that $\forall b\in B,\gamma_I (b) \in \mathcal{C}(A,(D\ I))$.
+Then for each $b\in B$, we have the cone 
+\[(A,\{\gamma_I(b):A\rightarrow D\ I\}_{I\in\text{Ob}(\mathcal{J})})\]
+From being the limit, there is a unique map $u_b:A\rightarrow C$ such that
+% https://q.uiver.app/#q=WzAsMyxbMCwxLCJBIl0sWzEsMSwiQyJdLFsxLDAsIkRcXCBJIl0sWzAsMSwidV9iIiwyXSxbMCwyLCJcXGdhbW1hX0koYikiXSxbMSwyLCJjX0kiLDJdXQ==
+\[\begin{tikzcd}
+	& {D\ I} \\
+	A & C
+	\arrow["{u_b}"', from=2-1, to=2-2]
+	\arrow["{\gamma_I(b)}", from=2-1, to=1-2]
+	\arrow["{c_I}"', from=2-2, to=1-2]
+\end{tikzcd}\]
+\[\forall I\in \text{Ob}(\mathcal{J}), c_I\circ u_b = \gamma_I(b)\]
+
+By defining the arrow $g:B\rightarrow \mathcal{C}(A,C)$ such that $\forall b\in B, g(b) = u_b$,
+$g$ is the unique arrow from the cone $(B, \gamma)$ to 
+$(\mathcal{C}(A,C), (\mathcal{C}(A,c_1), ,...,\mathcal{C}(A,c_N)))$, 
+determined by the uniqueness of each $u_b$.
+% https://q.uiver.app/#q=WzAsMyxbMCwxLCJCIl0sWzEsMSwiXFxtYXRoY2Fse0N9KEEsQykiXSxbMSwwLCJcXG1hdGhjYWx7Q30oQSxEXFwgSSkiXSxbMCwxLCJnIiwyXSxbMCwyLCJcXGdhbW1hX0kiXSxbMSwyLCJcXG1hdGhjYWx7Q30oQSxjX0kpIiwyXV0=
+\[\begin{tikzcd}
+	& {\mathcal{C}(A,D\ I)} \\
+	B & {\mathcal{C}(A,C)}
+	\arrow["g"', from=2-1, to=2-2]
+	\arrow["{\gamma_I}", from=2-1, to=1-2]
+	\arrow["{\mathcal{C}(A,c_I)}"', from=2-2, to=1-2]
+\end{tikzcd}\]
+
+Thus, $(\mathcal{C}(A,C), (\mathcal{C}(A,c_1), ,...,\mathcal{C}(A,c_N)))$ 
+is the finite limit to $\mathcal{C}(A,-) \circ D$.
+    
+\end{proof}
+
+
+\begin{corollary}
+Since all representable functors are naturally isomorphic to the covariant Hom-functor at $A$,
+$\mathcal{C}(A,-):C\rightarrow$ \textbf{Set} for some $A$, 
+representable functors then preserve finite limits.
+\end{corollary}
+
+{\color{teal}
+% https://q.uiver.app/#q=WzAsNixbMSwyLCJGTCJdLFswLDMsIkZKeCJdLFsyLDMsIkZKeSJdLFs0LDAsIlxcYnVsbGV0Il0sWzUsMSwiXFxidWxsZXQiXSxbMywxLCJcXGJ1bGxldCJdLFswLDFdLFswLDJdLFszLDRdLFszLDVdLFs1LDRdLFsxLDJdLFswLDMsIlxcY29uZyIsMV0sWzEsNSwiXFxjb25nIiwxXSxbMiw0LCJcXGNvbmciLDFdXQ==
+\[\begin{tikzcd}
+	&&&& \bullet \\
+	&&& \bullet && \bullet \\
+	& FL \\
+	FJx && FJy
+	\arrow[from=3-2, to=4-1]
+	\arrow[from=3-2, to=4-3]
+	\arrow[from=1-5, to=2-6]
+	\arrow[from=1-5, to=2-4]
+	\arrow[from=2-4, to=2-6]
+	\arrow[from=4-1, to=4-3]
+	\arrow["\cong"{description}, from=3-2, to=1-5]
+	\arrow["\cong"{description}, from=4-1, to=2-4]
+	\arrow["\cong"{description}, from=4-3, to=2-6]
+\end{tikzcd}\]
+\[\alpha : F \cong \mathcal{C}(A,-)\]
+
+\[\mathcal{C}(W,A\times B) \cong \mathcal{C}(W,A)\times \mathcal{C}(W,B)\]
+preserves binary products only if natural in $W$. 
+Objectwise isomorphic functors not necessarily naturally isomorphic.
+}
+
+\clearpage
+\section*{Question 2}
+\addtocounter{section}{1}
+\begin{proposition}
+	The natural transformation $\Delta:$ Id $\rightarrow F$ 
+	given by arrows $\Delta_X: X\rightarrow X\times X:=x\mapsto (x,x)$
+	is the only natural transformation of the type Id $\rightarrow F$.
+\end{proposition}
+\begin{proof}
+	$\Delta$ is a natural transformation since the following naturality square commutes,
+	where $f: A\rightarrow B$ is an arbitrary arrow in \textbf{Set}, and $f(a)=b\in B$,
+	with the mappings as shown, for every $a\in A, A\in \text{Ob}(\textbf{Set})$.
+	% https://q.uiver.app/#q=WzAsMTAsWzIsMSwiYSJdLFszLDEsImIiXSxbMywyLCIoYixiKSJdLFsyLDIsIihhLGEpIl0sWzEsMCwiXFx0ZXh0e0lkIH1BPUEiXSxbNCwwLCJcXHRleHR7SWQgfUI9QiJdLFs0LDMsIkZcXCBCPUJcXHRpbWVzIEIiXSxbMSwzLCJGXFwgQT1BXFx0aW1lcyBBIl0sWzAsMCwiXFx0ZXh0e0lkfSJdLFswLDMsIkYiXSxbMCwxLCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzEsMiwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFswLDMsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMywyLCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzQsNSwiXFx0ZXh0e0lkIH0gZj1mIiwyXSxbNSw2LCJcXERlbHRhX0IiLDJdLFs0LDcsIlxcRGVsdGFfQSIsMl0sWzcsNiwiRlxcIGY9ZlxcdGltZXMgZiJdLFs4LDksIlxcRGVsdGEiLDJdXQ==
+\[\begin{tikzcd}
+	{\text{Id}} & {\text{Id }A=A} &&& {\text{Id }B=B} \\
+	&& a & b \\
+	&& {(a,a)} & {(b,b)} \\
+	F & {F\ A=A\times A} &&& {F\ B=B\times B}
+	\arrow[maps to, from=2-3, to=2-4]
+	\arrow[maps to, from=2-4, to=3-4]
+	\arrow[maps to, from=2-3, to=3-3]
+	\arrow[maps to, from=3-3, to=3-4]
+	\arrow["{\text{Id } f=f}"', from=1-2, to=1-5]
+	\arrow["{\Delta_B}"', from=1-5, to=4-5]
+	\arrow["{\Delta_A}"', from=1-2, to=4-2]
+	\arrow["{F\ f=f\times f}", from=4-2, to=4-5]
+	\arrow["\Delta"', from=1-1, to=4-1]
+\end{tikzcd}\]
+Suppose $\Gamma:\text{Id}\rightarrow F$ is another natural transformation.
+Then for any function $f:\{*\}\rightarrow A$ on the singleton set where $f(*)=a\in A$, 
+the following diagram commutes.
+% https://q.uiver.app/#q=WzAsMTEsWzIsMSwiKiJdLFszLDEsImEiXSxbMywyLCIoYSxhKSJdLFsyLDIsIigqLCopIl0sWzEsMCwiXFx0ZXh0e0lkIH1cXHsqXFx9PVxceypcXH0iXSxbNCwwLCJcXHRleHR7SWQgfUE9QSJdLFs0LDMsIkZcXCBBPUFcXHRpbWVzIEEiXSxbMSwzLCJGXFwgXFx7KlxcfTo9XFx7KlxcfVxcdGltZXMgXFx7KlxcfSJdLFswLDAsIlxcdGV4dHtJZH0iXSxbMCwzLCJGIl0sWzEsNCwiPVxceygqLCopXFx9Il0sWzAsMSwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFsxLDIsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMCwzLCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzMsMiwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDUsIlxcdGV4dHtJZCB9IGY9ZiJdLFs1LDYsIlxcR2FtbWFfQSIsMl0sWzQsNywiXFxHYW1tYV97XFx7KlxcfX0iLDJdLFs3LDYsIkZcXCBmPWZcXHRpbWVzIGYiLDJdLFs4LDksIlxcR2FtbWEiLDJdXQ==
+\[\begin{tikzcd}
+	{\text{Id}} & {\text{Id }\{*\}=\{*\}} &&& {\text{Id }A=A} \\
+	&& {*} & a \\
+	&& {(*,*)} & {(a,a)} \\
+	F & {F\ \{*\}:=\{*\}\times \{*\}} &&& {F\ A=A\times A} \\
+	& {=\{(*,*)\}}
+	\arrow[maps to, from=2-3, to=2-4]
+	\arrow[maps to, from=2-4, to=3-4]
+	\arrow[maps to, from=2-3, to=3-3]
+	\arrow[maps to, from=3-3, to=3-4]
+	\arrow["{\text{Id } f=f}", from=1-2, to=1-5]
+	\arrow["{\Gamma_A}"', from=1-5, to=4-5]
+	\arrow["{\Gamma_{\{*\}}}"', from=1-2, to=4-2]
+	\arrow["{F\ f=f\times f}"', from=4-2, to=4-5]
+	\arrow["\Gamma"', from=1-1, to=4-1]
+\end{tikzcd}\]
+In other words, we must have
+\[\forall A\in \text{Ob}(\textbf{Set}): \Gamma_A (a)=(f\times f) (*,*) = (f(*),f(*))= (a,a)\]
+Then $\forall A, \Gamma_A = \Delta_A$, so $\Delta$ is the unique natural transformation.
+\end{proof}
+
+\clearpage
+\section*{Question 3}
+\addtocounter{section}{1}
+Define 
+\[\texttt{eval}:\mathcal{D}^{\mathcal{C}}\times \mathcal{C} \rightarrow \mathcal{D}\]
+\[\texttt{eval}::(F:\mathcal{C}\rightarrow\mathcal{D},C) \mapsto F\ C, \quad
+(\Delta:F\rightarrow G, h:C\rightarrow C') \mapsto (k : F\ C \rightarrow G\ C')\]
+{\color{teal} $k$ comes from the naturality square where for $f:C\rightarrow C'$,
+\[G\ f \circ \Delta_C = \Delta_{C'} \circ F\ f\]}
+% https://q.uiver.app/#q=WzAsNixbMCwwLCJcXG1hdGhjYWx7RH1ee1xcbWF0aGNhbHtDfX1cXHRpbWVzIFxcbWF0aGNhbHtDfSJdLFsyLDAsIlxcbWF0aGNhbHtEfSJdLFswLDEsIihGOlxcbWF0aGNhbHtDfVxccmlnaHRhcnJvd1xcbWF0aGNhbHtEfSxDKSJdLFsyLDEsIkZcXCBDIl0sWzAsMiwiKEY6XFxtYXRoY2Fse0N9XFxyaWdodGFycm93XFxtYXRoY2Fse0R9LEMnKSJdLFsyLDIsIkdcXCBDJyJdLFswLDEsIlxcdGV4dHtldmFsfSJdLFsyLDMsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMiw0LCIoXFxEZWx0YTpGXFxyaWdodGFycm93IEcsaDpDXFxyaWdodGFycm93IEMnKSIsMl0sWzMsNSwiXFxHYW1tYTpGXFwgQ1xccmlnaHRhcnJvdyBHXFwgQyciXSxbNCw1LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzgsOSwiIiwyLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfSwibGV2ZWwiOjEsInN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=
+\[\begin{tikzcd}
+	{\mathcal{D}^{\mathcal{C}}\times \mathcal{C}} && {\mathcal{D}} \\
+	{(F:\mathcal{C}\rightarrow\mathcal{D},C)} && {F\ C} \\
+	{(F:\mathcal{C}\rightarrow\mathcal{D},C')} && {G\ C'}
+	\arrow["{\texttt{eval}}", from=1-1, to=1-3]
+	\arrow[maps to, from=2-1, to=2-3]
+	\arrow[""{name=0, anchor=center, inner sep=0}, "{(\Delta:F\rightarrow G,h:C\rightarrow C')}"', from=2-1, to=3-1]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "{k:F\ C\rightarrow G\ C'}", from=2-3, to=3-3]
+	\arrow[maps to, from=3-1, to=3-3]
+	\arrow[shorten <=17pt, shorten >=17pt, maps to, from=0, to=1]
+\end{tikzcd}\]
+\begin{lemma}
+	$\texttt{eval}:\mathcal{D}^{\mathcal{C}}\times \mathcal{C} \rightarrow \mathcal{D}$ is a functor.
+	\label{lem:1}
+\end{lemma}
+\begin{proof}
+We use the lemma to show that \texttt{eval} is a functor.
+Fix an object $F:\mathcal{C} \rightarrow \mathcal{D}$ in $\mathcal{D}^{\mathcal{C}}$ so 
+\[\texttt{eval}(F,-):\mathcal{C}\rightarrow\mathcal{D}\]
+\[\texttt{eval}(F,-):: C\mapsto \texttt{eval}(F,C), \quad f \mapsto F\ f\]
+Clearly each object $C$ in $\mathcal{C}$ has a mapping to $F\ C$ in $\mathcal{D}$.
+For arrow $f:A\rightarrow B,g:B\rightarrow C$ in $\mathcal{C}$,
+\begin{equation}
+\begin{aligned}
+	\texttt{eval}(F,g\circ f)&=F(g\circ f)\\
+	&=F\ g \circ F\ f \quad\text{(by functoriality)}\\
+	&= \texttt{eval}(F,g) \circ \texttt{eval}(F,g)
+\end{aligned}
+\end{equation}
+\[\texttt{eval}(F,1_A)=F\ 1_A = 1_{F\ A} = 1_{\texttt{eval}(F,A)}\]
+So $\texttt{eval}(F,-)$ satisfies functoriality.
+
+Now fix an object $C$ in $\mathcal{C}$ so
+\[\texttt{eval}(-,C):\mathcal{D}^{\mathcal{C}}\rightarrow\mathcal{D}\]
+\[\texttt{eval}(-,C):: F \mapsto \texttt{eval}(F,C), \quad t \mapsto t_C\]
+Each functor $F:\mathcal{C}\rightarrow \mathcal{D}$ in $\mathcal{D}^{\mathcal{C}}$
+has a mapping to $F\ C$ in $\mathcal{D}$.
+For each natural transformation $\Delta:F\rightarrow G, \Gamma:G\rightarrow H$ in $\mathcal{D}^{\mathcal{C}}$,
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJGXFwgQyJdLFsxLDAsIkdcXCBDIl0sWzIsMCwiSFxcIEMiXSxbMCwxLCJcXERlbHRhX0MiXSxbMSwyLCJcXEdhbW1hX0MiXSxbMCwyLCIoXFxHYW1tYVxcY2lyY1xcRGVsdGEpX0MiLDAseyJjdXJ2ZSI6LTN9XV0=
+\[\begin{tikzcd}
+	{F\ C} & {G\ C} & {H\ C}
+	\arrow["{\Delta_C}", from=1-1, to=1-2]
+	\arrow["{\Gamma_C}", from=1-2, to=1-3]
+	\arrow["{(\Gamma\circ\Delta)_C}", curve={height=-18pt}, from=1-1, to=1-3]
+\end{tikzcd}\]
+\begin{equation}
+\begin{aligned}
+	\texttt{eval}(\Gamma\circ\Delta, C) &= (\Gamma\circ\Delta)_C:F\ C\rightarrow H\ C\\
+	&= (\Gamma_C:G\ C\rightarrow H\ C) \circ (\Delta_C : F\ C \rightarrow H\ C)\\
+	&= \texttt{eval}(\Gamma, C) \circ \texttt{eval}(\Delta, C)
+\end{aligned}
+\end{equation}
+\[\texttt{eval}(1_F, C) = 1_{F\ C} = 1_{\texttt{eval}(F,C)}\]
+So $\texttt{eval}(-,C)$ is a functor, and the first part of the lemma is satisfied.
+
+Suppose we have a natural transformation $\Delta: F\rightarrow G$ in $\mathcal{D}^{\mathcal{C}}$,
+and an arrow $f:C\rightarrow C'$ in $\mathcal{C}$.
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXHRleHR7ZXZhbH0oRixDKSJdLFsxLDAsIlxcdGV4dHtldmFsfShGLEMnKSJdLFsxLDEsIlxcdGV4dHtldmFsfShHLEMnKSJdLFswLDEsIlxcdGV4dHtldmFsfShHLEMpIl0sWzAsMSwiXFx0ZXh0e2V2YWx9KEYsZikiXSxbMSwyLCJcXHRleHR7ZXZhbH0oXFxEZWx0YSxDJykiXSxbMCwzLCJcXHRleHR7ZXZhbH0oXFxEZWx0YSxDKSIsMl0sWzMsMiwiXFx0ZXh0e2V2YWx9KEcsZikiXV0=
+\[\begin{tikzcd}
+	{\texttt{eval}(F,C)} & {\texttt{eval}(F,C')} \\
+	{\texttt{eval}(G,C)} & {\texttt{eval}(G,C')}
+	\arrow["{\texttt{eval}(F,f)}", from=1-1, to=1-2]
+	\arrow["{\texttt{eval}(\Delta,C')}", from=1-2, to=2-2]
+	\arrow["{\texttt{eval}(\Delta,C)}"', from=1-1, to=2-1]
+	\arrow["{\texttt{eval}(G,f)}", from=2-1, to=2-2]
+\end{tikzcd}\]
+Then the diagram commutes since the naturality square commutes with $\Delta$ being a natural transformation.
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJGXFwgQyJdLFsxLDAsIkZcXCBDJyJdLFsxLDEsIkdcXCBDJyJdLFswLDEsIkdcXCBDIl0sWzAsMSwiRlxcIGYiXSxbMSwyLCJcXERlbHRhX3tDJ30iXSxbMCwzLCJcXERlbHRhX0MiLDJdLFszLDIsIkdcXCBmIl1d
+\[\begin{tikzcd}
+	{F\ C} & {F\ C'} \\
+	{G\ C} & {G\ C'}
+	\arrow["{F\ f}", from=1-1, to=1-2]
+	\arrow["{\Delta_{C'}}", from=1-2, to=2-2]
+	\arrow["{\Delta_C}"', from=1-1, to=2-1]
+	\arrow["{G\ f}", from=2-1, to=2-2]
+\end{tikzcd}\]
+\begin{equation}
+\begin{aligned}
+	\texttt{eval}(F,f) \circ \texttt{eval}(\Delta,C')&=(F\ f) \circ \Delta_C'\\
+	&= (G\ f) \circ \Delta_C \quad\text{(by naturality)}\\
+	&= \texttt{eval}(G,f) \circ \texttt{eval}(\Delta,C)
+\end{aligned}
+\end{equation}
+The second part of the lemma is satisfied, and 
+$\texttt{eval}:\mathcal{D}^{\mathcal{C}}\times \mathcal{C} \rightarrow \mathcal{D}$
+is a functor.
+\end{proof}
+
+Let $G: \mathcal{E} \times \mathcal{C} \rightarrow \mathcal{D}$ be an arbitrary functor.
+Define 
+\[\tilde{G} : \mathcal{E} \rightarrow \mathcal{D}^{\mathcal{C}}\]
+\[\tilde{G} :: A \mapsto G(A, -),\quad (f:A\rightarrow B) \mapsto (\Delta: G(A,-) \rightarrow G(B,-))\]
+where $G(A,-):\mathcal{C} \rightarrow \mathcal{D}$ is a functor for each $A$ in $\mathcal{E}$.
+\begin{lemma}
+For a given $G: \mathcal{E} \times \mathcal{C} \rightarrow \mathcal{D}$,
+$\tilde{G} : \mathcal{E} \rightarrow \mathcal{D}^{\mathcal{C}}$ is the unique functor
+where the following diagram commutes.
+% https://q.uiver.app/#q=WzAsMyxbMCwxLCJcXG1hdGhjYWx7RX1cXHRpbWVzIFxcbWF0aGNhbHtDfSJdLFswLDAsIlxcbWF0aGNhbHtEfV57XFxtYXRoY2Fse0N9fVxcdGltZXMgXFxtYXRoY2Fse0N9Il0sWzEsMCwiXFxtYXRoY2Fse0R9Il0sWzAsMSwiXFx0aWxkZXtHfVxcdGltZXMgMV97XFxtYXRoY2Fse0N9fSJdLFswLDIsIkciLDJdLFsxLDIsIlxcdGV4dHtldmFsfSJdXQ==
+\[\begin{tikzcd}
+	{\mathcal{D}^{\mathcal{C}}\times \mathcal{C}} & {\mathcal{D}} \\
+	{\mathcal{E}\times \mathcal{C}}
+	\arrow["{\tilde{G}\times 1_{\mathcal{C}}}", from=2-1, to=1-1]
+	\arrow["G"', from=2-1, to=1-2]
+	\arrow["{\texttt{eval}}", from=1-1, to=1-2]
+\end{tikzcd}\]
+\label{lem:2}
+\end{lemma}
+
+\begin{proof}
+Any object $A$ in $\mathcal{E}$ will get mapped to $G(A,-)$ in $\mathcal{D}^{\mathcal{C}}$.
+Suppose $A\xrightarrow[]{f}A'\xrightarrow[]{g}A''$ in $\mathcal{E}$. Then
+\begin{equation}
+\begin{aligned}
+	\forall C\in\text{Ob}(\mathcal{C}), ((\tilde{G}\ g) \circ (\tilde{G}\ f))(C)
+	&= (\tilde{G}\ g)(C) \circ (\tilde{G}\ f)(C)\\
+	&= (\Delta'_C:G(A',C)\rightarrow G(A'',C)) \circ (\Delta_C: G(A,C)\rightarrow G(A',C))\\
+	&= (\Delta'\circ \Delta)_C: G(A,C) \rightarrow G(A'',C)\\
+	&= \tilde{G} (g\circ f)(C)
+\end{aligned}
+\end{equation}
+\[\tilde{G}\ 1_A = 1_{G(A,-)}=1_{\tilde{G}\ A}\]
+So $\tilde{G} : \mathcal{E} \rightarrow \mathcal{D}^{\mathcal{C}}$ is a functor.
+
+
+Let $(E,C)$ be an object in $\mathcal{E}\times \mathcal{C}$.
+\[\texttt{eval}\circ (\tilde{G}\times 1_{\mathcal{C}})(E,C)=\texttt{eval}(G(E,-),C) = G(E,C)\]
+Let $(f,g)$ be an arrow in $\mathcal{E}\times \mathcal{C}$.
+\begin{equation}
+\begin{aligned}
+	\texttt{eval}\circ (\tilde{G}\times 1_{\mathcal{C}})(f:A\rightarrow A', g:C\rightarrow C')
+	&=\texttt{eval}(\Delta:G(A,-)\rightarrow G(A',-),g:C\rightarrow C')\\
+	&=k: G(A,C)\rightarrow G(A', C')\\
+	&= G(f:A\rightarrow A',g:C\rightarrow C')
+\end{aligned}
+\end{equation}
+So $\texttt{eval}\circ (\tilde{G}\times 1_{\mathcal{C}}) = G$.
+
+To show uniqueness, suppose there is some other functor $H: \mathcal{E} \rightarrow \mathcal{D}^{\mathcal{C}}$
+such that $\texttt{eval}\circ (H\times 1_{\mathcal{C}}) = G$. 
+Then for each object $(E,C)$ in $\mathcal{E}\times \mathcal{C}$,
+\[\texttt{eval}\circ (H\times 1_{\mathcal{C}})(E,C)=\texttt{eval}(H(E),C) = H(E)(C)= G(E,C)\]
+So $\forall (E,C)\in\text{Ob}(\mathcal{E}\times\mathcal{C}), H(E)(C)=G(E,C)$.
+Then for each arrow $(f,g)$ in $\mathcal{E}\times \mathcal{C}$,
+\begin{equation}
+\begin{aligned}
+	\texttt{eval}\circ (H\times 1_{\mathcal{C}})(f:A\rightarrow A', g:C\rightarrow C')
+	&=\texttt{eval}(H\ f: H\ A\ \rightarrow H\ A',g:C\rightarrow C')\\
+	&=k: H\ A\ C\rightarrow H\ A'\ C'\\
+	&= G(f:A\rightarrow A',g:C\rightarrow C')\\
+	&= k: G(A, C) \rightarrow G(A', C')
+\end{aligned}
+\end{equation}
+So $\forall (f,g)\in\text{Ob}(\mathcal{E}\times\mathcal{C}), H(f)(g)=G(f,g)$.
+Thus, $H=\tilde{G}$ is unique. 
+\end{proof}
+{\color{teal}
+Exponentials are right adjoint to products.}
+
+\begin{proposition}
+	Func$(\mathcal{C},\mathcal{D})$ is an exponential object in \textbf{Cat}.
+\end{proposition}
+\begin{proof}
+By Lemmas \ref{lem:1}, \ref{lem:2}, there is an object $\mathcal{D}^{\mathcal{C}}$ 
+and morphism \texttt{eval}$:\mathcal{D}^{\mathcal{C}}\times \mathcal{C} \rightarrow \mathcal{D}$,
+where for every $G: \mathcal{E} \times \mathcal{C} \rightarrow \mathcal{D}$,
+there is a unique morphism $\tilde{G} : \mathcal{E} \rightarrow \mathcal{D}^{\mathcal{C}}$
+such that $\texttt{eval}\circ (\tilde{G}\times 1_{\mathcal{C}}) = G$.
+Func$(\mathcal{C},\mathcal{D})$ is an exponential object in \textbf{Cat}.
+\end{proof}
+
+\clearpage
+\section*{Question 4}
+\addtocounter{section}{1}
+\subsection*{(a)}
+\begin{proposition}
+	$a\Rightarrow b$ is an exponential.
+\end{proposition}
+\begin{proof}
+\[\texttt{eval}: (a\Rightarrow b) \wedge a \leq b\]
+Let $f: c\wedge a \leq b$ be an arrow.
+We want to show the unique arrow $\tilde{f}: c\leq (a\Rightarrow b)$ such that
+\[\texttt{eval} \circ (\tilde{f}\times 1_a) = f\]
+\begin{equation}
+\begin{aligned}
+	\texttt{eval} \circ (\tilde{f}\times 1_a) &= \texttt{eval} \circ (c\leq (a\Rightarrow b) \wedge a \leq a)\\
+	&= ((a\Rightarrow b) \wedge a \leq b) \circ (c \wedge a \leq (a\Rightarrow b) \wedge a)\\
+	&= c \wedge a \leq b\\
+	&= f
+\end{aligned}
+\end{equation}
+Since $B$ is a poset, there is at most 1 arrow between objects - $\tilde{f}$ is a unique arrow.
+
+$a\Rightarrow b$ is an exponential.
+	
+\end{proof}
+{\color{teal}
+Finite boolean algebra $B$ is a poset $\implies$ thing category, which is closed (has exponentials)
+
+Cartesian closed categories (CCC).
+
+$\tilde{G}$ corresponds to $\lambda$ abstraction in functional programming.
+% https://q.uiver.app/#q=WzAsNSxbMSwwLCJBXFxSaWdodGFycm93IEJcXHRpbWVzIEEiXSxbMiwwLCJCIl0sWzEsMSwiXFxHYW1tYSBcXHRpbWVzIEEiXSxbMCwxLCJcXEdhbW1hIl0sWzAsMCwiQVxcUmlnaHRhcnJvdyBCIl0sWzAsMSwiYXBwIl0sWzIsMSwidCIsMl0sWzIsMCwiXFxsYW1iZGEgdFxcdGltZXMgMV9BIl0sWzMsNCwiXFxsYW1iZGEgdCJdXQ==
+\[\begin{tikzcd}
+	{A\Rightarrow B} & {A\Rightarrow B\times A} & B \\
+	\Gamma & {\Gamma \times A}
+	\arrow["app", from=1-2, to=1-3]
+	\arrow["t"', from=2-2, to=1-3]
+	\arrow["{\lambda t\times 1_A}", from=2-2, to=1-2]
+	\arrow["{\lambda t}", from=2-1, to=1-1]
+\end{tikzcd}\]
+\[(\lambda x. t)(a) = t[a/x]\]
+
+
+Show
+\[a\wedge b \leq c \iff b \leq a \implies c\]
+\[\texttt{eval} : (\neg a \vee b) \wedge a = (\neg a \wedge a) \vee (b \wedge a) = b \wedge a\]
+\begin{proof}
+\[a\times b \rightarrow c\]
+\begin{equation}
+\begin{aligned}
+    a \wedge b \leq c &\iff a \wedge b \leq \neg\neg c\\
+    &\iff a \wedge b \wedge \neg c = \bot\\
+    &\iff b \leq \neg(a \wedge \neg c)\\
+    &\iff b \leq \neg a \vee c\\
+    &\iff b \leq a \implies c
+\end{aligned}
+\end{equation}
+\[b \rightarrow c^a\]
+\end{proof}
+}
+
+\subsection*{(b)}
+\[\bot=\emptyset\]
+\[\top=X\]
+
+\subsection*{(c)}
+The atoms are the elements of the set $X$ as sets. i.e. the set $\{x\}$ where $x\in X$.
+
+\clearpage
+\subsection*{(d)}
+\begin{proposition}
+	$t:\text{Id}\rightarrow At\circ \mathcal{P}^B$ is a natural isomorphism.
+\end{proposition}
+% https://q.uiver.app/#q=WzAsMTAsWzIsMSwiYSJdLFszLDEsImYoYSkiXSxbMywyLCJcXHtmKGEpXFx9Il0sWzIsMiwiXFx7YVxcfSJdLFsxLDAsIkEiXSxbNCwwLCJCIl0sWzQsMywiXFx7XFx7YlxcfXxiXFxpbiBCXFx9Il0sWzEsMywiXFx7XFx7YVxcfXxhXFxpbiBBXFx9Il0sWzAsMCwiXFx0ZXh0e0lkfSJdLFswLDMsIkF0XFxjaXJjXFxtYXRoY2Fse1B9XkIiXSxbMCwxLCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzEsMiwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFswLDMsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMywyLCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzQsNSwiZiIsMl0sWzUsNiwidF9CIiwyLHsib2Zmc2V0IjoxfV0sWzQsNywidF9BIiwyLHsib2Zmc2V0IjoxfV0sWzcsNiwiXFx7YVxcfVxcbWFwc3RvIFxce2YoYSlcXH0iXSxbOCw5LCJ0IiwyLHsib2Zmc2V0IjoxfV0sWzksOCwidF57LTF9IiwyLHsib2Zmc2V0IjoyfV0sWzcsNCwidF9BXnstMX0iLDIseyJvZmZzZXQiOjF9XSxbNiw1LCJ0X0Jeey0xfSIsMix7Im9mZnNldCI6MX1dXQ==
+\[\begin{tikzcd}
+	{\text{Id}} & A &&& B \\
+	&& a & {f(a)} \\
+	&& {\{a\}} & {\{f(a)\}} \\
+	{At\circ\mathcal{P}^B} & {\{\{a\}|a\in A\}} &&& {\{\{b\}|b\in B\}}
+	\arrow[maps to, from=2-3, to=2-4]
+	\arrow[maps to, from=2-4, to=3-4]
+	\arrow[maps to, from=2-3, to=3-3]
+	\arrow[maps to, from=3-3, to=3-4]
+	\arrow["f"', from=1-2, to=1-5]
+	\arrow["{t_B}"', shift right, from=1-5, to=4-5]
+	\arrow["{t_A}"', shift right, from=1-2, to=4-2]
+	\arrow["{\{a\}\mapsto \{f(a)\}}", from=4-2, to=4-5]
+	\arrow["t"', shift right, from=1-1, to=4-1]
+	\arrow["{t^{-1}}"', shift right=2, from=4-1, to=1-1]
+	\arrow["{t_A^{-1}}"', shift right, from=4-2, to=1-2]
+	\arrow["{t_B^{-1}}"', shift right, from=4-5, to=1-5]
+\end{tikzcd}\]
+\begin{proof}
+To prove the naturality square commutes, we show that for all finite sets $A,B$,
+\[((At\circ \mathcal{P}^B)\ f) \circ t_A = t_B \circ f\]
+
+% https://q.uiver.app/#q=WzAsOSxbMSwxLCJcXG1hdGhjYWx7UH0oQSkiXSxbMiwxLCJcXHtcXHthXFx9fGFcXGluIEFcXH0iXSxbMCwyLCJCIl0sWzEsMiwiXFxtYXRoY2Fse1B9KEIpIl0sWzAsMCwiXFx0ZXh0YmZ7RmluU2V0fSJdLFsxLDAsIlxcdGV4dGJme0ZpbkJvb2x9XntvcH0iXSxbMiwwLCJcXHRleHRiZntGaW5TZXR9Il0sWzAsMSwiQSJdLFsyLDIsIlxce1xce2JcXH18YlxcaW4gQlxcfSJdLFswLDEsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw1LCJcXG1hdGhjYWx7UH1eQiJdLFs1LDYsIkF0Il0sWzcsMCwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs3LDIsImYiLDJdLFszLDAsImgoVCk9XFx7YVxcaW4gQXxmKGEpXFxpbiBUXFx9IiwxXSxbMSw4LCJBdChoKSJdLFsyLDMsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMyw4LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d
+\[\begin{tikzcd}
+	{\textbf{FinSet}} & {\textbf{FinBool}^{op}} & {\textbf{FinSet}} \\
+	A & {\mathcal{P}(A)} & {\{\{a\}|a\in A\}} \\
+	B & {\mathcal{P}(B)} & {\{\{b\}|b\in B\}}
+	\arrow[maps to, from=2-2, to=2-3]
+	\arrow["{\mathcal{P}^B}", from=1-1, to=1-2]
+	\arrow["At", from=1-2, to=1-3]
+	\arrow[maps to, from=2-1, to=2-2]
+	\arrow["f"', from=2-1, to=3-1]
+	\arrow["{h(T)=\{a\in A|f(a)\in T\}}"{description}, from=3-2, to=2-2]
+	\arrow["{At(h)}", from=2-3, to=3-3]
+	\arrow[maps to, from=3-1, to=3-2]
+	\arrow[maps to, from=3-2, to=3-3]
+\end{tikzcd}\]
+Note that by definition of the functors $\mathcal{P}^B$ and $At$,
+where $\mathcal{P}^B\ f = h:\mathcal{P}(B) \rightarrow \mathcal{P}(A)$,
+\begin{equation}
+\begin{aligned}
+	\forall a\in A, &(\forall T\in \mathcal{P}(B), f(a)\in T \iff a\in h(T) \iff \{a\} \subseteq h(T))\\
+	&\iff (\exists! \{b'\}\in \mathcal{P}(B): \{b'\} \subseteq T \iff b' \in T)
+	\label{eq:10}
+\end{aligned}
+\end{equation}
+In other words, for all elements $a\in A$, let its corresponding atom $\{a\}\subseteq h(T)$ 
+for all subsets $T\subseteq B$ where $f(a)\in T$, so that $\{b'\} \subseteq B$ is the unique atom 
+that satisfies the property of a Boolean algebra homomorphism.
+
+It must be that $b'=f(a)$ since $\{f(a)\}\subseteq B$ is one such atom that satisfies the property,
+and by uniqueness.
+So $\forall a\in A,At(h)(\{a\})=\{f(a)\}\subseteq B$.
+ $t$ is a natural transformation.
+
+To show the natural isomorphism, we can define the inverse for all finite sets $A$,
+\[t_A^{-1} : \{\{a\}|a\in A\} \rightarrow A\]
+\[t_A^{-1} :: \{a\} \mapsto a, \quad (k: \{a\} \mapsto \{b\}) \mapsto (f(a) = b)\]
+so $t_A^{-1}\circ t_A = 1_{\text{Id}\ A},t_A\circ t_A^{-1} = 1_{At\circ \mathcal{P}^B\ A} $.
+We have for all $A, t_A$ is an isomorphism, so $t$ is a natural isomorphism.
+	
+\end{proof}
+
+\section*{Optional}
+\addtocounter{section}{1}
+\subsection*{(a)}
+Suppose we have a function $f:A\rightarrow B$.
+Then $[f]\circ \texttt{flatten}_A=\texttt{flatten}_B\circ (\texttt{Tree}\ f)$
+since each element in the underlying tree will get mapped to the same element in the resulting list.
+
+\subsection*{(b)}
+If we have the following where \texttt{undef1 . id = undef2},
+\begin{lstlisting}[language=Haskell]
+undef1 = undefined :: a -> b
+undef2 = \_ -> undefined
+seq undef1 () = undefined
+seq undef2 () = ()
+\end{lstlisting}
+Different values are given with \texttt{seq}. 
+The identity axiom is not satisfied so \textbf{Hask} is not a category.
+
+
+\end{document}
