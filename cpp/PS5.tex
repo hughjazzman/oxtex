@@ -351,12 +351,18 @@ Note that for all objects $A,B$ in $\mathcal{P}$,
 \]
 % Since $[\mathcal{P},\mathcal{B}]$ is a full subcategory of $[\mathcal{P},\textbf{Set}]$,
 % for both $\emptyset,\{*\}\in \text{Ob}([\mathcal{P},\mathcal{B}])$,
-Since the Yoneda embedding is full and faithful,
-for any objects $A,B$ in $[\mathcal{P},\textbf{Set}]$,
-the mapping $Y_{A,B}$ is bijective.
+% Since the Yoneda embedding is full and faithful,
+% for any objects $A,B$ in $\mathcal{P}$,
+% the mapping $Y_{A,B}: \mathcal{P}(A,B) \rightarrow [\mathcal{P},\textbf{Set}](Y\ A, Y\ B) $ is bijective.
+% want to show that for any objects $A,B$ in $\mathcal{P}$,
+% mapping $Y'_{A,B}$ is bijective.
+% i.e. show that 
+
+% The only arrows in $[\mathcal{P}^{op},\mathcal{B}]$
 
 
-Then for each object $\mathcal{P}(-, A)$ in $[\mathcal{P},\textbf{Set}]$, $\forall A,B,C,D\in P$,
+
+Then for each object $\mathcal{P}(-, A)$ in $[\mathcal{P}^{op},\textbf{Set}]$, $\forall A,B,C,D\in P$,
 \[\mathcal{P}(-, A)(B) \in \{\emptyset, \{\leq\}\}\]
 \[\mathcal{P}(-, A)(f:B\rightarrow C) 
 \in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{B\leq A\}, \{C\leq A\} \rightarrow \{B\leq A\}\}\]
@@ -365,17 +371,58 @@ And for all arrows $\mathcal{P}(-, f: A\rightarrow B)$,
 \in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{C\leq B\}, \{D\leq A\} \rightarrow \{C\leq B\}\}\]
 \[ \mathcal{P}(-, f)(C) 
 \in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{C\leq B\}, \{C\leq A\} \rightarrow \{C\leq B\}\}\]
-These only consist of either the empty set $\emptyset$, or singleton sets $\{*\}$ and arrows between them.
-Then the objects in the subcategory of \textbf{Set} mapped to 
-are just the empty set $\emptyset$ and the singleton set $\{*\}$
-with the arrows $1_{\emptyset}, 1_{\{*\}},\emptyset\rightarrow\{*\}$,
-corresponding to the full subcategory $\mathcal{B}$.
 
-The functor is full since for any arrow $\mathcal{P}(-, f: A\rightarrow B)$,
-there is an arrow $f:A\rightarrow B$ in $\mathcal{P}$.
-It is full since if two arrows $F,G:\mathcal{P}(-, A)\rightarrow\mathcal{P}(-, B)$ are such that $F=G$,
-so $F = \mathcal{P}(-, f:A\rightarrow B),G = \mathcal{P}(-, g:A\rightarrow B)$,
-then $f=g$ since $P$ is a preorder.
+We show that $[\mathcal{P}^{op},\mathcal{B}]$ is a subcategory of $[\mathcal{P}^{op},\textbf{Set}]$.
+Let $\mathcal{P}(-, A)$ be an object in $[\mathcal{P}^{op},\mathcal{B}]$.
+Then $A$ must be an object in $\mathcal{P}$ by definition of the Hom-functor.
+So $\mathcal{P}(-, A)$ is an object in $[\mathcal{P}^{op},\textbf{Set}]$.
+Let $\mathcal{P}(-, B)$ be another object in $[\mathcal{P}^{op},\mathcal{B}]$.
+Then if $\mathcal{P}(-, f): \mathcal{P}(-, A)\rightarrow \mathcal{P}(-, B)$ 
+is an arrow in $[\mathcal{P}^{op},\mathcal{B}]$,
+it must be that $f:A\rightarrow B$ is an arrow of $\mathcal{P}$ by definition of the Hom-functor.
+So $\mathcal{P}(-, f)$ is an arrow in $[\mathcal{P}^{op},\textbf{Set}]$.
+Also,
+\[1_{\mathcal{P}(-, A)} = \mathcal{P}(-, 1_A)\]
+Let $f: A\rightarrow B, g: B\rightarrow C$ so $\mathcal{P}(-, f),\mathcal{P}(-, g)$ 
+are arrows in $[\mathcal{P}^{op},\mathcal{B}]$.
+Then since $P$ is a preorder, we must have $g\circ f: A\rightarrow C$ so $\mathcal{P}(-, g\circ f)$ 
+is an arrow in $[\mathcal{P}^{op},\mathcal{B}]$.
+
+Thus, $[\mathcal{P}^{op},\mathcal{B}]$ is a subcategory of $[\mathcal{P}^{op},\textbf{Set}]$.
+
+It is a full subcategory since for any objects $\mathcal{P}(-, A),\mathcal{P}(-, B)$ 
+in $[\mathcal{P}^{op},\mathcal{B}]$,
+we only have the arrow $\mathcal{P}(-, f:A\rightarrow B)$ exists iff $f:A\rightarrow B$ exists in $\mathcal{P}$
+iff $\mathcal{P}(-, A),\mathcal{P}(-, B)$ exists in $[\mathcal{P}^{op},\textbf{Set}]$,
+by definition of the Hom-functor.
+
+Then since $Y$ is full and faithful, $Y'$ must be full and faithful where 
+$[\mathcal{P}^{op},\mathcal{B}]$ is a full subcategory of $[\mathcal{P}^{op},\textbf{Set}]$
+% \begin{cases}
+    
+% \end{cases}
+
+% TODO: story of matty
+
+
+
+% Let $\phi: [\mathcal{P}^{op},\textbf{Set}] \rightarrow [\mathcal{P}^{op},\mathcal{B}]$
+% be the bijection where
+% \[\phi :: \mathcal{P}(-, A) \mapsto 
+
+% Since $Y$ is full and faithful
+
+% These only consist of either the empty set $\emptyset$, or singleton sets $\{*\}$ and arrows between them.
+% Then the objects in the subcategory of \textbf{Set} mapped to 
+% are just the empty set $\emptyset$ and the singleton set $\{*\}$
+% with the arrows $1_{\emptyset}, 1_{\{*\}},\emptyset\rightarrow\{*\}$,
+% corresponding to the full subcategory $\mathcal{B}$.
+
+% The functor is full since for any arrow $\mathcal{P}(-, f: A\rightarrow B)$,
+% there is an arrow $f:A\rightarrow B$ in $\mathcal{P}$.
+% It is full since if two arrows $F,G:\mathcal{P}(-, A)\rightarrow\mathcal{P}(-, B)$ are such that $F=G$,
+% so $F = \mathcal{P}(-, f:A\rightarrow B),G = \mathcal{P}(-, g:A\rightarrow B)$,
+% then $f=g$ since $P$ is a preorder.
 
 \subsection*{(a)}
 \subsection*{(b)}
