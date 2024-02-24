@@ -329,8 +329,8 @@ Hence, there is an bijection between sets of arrows
 Then by the property of the product, 
 since for any object $C'$ and set of arrows $f_i:C'\rightarrow C_i$ in $\mathcal{C}$,
 there is the unique arrow $\langle f_i\rangle_i : C'\rightarrow \prod_i C_i$ 
-such that $\forall j\in I, \pi_j \circ \langle f_i\rangle_i = f_j$,
-for the corresponding objects $Y\ C', \{Y\ C_i\}_i, Y\ \prod_i C_i$,
+such that $\forall j\in I, \pi_j \circ \langle f_i\rangle_i = f_j$.
+For the corresponding objects $Y\ C', \{Y\ C_i\}_i, Y\ \prod_i C_i$,
 with the set of arrows $\{Y\ f_i\}_i=\{\phi_{C',C_i}(f_i)\}_i $ in $[\mathcal{C}^{op}, \textbf{Set}]$, 
 there must be the unique arrow 
 \[Y\ \langle f_i\rangle_i=(\phi_{C',\prod_i C_i})(\langle f_i\rangle_i) : Y\ C'\rightarrow Y\ \prod_i C_i\]
@@ -342,95 +342,170 @@ The embedding preserves set-indexed products when they exist.
 \section*{Question 2}
 \addtocounter{section}{1}
 \subsection*{(a)}
+First, define the functor 
+\[\Delta: [\mathcal{P}^{op}, \textbf{Set}] \rightarrow [\mathcal{P}^{op}, \mathcal{B}]\]
+\[\forall C\in\text{Ob}(\mathcal{P}), \Delta(F\ C) = 
+\begin{cases}
+    \emptyset & \text{if } F\ C = \emptyset\\
+    \{*\} & \text{if } F\ C \neq \emptyset
+\end{cases}
+\]
+\[\forall C\in\text{Ob}(\mathcal{P}), \Delta(f_C : F\ C \rightarrow G\ C) =
+\begin{cases}
+    1_{\emptyset} & \text{if } F\ C=G\ C = \emptyset\\
+    \emptyset \rightarrow \{*\} & \text{if } F\ C=\emptyset \wedge G\ C\neq \emptyset\\
+    1_{\{*\}} & \text{if } G\ C\neq\emptyset
+\end{cases} 
+\]
+Functoriality is satisfied since $\forall C\in\text{Ob}(\mathcal{P})$,
+\begin{equation}
+\begin{aligned}
+\Delta(((g: G \rightarrow H) \circ (f: F\rightarrow G))_C) &= 
+\Delta((g_C : G\ C \rightarrow H\ C) \circ (f_C : F\ C \rightarrow G\ C)) \\
+&= 
+\begin{cases}
+    1_{\emptyset} & \text{if } F\ C=G\ C=H\ C=\emptyset\\
+    \emptyset \rightarrow \{*\} & \text{if } F\ C=\emptyset \wedge H\ C\neq \emptyset\\
+    1_{\{*\}} & \text{if } F\ C\neq\emptyset
+\end{cases}\\
+&= 
+\begin{cases}
+    1_{\emptyset}\circ 1_{\emptyset} & \text{if } F\ C=G\ C=\emptyset \wedge G\ C=H\ C=\emptyset\\
+    (\emptyset \rightarrow \{*\}) \circ 1_{\emptyset} 
+    & \text{if } F\ C=\emptyset \wedge (G\ C=\emptyset \wedge  H\ C\neq \emptyset)\\
+    1_{\{*\}} \circ (\emptyset \rightarrow \{*\})
+    & \text{if } (F\ C=\emptyset \wedge G\ C\neq \emptyset) \wedge H\ C \neq \emptyset\\
+    1_{\{*\}} \circ 1_{\{*\}} & \text{if } F\ C\neq\emptyset \wedge G\ C \neq \emptyset
+\end{cases}\\
+&= \Delta(g_C:G\ C\rightarrow H\ C) \circ \Delta(f_C:F\ C\rightarrow G\ C)\\
+\end{aligned}
+\end{equation}
+
+By definition of $\Delta$, there is a bijection on each arrow map $\Delta_{F,G}$
+for each pair of objects $F,G$ in $[\mathcal{P}^{op}, \textbf{Set}]$,
+since all cases are covered, where $\forall A,C\in \text{Ob}(\mathcal{P}),\mathcal{P}(A,C)\in\{\emptyset, \{*\}\}$,
+and there is only a single mapping for each arrow $f$, where $\forall C\in \text{Ob}(\mathcal{P})$,
+\[f_C :
+\begin{cases}
+    1_{\emptyset}\\
+    \emptyset \rightarrow \{\leq\}\\
+    1_{\{\leq\}}
+\end{cases}
+\iff
+\Delta(f_C) = 
+\begin{cases}
+    1_{\emptyset} \\
+    \emptyset \rightarrow \{*\} \\
+    1_{\{*\}}
+\end{cases} 
+\]
+Thus there is a bijection on arrows
+\[\forall A,C\in \text{Ob}(\mathcal{P}), \Delta_{A,C} 
+: [\mathcal{P}^{op}, \textbf{Set}](A,C) \cong [\mathcal{P}^{op}, \mathcal{B}](\Delta A,\Delta C)\]
+Since the Yoneda embedding is full and faithful as proven in lecture,
+combining this with the above bijection on arrows using $\Delta$,
+there is a bijection on arrows for $Y'$ using 
+$\Delta \circ Y : \mathcal{P} \rightarrow [\mathcal{P}^{op}, \mathcal{B}]$.
+So $Y'$ is full and faithful.
+
+
 % By Yoneda's lemma, there is a bijection $\phi$ for any object $A$ in $\mathcal{C}$, 
 % and any functor $H:\mathcal{C}^{op}\rightarrow \textbf{Set}$,
 % \[\phi: \text{Nat}(\mathcal{C}(-,A), H) \cong H\ A\]
 
-First, define the functor 
-\[\Delta:\textbf{Set} \rightarrow \mathcal{B}\]
-\[\Delta (A) = \begin{cases}
-    \emptyset & \text{if } A=\emptyset\\
-    \{*\}  & \text{if } A\neq \emptyset
-\end{cases}
-\]
-\[\Delta(f:A\rightarrow B) = \begin{cases}
-    1_{\emptyset} & \text{if } A=B=\emptyset\\
-    \emptyset \mapsto \{*\} & \text{if } A=\emptyset \wedge B\neq \emptyset\\
-    1_{\{*\}} & \text{if } A\neq\emptyset
-\end{cases}
-\]
-Functoriality is satisfied since
-\begin{equation}
-\begin{aligned}
-\Delta((g:B\rightarrow C) \circ (f:A\rightarrow B)) &= 
-\begin{cases}
-    1_{\emptyset} & \text{if } A=B=C=\emptyset\\
-    \emptyset \mapsto \{*\} & \text{if } A=\emptyset \wedge C\neq \emptyset\\
-    1_{\{*\}} & \text{if } A\neq\emptyset
-\end{cases}\\
-&= 
-\begin{cases}
-    1_{\emptyset}\circ 1_{\emptyset} & \text{if } A=B=\emptyset \wedge B=C=\emptyset\\
-    (\emptyset \mapsto \{*\}) \circ 1_{\emptyset} 
-    & \text{if } A=B=\emptyset \wedge (B=\emptyset \wedge  C\neq \emptyset)\\
-    1_{\{*\}} \circ (\emptyset \mapsto \{*\})
-    & \text{if } (A=\emptyset \wedge B\neq \emptyset) \wedge \neq \emptyset\\
-    1_{\{*\}} \circ 1_{\{*\}} & \text{if } A\neq\emptyset \wedge B\neq \emptyset
-\end{cases}\\
-&= \Delta(g:B\rightarrow C) \circ \Delta(f:A\rightarrow B)\\
-\end{aligned}
-\end{equation}
+% First, define the functor 
+% \[\Delta:\textbf{Set} \rightarrow \mathcal{B}\]
+% \[\Delta (A) = \begin{cases}
+%     \emptyset & \text{if } A=\emptyset\\
+%     \{*\}  & \text{if } A\neq \emptyset
+% \end{cases}
+% \]
+% \[\Delta(f:A\rightarrow B) = \begin{cases}
+%     1_{\emptyset} & \text{if } A=B=\emptyset\\
+%     \emptyset \rightarrow \{*\} & \text{if } A=\emptyset \wedge B\neq \emptyset\\
+%     1_{\{*\}} & \text{if } A\neq\emptyset
+% \end{cases}
+% \]
+% Functoriality is satisfied since
+% \begin{equation}
+% \begin{aligned}
+% \Delta((g:B\rightarrow C) \circ (f:A\rightarrow B)) &= 
+% \begin{cases}
+%     1_{\emptyset} & \text{if } A=B=C=\emptyset\\
+%     \emptyset \rightarrow \{*\} & \text{if } A=\emptyset \wedge C\neq \emptyset\\
+%     1_{\{*\}} & \text{if } A\neq\emptyset
+% \end{cases}\\
+% &= 
+% \begin{cases}
+%     1_{\emptyset}\circ 1_{\emptyset} & \text{if } A=B=\emptyset \wedge B=C=\emptyset\\
+%     (\emptyset \rightarrow \{*\}) \circ 1_{\emptyset} 
+%     & \text{if } A=B=\emptyset \wedge (B=\emptyset \wedge  C\neq \emptyset)\\
+%     1_{\{*\}} \circ (\emptyset \rightarrow \{*\})
+%     & \text{if } (A=\emptyset \wedge B\neq \emptyset) \wedge \neq \emptyset\\
+%     1_{\{*\}} \circ 1_{\{*\}} & \text{if } A\neq\emptyset \wedge B\neq \emptyset
+% \end{cases}\\
+% &= \Delta(g:B\rightarrow C) \circ \Delta(f:A\rightarrow B)\\
+% \end{aligned}
+% \end{equation}
 
-\[
-\Delta (1_A) = \left.
-\begin{cases}
-    1_{\emptyset} & \text{if } A=\emptyset\\
-    1_{\{*\}} & \text{if } A\neq\emptyset
-\end{cases}
-\right\} = 1_{\Delta A}
-\]
+% \[
+% \Delta (1_A) = \left.
+% \begin{cases}
+%     1_{\emptyset} & \text{if } A=\emptyset\\
+%     1_{\{*\}} & \text{if } A\neq\emptyset
+% \end{cases}
+% \right\} = 1_{\Delta A}
+% \]
 
-By Yoneda's lemma, for any functor $H:\mathcal{P}^{op}\rightarrow \textbf{Set}$,
-and $A\in \text{Ob}(\mathcal{P})$, there exists a bijection 
-\[\phi: \text{Nat}(\mathcal{P}(-,A), H) \cong H\ A\]
-We show that for any functor $\Delta H:\mathcal{P}^{op}\rightarrow \mathcal{B}$,
-and $A\in \text{Ob}(\mathcal{P})$, there exists a bijection 
-\[\Delta \phi: \text{Nat}(\Delta\mathcal{P}(-,A), \Delta H) \cong \Delta H\ A\]
-Take a natural transformation $t: \mathcal{P}(-,A) \rightarrow H$ so
-\[\Delta t: \Delta\mathcal{P}(-,A) \rightarrow\Delta H\]
-We have $\phi(t) \in H\ A$, so define
-\[\Delta\phi(\Delta t)=\Delta (\phi(t))\in \Delta H\ A\]
-Now take some $u\in H\ A$ so $\phi^{-1}(u)\in \text{Nat}(\mathcal{P}(-,A),H)$.
-Then let 
-\begin{equation}
-\begin{aligned}
-(\Delta \phi)^{-1}(\Delta u) &= \Delta (\phi^{-1}(u)) \\
-&\in \Delta\text{Nat}(\mathcal{P}(-,A),H) \\
-&= \text{Nat}(\Delta\mathcal{P}(-,A),\Delta H)
-\end{aligned}
-\end{equation}
+% By Yoneda's lemma, for any functor $H:\mathcal{P}^{op}\rightarrow \textbf{Set}$,
+% and $A\in \text{Ob}(\mathcal{P})$, there exists a bijection 
+% \[\phi: \text{Nat}(\mathcal{P}(-,A), H) \cong H\ A\]
 
-We have that
-\[\Delta\phi((\Delta\phi)^{-1}(\Delta u)) = \Delta (\phi(\phi^{-1}(u))) = \Delta u\]
-\[(\Delta\phi)^{-1}(\Delta\phi(\Delta t)) = \Delta (\phi^{-1}(\phi(t))) = \Delta t\] 
-So 
-\[\Delta \phi: \text{Nat}(\Delta\mathcal{P}(-,A),\Delta H) \cong \Delta H\ A\]
-Then $Y'$ is full and faithful as $Y'$ on arrows is $(\Delta\phi)^{-1}$, a bijection.
+% Then combining
+
+% We show that for any functor $\Delta H:\mathcal{P}^{op}\rightarrow \mathcal{B}$,
+% and $A\in \text{Ob}(\mathcal{P})$, there exists a bijection 
+% \[\Delta \phi: \text{Nat}(\Delta\mathcal{P}(-,A), \Delta H) \cong \Delta H\ A\]
+% Take a natural transformation $t: \mathcal{P}(-,A) \rightarrow H$ so
+% \[\Delta t: \Delta\mathcal{P}(-,A) \rightarrow\Delta H\]
+% Note that $\forall C\in\text{Ob}(\mathcal{P}),\mathcal{P}(C,A)\in \{\emptyset, \{*\}\} = \text{Ob}(\mathcal{B})$,
+% so $\Delta t_C \in \text{Ar}(\mathcal{B})$.
+% We have $\phi(t) \in H\ A$, and so we have
+% \[\Delta\phi(\Delta t)=\Delta (\phi(t))\in \Delta H\ A\]
+% Similarly, note that 
+% $\forall C\in\text{Ob}(\mathcal{P}),\phi^{-1}(u)(C)\in\text{Ar}(\mathcal{B})$.
+% Now take some $u\in H\ A$ so $\phi^{-1}(u)\in \text{Nat}(\mathcal{P}(-,A),H)$
+% and $\Delta u\in \text{Ar}(\mathcal{B})$.
+% Then  
+% \begin{equation}
+% \begin{aligned}
+% (\Delta \phi)^{-1}(\Delta u) &= \Delta (\phi^{-1}(u)) \\
+% &\in \Delta\text{Nat}(\mathcal{P}(-,A),H) \\
+% &= \text{Nat}(\Delta\mathcal{P}(-,A),\Delta H)
+% \end{aligned}
+% \end{equation}
+
+% We have that
+% \[\Delta\phi((\Delta\phi)^{-1}(\Delta u)) = \Delta (\phi(\phi^{-1}(u))) = \Delta u\]
+% \[(\Delta\phi)^{-1}(\Delta\phi(\Delta t)) = \Delta (\phi^{-1}(\phi(t))) = \Delta t\] 
+% So 
+% \[\Delta \phi: \text{Nat}(\Delta\mathcal{P}(-,A),\Delta H) \cong \Delta H\ A\]
+% Then $Y'$ is full and faithful as $Y'$ on arrows is $(\Delta\phi)^{-1}$, a bijection.
 
 
 
 % Note that for all objects $A,B$ in $\mathcal{P}$,
 % \[ \mathcal{P}(A,B) = 
 % \begin{cases}
-    %     \emptyset & \text{if } A\nleq B\\
-    %     \{\leq\} & \text{if } A\leq B
-    % \end{cases}
-    % \]
+%         \emptyset & \text{if } A\nleq B\\
+%         \{\leq\} & \text{if } A\leq B
+%     \end{cases}
+%     \]
     
-    % Then for each object $\mathcal{P}(-, A)$ in $[\mathcal{P}^{op},\textbf{Set}]$, $\forall A,B,C,D\in P$,
-    % \[\mathcal{P}(-, A)(B) \in \{\emptyset, \{\leq\}\}\]
-    % \[\mathcal{P}(-, A)(f:B\rightarrow C) 
-    % \in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{B\leq A\}, \{C\leq A\} \rightarrow \{B\leq A\}\}\]
+%     Then for each object $\mathcal{P}(-, A)$ in $[\mathcal{P}^{op},\textbf{Set}]$, $\forall A,B,C,D\in P$,
+%     \[\mathcal{P}(-, A)(B) \in \{\emptyset, \{\leq\}\}\]
+%     \[\mathcal{P}(-, A)(f:B\rightarrow C) 
+%     \in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{B\leq A\}, \{C\leq A\} \rightarrow \{B\leq A\}\}\]
 % And for all arrows $\mathcal{P}(-, f: A\rightarrow B)$,
 % \[\mathcal{P}(-, f)(g) 
 % \in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{C\leq B\}, \{D\leq A\} \rightarrow \{C\leq B\}\}\]
@@ -489,8 +564,32 @@ which has the correspondence to the set
 \[\{B | \mathcal{P}(B,A) = \{*\}\} = \{A | A \leq B\} := A^{\downarrow}\]
 
 \subsection*{(c)}
+Each functor $\hat{S},\hat{T}$ has a corresponding downward-closed set $S,T$ in $\mathcal{P}$.
+The transformation $\hat{S}\rightarrow\hat{T}$ then has the corresponding subset relationship $S\subseteq T$.
 \subsection*{(d)}
+If $\hat{S}\cong \hat{T}$, then $S\subseteq T \wedge T\subseteq S$, so $S=T$.
+Thus $\hat{S} = \hat{T}$ from the 1-to-1 correspondence.
 \subsection*{(e)}
+By (a), the Yoneda embedding $Y: \mathbb{Q} \rightarrow [\mathbb{Q}^{op}, \textbf{Set}]$
+restricts to a full and faithful functor $Y' : \mathbb{Q} \rightarrow [\mathbb{Q}^{op},\mathcal{B}]$.
+
+By (b), objects in $[\mathbb{Q}^{op},\mathcal{B}]$ are in 1-to-1 correspondence
+with downward-closed sets in $\mathbb{Q}$.
+
+Using Dedekind pre-cuts, each $r\in \mathbb{R}^{\infty}$ is uniquely represented
+by a downward-closed set. 
+Then each $r\in \mathbb{R}^{\infty}$ is in 1-to-1 correspondence with objects in $[\mathbb{Q}^{op},\mathcal{B}]$.
+
+We show that the arrow mapping of $[\mathbb{Q}^{op},\mathcal{B}]$ and $\mathbb{R}^{\infty}$ is bijective.
+
+If $r_1,r_2 \in \mathbb{R}^{\infty}$ such that $r_1\leq r_2$, 
+then there are downward-closed sets $S_{r_1},S_{r_2}$ such that $S_{r_1} \subseteq S_{r_2}$, for surjectivity.
+
+By (c), there is only one arrow between objects $S_a, S_b$ in $[\mathbb{Q}^{op},\mathcal{B}]$, 
+which is mapped to the corresponding inequality $a\leq b$ in $\mathbb{R}^{\infty}$, for injectivity.
+
+$[\mathbb{Q}^{op},\mathcal{B}]$ fully and faithfully embeds $\mathbb{R}^{\infty}$.
+
 \subsection*{(f)}
 
 
