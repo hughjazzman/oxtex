@@ -144,11 +144,10 @@ such that for any object $C$ and set of arrows $A_i\xleftarrow[]{\pi_i} C \xrigh
 there is a unique arrow $\langle f_i, f_j\rangle:C\rightarrow A_i \times A_j$
 such that $\pi_i \circ \langle f_i, f_j\rangle=f_i$ and $\pi_j \circ \langle f_i, f_j\rangle=f_j$.
 
-When $|I|=1$, we get terminal objects.
-The product of 1 object $A_i$ for $i\in I$ is the terminal object $A_i$
-with the identity $1_{A_i}$
-such that for any object $C$, the arrow $f_i:C\rightarrow A_i$,
-is the unique arrow from $C$ to $A_i$.
+When $|I|=0$, we get terminal objects.
+The nullary product for $I=\emptyset$ is the terminal object $T$
+such that for any object $C$, the arrow $\tau_C:C\rightarrow T$,
+is the unique arrow from $C$ to $T$.
 
 \subsection*{(c)}
 Let $(L, \gamma)$ be the limit of $D:\mathcal{I}\rightarrow \mathcal{C}$.
@@ -342,90 +341,153 @@ The embedding preserves set-indexed products when they exist.
 
 \section*{Question 2}
 \addtocounter{section}{1}
-Note that for all objects $A,B$ in $\mathcal{P}$,
-\[ \mathcal{P}(A,B) = 
-\begin{cases}
-    \emptyset & \text{if } A\nleq B\\
-    \{\leq\} & \text{if } A\leq B
+\subsection*{(a)}
+% By Yoneda's lemma, there is a bijection $\phi$ for any object $A$ in $\mathcal{C}$, 
+% and any functor $H:\mathcal{C}^{op}\rightarrow \textbf{Set}$,
+% \[\phi: \text{Nat}(\mathcal{C}(-,A), H) \cong H\ A\]
+
+First, define the functor 
+\[\Delta:\textbf{Set} \rightarrow \mathcal{B}\]
+\[\Delta (A) = \begin{cases}
+    \emptyset & \text{if } A=\emptyset\\
+    \{*\}  & \text{if } A\neq \emptyset
 \end{cases}
 \]
-% Since $[\mathcal{P},\mathcal{B}]$ is a full subcategory of $[\mathcal{P},\textbf{Set}]$,
-% for both $\emptyset,\{*\}\in \text{Ob}([\mathcal{P},\mathcal{B}])$,
-% Since the Yoneda embedding is full and faithful,
-% for any objects $A,B$ in $\mathcal{P}$,
-% the mapping $Y_{A,B}: \mathcal{P}(A,B) \rightarrow [\mathcal{P},\textbf{Set}](Y\ A, Y\ B) $ is bijective.
-% want to show that for any objects $A,B$ in $\mathcal{P}$,
-% mapping $Y'_{A,B}$ is bijective.
-% i.e. show that 
+\[\Delta(f:A\rightarrow B) = \begin{cases}
+    1_{\emptyset} & \text{if } A=B=\emptyset\\
+    \emptyset \mapsto \{*\} & \text{if } A=\emptyset \wedge B\neq \emptyset\\
+    1_{\{*\}} & \text{if } A\neq\emptyset
+\end{cases}
+\]
+Functoriality is satisfied since
+\begin{equation}
+\begin{aligned}
+\Delta((g:B\rightarrow C) \circ (f:A\rightarrow B)) &= 
+\begin{cases}
+    1_{\emptyset} & \text{if } A=B=C=\emptyset\\
+    \emptyset \mapsto \{*\} & \text{if } A=\emptyset \wedge C\neq \emptyset\\
+    1_{\{*\}} & \text{if } A\neq\emptyset
+\end{cases}\\
+&= 
+\begin{cases}
+    1_{\emptyset}\circ 1_{\emptyset} & \text{if } A=B=\emptyset \wedge B=C=\emptyset\\
+    (\emptyset \mapsto \{*\}) \circ 1_{\emptyset} 
+    & \text{if } A=B=\emptyset \wedge (B=\emptyset \wedge  C\neq \emptyset)\\
+    1_{\{*\}} \circ (\emptyset \mapsto \{*\})
+    & \text{if } (A=\emptyset \wedge B\neq \emptyset) \wedge \neq \emptyset\\
+    1_{\{*\}} \circ 1_{\{*\}} & \text{if } A\neq\emptyset \wedge B\neq \emptyset
+\end{cases}\\
+&= \Delta(g:B\rightarrow C) \circ \Delta(f:A\rightarrow B)\\
+\end{aligned}
+\end{equation}
 
-% The only arrows in $[\mathcal{P}^{op},\mathcal{B}]$
+\[
+\Delta (1_A) = \left.
+\begin{cases}
+    1_{\emptyset} & \text{if } A=\emptyset\\
+    1_{\{*\}} & \text{if } A\neq\emptyset
+\end{cases}
+\right\} = 1_{\Delta A}
+\]
+
+By Yoneda's lemma, for any functor $H:\mathcal{P}^{op}\rightarrow \textbf{Set}$,
+and $A\in \text{Ob}(\mathcal{P})$, there exists a bijection 
+\[\phi: \text{Nat}(\mathcal{P}(-,A), H) \cong H\ A\]
+We show that for any functor $\Delta H:\mathcal{P}^{op}\rightarrow \mathcal{B}$,
+and $A\in \text{Ob}(\mathcal{P})$, there exists a bijection 
+\[\Delta \phi: \text{Nat}(\Delta\mathcal{P}(-,A), \Delta H) \cong \Delta H\ A\]
+Take a natural transformation $t: \mathcal{P}(-,A) \rightarrow H$ so
+\[\Delta t: \Delta\mathcal{P}(-,A) \rightarrow\Delta H\]
+We have $\phi(t) \in H\ A$, so define
+\[\Delta\phi(\Delta t)=\Delta (\phi(t))\in \Delta H\ A\]
+Now take some $u\in H\ A$ so $\phi^{-1}(u)\in \text{Nat}(\mathcal{P}(-,A),H)$.
+Then let 
+\begin{equation}
+\begin{aligned}
+(\Delta \phi)^{-1}(\Delta u) &= \Delta (\phi^{-1}(u)) \\
+&\in \Delta\text{Nat}(\mathcal{P}(-,A),H) \\
+&= \text{Nat}(\Delta\mathcal{P}(-,A),\Delta H)
+\end{aligned}
+\end{equation}
+
+We have that
+\[\Delta\phi((\Delta\phi)^{-1}(\Delta u)) = \Delta (\phi(\phi^{-1}(u))) = \Delta u\]
+\[(\Delta\phi)^{-1}(\Delta\phi(\Delta t)) = \Delta (\phi^{-1}(\phi(t))) = \Delta t\] 
+So 
+\[\Delta \phi: \text{Nat}(\Delta\mathcal{P}(-,A),\Delta H) \cong \Delta H\ A\]
+Then $Y'$ is full and faithful as $Y'$ on arrows is $(\Delta\phi)^{-1}$, a bijection.
 
 
 
-Then for each object $\mathcal{P}(-, A)$ in $[\mathcal{P}^{op},\textbf{Set}]$, $\forall A,B,C,D\in P$,
-\[\mathcal{P}(-, A)(B) \in \{\emptyset, \{\leq\}\}\]
-\[\mathcal{P}(-, A)(f:B\rightarrow C) 
-\in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{B\leq A\}, \{C\leq A\} \rightarrow \{B\leq A\}\}\]
-And for all arrows $\mathcal{P}(-, f: A\rightarrow B)$,
-\[\mathcal{P}(-, f)(g) 
-\in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{C\leq B\}, \{D\leq A\} \rightarrow \{C\leq B\}\}\]
-\[ \mathcal{P}(-, f)(C) 
-\in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{C\leq B\}, \{C\leq A\} \rightarrow \{C\leq B\}\}\]
-
-We show that $[\mathcal{P}^{op},\mathcal{B}]$ is a subcategory of $[\mathcal{P}^{op},\textbf{Set}]$.
-Let $\mathcal{P}(-, A)$ be an object in $[\mathcal{P}^{op},\mathcal{B}]$.
-Then $A$ must be an object in $\mathcal{P}$ by definition of the Hom-functor.
-So $\mathcal{P}(-, A)$ is an object in $[\mathcal{P}^{op},\textbf{Set}]$.
-Let $\mathcal{P}(-, B)$ be another object in $[\mathcal{P}^{op},\mathcal{B}]$.
-Then if $\mathcal{P}(-, f): \mathcal{P}(-, A)\rightarrow \mathcal{P}(-, B)$ 
-is an arrow in $[\mathcal{P}^{op},\mathcal{B}]$,
-it must be that $f:A\rightarrow B$ is an arrow of $\mathcal{P}$ by definition of the Hom-functor.
-So $\mathcal{P}(-, f)$ is an arrow in $[\mathcal{P}^{op},\textbf{Set}]$.
-Also,
-\[1_{\mathcal{P}(-, A)} = \mathcal{P}(-, 1_A)\]
-Let $f: A\rightarrow B, g: B\rightarrow C$ so $\mathcal{P}(-, f),\mathcal{P}(-, g)$ 
-are arrows in $[\mathcal{P}^{op},\mathcal{B}]$.
-Then since $P$ is a preorder, we must have $g\circ f: A\rightarrow C$ so $\mathcal{P}(-, g\circ f)$ 
-is an arrow in $[\mathcal{P}^{op},\mathcal{B}]$.
-
-Thus, $[\mathcal{P}^{op},\mathcal{B}]$ is a subcategory of $[\mathcal{P}^{op},\textbf{Set}]$.
-
-It is a full subcategory since for any objects $\mathcal{P}(-, A),\mathcal{P}(-, B)$ 
-in $[\mathcal{P}^{op},\mathcal{B}]$,
-we only have the arrow $\mathcal{P}(-, f:A\rightarrow B)$ exists iff $f:A\rightarrow B$ exists in $\mathcal{P}$
-iff $\mathcal{P}(-, A),\mathcal{P}(-, B)$ exists in $[\mathcal{P}^{op},\textbf{Set}]$,
-by definition of the Hom-functor.
-
-Then since $Y$ is full and faithful, $Y'$ must be full and faithful where 
-$[\mathcal{P}^{op},\mathcal{B}]$ is a full subcategory of $[\mathcal{P}^{op},\textbf{Set}]$
+% Note that for all objects $A,B$ in $\mathcal{P}$,
+% \[ \mathcal{P}(A,B) = 
 % \begin{cases}
+    %     \emptyset & \text{if } A\nleq B\\
+    %     \{\leq\} & \text{if } A\leq B
+    % \end{cases}
+    % \]
     
-% \end{cases}
+    % Then for each object $\mathcal{P}(-, A)$ in $[\mathcal{P}^{op},\textbf{Set}]$, $\forall A,B,C,D\in P$,
+    % \[\mathcal{P}(-, A)(B) \in \{\emptyset, \{\leq\}\}\]
+    % \[\mathcal{P}(-, A)(f:B\rightarrow C) 
+    % \in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{B\leq A\}, \{C\leq A\} \rightarrow \{B\leq A\}\}\]
+% And for all arrows $\mathcal{P}(-, f: A\rightarrow B)$,
+% \[\mathcal{P}(-, f)(g) 
+% \in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{C\leq B\}, \{D\leq A\} \rightarrow \{C\leq B\}\}\]
+% \[ \mathcal{P}(-, f)(C) 
+% \in \{\emptyset \rightarrow \emptyset, \emptyset \rightarrow \{C\leq B\}, \{C\leq A\} \rightarrow \{C\leq B\}\}\]
+
+% We show that $[\mathcal{P}^{op},\mathcal{B}]$ is a subcategory of $[\mathcal{P}^{op},\textbf{Set}]$.
+% Let $\mathcal{P}(-, A)$ be an object in $[\mathcal{P}^{op},\mathcal{B}]$.
+% Then $A$ must be an object in $\mathcal{P}$ by definition of the Hom-functor.
+% So $\mathcal{P}(-, A)$ is an object in $[\mathcal{P}^{op},\textbf{Set}]$.
+% Let $\mathcal{P}(-, B)$ be another object in $[\mathcal{P}^{op},\mathcal{B}]$.
+% Then if $\mathcal{P}(-, f): \mathcal{P}(-, A)\rightarrow \mathcal{P}(-, B)$ 
+% is an arrow in $[\mathcal{P}^{op},\mathcal{B}]$,
+% it must be that $f:A\rightarrow B$ is an arrow of $\mathcal{P}$ by definition of the Hom-functor.
+% So $\mathcal{P}(-, f)$ is an arrow in $[\mathcal{P}^{op},\textbf{Set}]$.
+% Also,
+% \[1_{\mathcal{P}(-, A)} = \mathcal{P}(-, 1_A)\]
+% Let $f: A\rightarrow B, g: B\rightarrow C$ so $\mathcal{P}(-, f),\mathcal{P}(-, g)$ 
+% are arrows in $[\mathcal{P}^{op},\mathcal{B}]$.
+% Then since $P$ is a preorder, we must have $g\circ f: A\rightarrow C$ so $\mathcal{P}(-, g\circ f)$ 
+% is an arrow in $[\mathcal{P}^{op},\mathcal{B}]$.
+
+% Thus, $[\mathcal{P}^{op},\mathcal{B}]$ is a subcategory of $[\mathcal{P}^{op},\textbf{Set}]$.
+
+% It is a full subcategory since for any objects $\mathcal{P}(-, A),\mathcal{P}(-, B)$ 
+% in $[\mathcal{P}^{op},\mathcal{B}]$,
+% we only have the arrow $\mathcal{P}(-, f:A\rightarrow B)$ exists iff $f:A\rightarrow B$ exists in $\mathcal{P}$
+% iff $\mathcal{P}(-, A),\mathcal{P}(-, B)$ exists in $[\mathcal{P}^{op},\textbf{Set}]$,
+% by definition of the Hom-functor.
+
+% Then since $Y$ is full and faithful, $Y'$ must be full and faithful where 
+% $[\mathcal{P}^{op},\mathcal{B}]$ is a full subcategory of $[\mathcal{P}^{op},\textbf{Set}]$.
 
 % TODO: story of matty
 
-
-
-% Let $\phi: [\mathcal{P}^{op},\textbf{Set}] \rightarrow [\mathcal{P}^{op},\mathcal{B}]$
-% be the bijection where
-% \[\phi :: \mathcal{P}(-, A) \mapsto 
-
-% Since $Y$ is full and faithful
-
-% These only consist of either the empty set $\emptyset$, or singleton sets $\{*\}$ and arrows between them.
-% Then the objects in the subcategory of \textbf{Set} mapped to 
-% are just the empty set $\emptyset$ and the singleton set $\{*\}$
-% with the arrows $1_{\emptyset}, 1_{\{*\}},\emptyset\rightarrow\{*\}$,
-% corresponding to the full subcategory $\mathcal{B}$.
-
-% The functor is full since for any arrow $\mathcal{P}(-, f: A\rightarrow B)$,
-% there is an arrow $f:A\rightarrow B$ in $\mathcal{P}$.
-% It is full since if two arrows $F,G:\mathcal{P}(-, A)\rightarrow\mathcal{P}(-, B)$ are such that $F=G$,
-% so $F = \mathcal{P}(-, f:A\rightarrow B),G = \mathcal{P}(-, g:A\rightarrow B)$,
-% then $f=g$ since $P$ is a preorder.
-
-\subsection*{(a)}
 \subsection*{(b)}
+From lecture,
+\[\hat{S}: \mathcal{P}^{op}\rightarrow \textbf{Set} ::
+\begin{cases}
+    \hat{S}(A) = 1 & \text{if } A\in S\\
+    \hat{S}(A) = 0 & \text{if } A\notin S
+\end{cases}
+\]
+We have that a downward-closed set $S$ is such that
+\[A\in S \wedge B\leq A \implies B\in S\]
+so define $S_B := B^{\downarrow} := \{A | A \leq B\}$ which satisfies the condition.
+
+Then we can see that
+\[\forall B\in \text{Ob}(\mathcal{P}), \{A | \hat{S}_B (A) = 1\} := \{A | \mathcal{P}(A,B) = \{*\}\} 
+=  \{A | A \leq B\} := S_B\]
+Then any downward-closed set $S_B$ has a corresponding $\hat{S}_B$, 
+so there is a 1-to-1 correspondence.
+
+Representable functors are naturally isomorphic to the covariant Hom-functor $\mathcal{P}(-,A)$ for some $A$,
+which has the correspondence to the set 
+\[\{B | \mathcal{P}(B,A) = \{*\}\} = \{A | A \leq B\} := A^{\downarrow}\]
+
 \subsection*{(c)}
 \subsection*{(d)}
 \subsection*{(e)}
