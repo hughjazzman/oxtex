@@ -1,0 +1,284 @@
+% Please do not change %
+\documentclass[11pt]{article} % font size
+\usepackage[margin=1in]{geometry} % margins
+\usepackage{amsmath,amsthm,amssymb} % for the  common "math symbols"
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[shortlabels]{enumitem} % for enumeration
+\usepackage{booktabs} % if you need tables
+\usepackage{listings}
+\usepackage{color}
+\usepackage{quiver}
+\usepackage{ulem}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% \theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{definition}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+
+\lstset{
+  frame=none,
+  xleftmargin=2pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\ttfamily\tiny\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=haskell,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\small\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
+% Feel free to include additional packages (if needed), but make sure it does not override the margin/font requirements.
+%
+\setlength{\parindent}{0pt} % no indent for new paragraphs.
+\setlength{\parskip}{5pt} % distance between paragraphs, which will be used when you have a blank line in your LaTeX code.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Categories, Proofs, and Processes: \\Lecture 17}
+%
+\author{Wira Azmoon Ahmad}
+\date{27 Feb 2024}
+%
+\begin{document}
+%
+\maketitle
+
+%You may use the usual \LaTeX\ environments to structure your answers:
+%\begin{align}
+%        \label{basegnn}
+%        \mathbf{h}_u^{(t+1)} = \sigma \bigg( \mathbf{W}_\text{self}^{(t)} \mathbf{h}_u^{(t)}  + \mathbf{W}_\text{neigh}^{(t)} \sum_{v \in N(u)} \mathbf{h}_v^{(t)} + \mathbf{b}^{(t)} \bigg): 
+%\end{align}
+
+
+%\begin{table}[h]
+%\caption{A simple table.}
+%\centering
+%\begin{tabular}[t]{lrrrr}
+%\toprule
+%Graphs & Can & Be  & Fun & Too \\ 
+%\midrule 
+%$G_1$ & $1$  & $2$ & $3$ & $4$ \\ 
+%$G_2$ & $-1$  & $-2$ & $-3$ & $-4$ \\ 
+%$G_3$ & $0.1$  & $0.2$ & $0.3$ & $0.4$ \\ 
+%\bottomrule
+%\end{tabular}
+%\label{tab}
+%\end{table}
+
+% A functor $F:\mathcal{C} \rightarrow \mathcal{D}$ is
+% \begin{itemize}
+%     \item \textbf{faithful} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is injective;
+%     \item \textbf{full} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is surjective
+% \end{itemize}
+
+
+\section*{Adjunctions}
+\addtocounter{section}{1}
+\subsection*{Unit}
+% https://q.uiver.app/#q=WzAsMixbMCwwLCJcXG1hdGhjYWx7Q30iXSxbMSwwLCJcXG1hdGhjYWx7RH0iXSxbMCwxLCJGIiwwLHsiY3VydmUiOi0yfV0sWzEsMCwiRyIsMCx7ImN1cnZlIjotMn1dLFsyLDMsIiIsMCx7ImxldmVsIjoxLCJzdHlsZSI6eyJuYW1lIjoiYWRqdW5jdGlvbiJ9fV1d
+\[\begin{tikzcd}
+	{\mathcal{C}} & {\mathcal{D}}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "F", curve={height=-12pt}, from=1-1, to=1-2]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "G", curve={height=-12pt}, from=1-2, to=1-1]
+	\arrow["\dashv"{anchor=center, rotate=-90}, draw=none, from=0, to=1]
+\end{tikzcd}\]
+is an adjunction iff $\forall X \in \text{Ob}(\mathcal{C})$, there exists a \underline{unit}
+\[\eta_X: X\rightarrow GF(X)\]
+such that
+\[\forall f: X\rightarrow G(Y), \exists ! \hat{f}: F(X) \rightarrow Y\]
+where
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJYIl0sWzEsMCwiR0YoWCkiXSxbMSwxLCJHKFkpIl0sWzAsMSwiXFxldGFfWCJdLFswLDIsImYiLDJdLFsxLDIsIkcoXFxoYXR7Zn0pIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d
+\[\begin{tikzcd}
+	X & {GF(X)} \\
+	& {G(Y)}
+	\arrow["{\eta_X}", from=1-1, to=1-2]
+	\arrow["f"', from=1-1, to=2-2]
+	\arrow["{G(\hat{f})}", dashed, from=1-2, to=2-2]
+\end{tikzcd}\]
+
+\begin{example}
+Makes more sense as unit, unit version.
+% https://q.uiver.app/#q=WzAsMixbMCwwLCJcXHRleHRiZntTZXR9Il0sWzEsMCwiXFx0ZXh0YmZ7VmVjdH1fe1xcbWF0aGJie1J9fSJdLFswLDEsIlxcbWF0aGJie1J9Wy1dIiwwLHsiY3VydmUiOi0yfV0sWzEsMCwiVSIsMCx7ImN1cnZlIjotMn1dLFsyLDMsIiIsMCx7ImxldmVsIjoxLCJzdHlsZSI6eyJuYW1lIjoiYWRqdW5jdGlvbiJ9fV1d
+\[\begin{tikzcd}
+	{\textbf{Set}} & {\textbf{Vect}_{\mathbb{R}}}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "{\mathbb{R}[-]}", curve={height=-12pt}, from=1-1, to=1-2]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "U", curve={height=-12pt}, from=1-2, to=1-1]
+	\arrow["\dashv"{anchor=center, rotate=-90}, draw=none, from=0, to=1]
+\end{tikzcd}\]
+$\mathbb{R}[X]$ vector space spanned by $X$.
+\[v\in \mathbb{R}[X], v=\sum_i r_i x_i,\quad r_i\in \mathbb{R}, x_i\in X\]
+\[\mathbb{R}[f] : \mathbb{R} [X] \rightarrow \mathbb{R}[Y]\]
+\[\mathbb{R}[f]\left(\sum_i r_i x_i\right) = \sum_i r_i f(x_i)\]
+% https://q.uiver.app/#q=WzAsMTAsWzIsMSwiQiJdLFszLDEsIlUoXFxtYXRoYmJ7Un1bQl0pIl0sWzMsMiwiVShWKSJdLFswLDAsImIiXSxbNCwwLCJiIl0sWzQsNCwiZihiKSJdLFs2LDEsIlxcbWF0aGJie1J9W0JdIl0sWzYsMiwiViJdLFs3LDEsIlxcc3VtX2kgcl9pIGtfaSJdLFs3LDIsIlxcc3VtX2kgcl9pIGYoYl9pKSJdLFswLDFdLFswLDIsImYiLDJdLFsxLDIsIlUoXFxoYXR7Zn0pIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzMsNCwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDUsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMyw1LCIiLDIseyJjdXJ2ZSI6MSwic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs2LDcsIlxcaGF0e2Z9IiwyLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzgsOSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==
+\[\begin{tikzcd}
+	b &&&& b \\
+	&& B & {U(\mathbb{R}[B])} &&& {\mathbb{R}[B]} & {\sum_i r_i k_i} \\
+	&&& {U(V)} &&& V & {\sum_i r_i f(b_i)} \\
+	\\
+	&&&& {f(b)}
+	\arrow[from=2-3, to=2-4]
+	\arrow["f"', from=2-3, to=3-4]
+	\arrow["{U(\hat{f})}", dashed, from=2-4, to=3-4]
+	\arrow[maps to, from=1-1, to=1-5]
+	\arrow[maps to, from=1-5, to=5-5]
+	\arrow[curve={height=6pt}, maps to, from=1-1, to=5-5]
+	\arrow["{\hat{f}}"', dashed, from=2-7, to=3-7]
+	\arrow[maps to, from=2-8, to=3-8]
+\end{tikzcd}\]
+
+\end{example}
+
+\begin{example}
+Makes more sense as co-unit, unit version.
+
+\[(-\times B) : \textbf{Set} \rightarrow \textbf{Set}\]
+\[\begin{cases}
+    A \mapsto A\times B\\
+    f \mapsto f\times 1_B
+\end{cases}
+\]
+\[g:X\rightarrow Y\]
+\[B \Rightarrow g : B\Rightarrow X \rightarrow B \Rightarrow Y\]
+\[(B\Rightarrow g)(h) := g\circ h\]
+% https://q.uiver.app/#q=WzAsNixbMiwxLCJYIl0sWzMsMSwiQlxcUmlnaHRhcnJvdyhYXFx0aW1lcyBCKSJdLFszLDIsIkJcXFJpZ2h0YXJyb3cgWSJdLFswLDAsIngiXSxbNCwwLCJcXGxhbWJkYSBiLiAoeCxiKSJdLFs0LDQsImYoeCk9KFxcaGF0e2Z9XFxjaXJjIC0pKFxcbGFtYmRhIGIuKHgsYikpIl0sWzAsMSwiXFxldGFfWCJdLFsxLDIsIihmXFxjaXJjIC0pIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzAsMiwiZiIsMl0sWzMsNF0sWzMsNSwiIiwyLHsiY3VydmUiOjEsInN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw1LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d
+\[\begin{tikzcd}
+	x &&&& {\lambda b. (x,b)} \\
+	&& X & {B\Rightarrow(X\times B)} \\
+	&&& {B\Rightarrow Y} \\
+	\\
+	&&&& {f(x)=(\hat{f}\circ -)(\lambda b.(x,b))}
+	\arrow["{\eta_X}", from=2-3, to=2-4]
+	\arrow["{(f\circ -)}", dashed, from=2-4, to=3-4]
+	\arrow["f"', from=2-3, to=3-4]
+	\arrow[from=1-1, to=1-5]
+	\arrow[curve={height=24pt}, maps to, from=1-1, to=5-5]
+	\arrow[maps to, from=1-5, to=5-5]
+\end{tikzcd}\]
+\[\hat{f} : X\times B \rightarrow Y\]
+\[\hat{f}(x,b) = f(x)(b)\]
+\[(\hat{f} \circ -)(\lambda b.(x,b)) = \lambda b.\hat{f}(x,b) = \lambda b.f(x)(b) = f(x)\]
+Last equality by $\eta$ expansion.
+
+\end{example}
+
+\subsubsection*{Notes}
+\begin{itemize}
+    \item Example: $X$ is set, $GF(X)$ is a list.
+    \item More useful for the left adjoints.
+\end{itemize}
+
+\subsection*{Bijection}
+\[\mathcal{D}(F(X),Y) \cong \mathcal{C}(X,G(Y))\]
+
+\subsection*{Co-Unit}
+% https://q.uiver.app/#q=WzAsMixbMCwwLCJcXG1hdGhjYWx7Q30iXSxbMSwwLCJcXG1hdGhjYWx7RH0iXSxbMCwxLCJGIiwwLHsiY3VydmUiOi0yfV0sWzEsMCwiRyIsMCx7ImN1cnZlIjotMn1dLFsyLDMsIiIsMCx7ImxldmVsIjoxLCJzdHlsZSI6eyJuYW1lIjoiYWRqdW5jdGlvbiJ9fV1d
+\[\begin{tikzcd}
+	{\mathcal{C}} & {\mathcal{D}}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "F", curve={height=-12pt}, from=1-1, to=1-2]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "G", curve={height=-12pt}, from=1-2, to=1-1]
+	\arrow["\dashv"{anchor=center, rotate=-90}, draw=none, from=0, to=1]
+\end{tikzcd}\]
+is an adjunction iff $\forall X \in \text{Ob}(\mathcal{C})$, there exists a \underline{co-unit}
+\[\varepsilon_Y: FG(Y)\rightarrow Y\]
+such that
+\[\forall f: F(X)\rightarrow Y, \exists ! \tilde{f}: X\rightarrow G(Y)\]
+where
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJGKFgpIl0sWzAsMSwiRkcoWSkiXSxbMSwxLCJZIl0sWzAsMSwiRihcXGhhdHtmfSkiLDIseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMCwyLCJmIl0sWzEsMiwiXFx2YXJlcHNpbG9uX1kiLDJdXQ==
+\[\begin{tikzcd}
+	{F(X)} \\
+	{FG(Y)} & Y
+	\arrow["{F(\tilde{f})}"', dashed, from=1-1, to=2-1]
+	\arrow["f", from=1-1, to=2-2]
+	\arrow["{\varepsilon_Y}"', from=2-1, to=2-2]
+\end{tikzcd}\]
+
+\subsubsection*{Notes}
+Co-unit is some kind of evaluation.
+
+\begin{example}
+Makes more sense as unit, co-unit version.
+\[F = \mathbb{R}[-], G= U\]
+% https://q.uiver.app/#q=WzAsMixbMCwwLCJcXHRleHRiZntTZXR9Il0sWzEsMCwiXFx0ZXh0YmZ7VmVjdH1fe1xcbWF0aGJie1J9fSJdLFswLDEsIlxcbWF0aGJie1J9Wy1dIiwwLHsiY3VydmUiOi0yfV0sWzEsMCwiVSIsMCx7ImN1cnZlIjotMn1dLFsyLDMsIiIsMCx7ImxldmVsIjoxLCJzdHlsZSI6eyJuYW1lIjoiYWRqdW5jdGlvbiJ9fV1d
+\[\begin{tikzcd}
+	{\textbf{Set}} & {\textbf{Vect}_{\mathbb{R}}}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "{\mathbb{R}[-]}", curve={height=-12pt}, from=1-1, to=1-2]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "U", curve={height=-12pt}, from=1-2, to=1-1]
+	\arrow["\dashv"{anchor=center, rotate=-90}, draw=none, from=0, to=1]
+\end{tikzcd}\]
+"Forget that $Y$ is a vector space, treat it as a set"
+% https://q.uiver.app/#q=WzAsNSxbMCwwLCJcXG1hdGhiYntSfVtYXSJdLFsxLDEsIlkiXSxbMCwxLCJcXG1hdGhiYntSfVtVKFkpXSJdLFswLDIsIlxcc3VtX2kgcl9pIFxcY2RvdCBbdl9pXSJdLFsxLDIsIlxcc3VtX2kgcl9pIHZfaSJdLFswLDEsImYiXSxbMiwxLCJcXHZhcmVwc2lsb25fWSIsMl0sWzAsMiwiRihcXHRpbGRle2Z9KSIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFszLDIsIiIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6InNxdWlnZ2x5In19fV0sWzMsNCwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==
+\[\begin{tikzcd}
+	{\mathbb{R}[X]} \\
+	{\mathbb{R}[U(Y)]} & Y \\
+	{\sum_i r_i \cdot [v_i]} & {\sum_i r_i v_i}
+	\arrow["f", from=1-1, to=2-2]
+	\arrow["{\varepsilon_Y}"', from=2-1, to=2-2]
+	\arrow["{F(\tilde{f})}"', dashed, from=1-1, to=2-1]
+	\arrow[squiggly, from=3-1, to=2-1]
+	\arrow[maps to, from=3-1, to=3-2]
+\end{tikzcd}\]
+\[\tilde{f}(x)=f(x)\]
+\end{example}
+
+\begin{example}
+Makes more sense as co-unit.
+\[(-\times B) : \textbf{Set} \rightarrow \textbf{Set}\]
+\[\begin{cases}
+    A \mapsto A\times B\\
+    f \mapsto f\times 1_B
+\end{cases}
+\]
+\[\textbf{Set}(A\times B, C) \cong \textbf{Set}(A,B\Rightarrow C)\]
+% https://q.uiver.app/#q=WzAsMixbMCwwLCJcXHRleHRiZntTZXR9Il0sWzEsMCwiXFx0ZXh0YmZ7U2V0fSJdLFswLDEsIigtXFx0aW1lcyBCKSIsMCx7ImN1cnZlIjotMn1dLFsxLDAsIkc9KEJcXFJpZ2h0YXJyb3ctKSIsMCx7ImN1cnZlIjotMn1dLFsyLDMsIiIsMCx7ImxldmVsIjoxLCJzdHlsZSI6eyJuYW1lIjoiYWRqdW5jdGlvbiJ9fV1d
+\[\begin{tikzcd}
+	{\textbf{Set}} & {\textbf{Set}}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "{(-\times B)}", curve={height=-12pt}, from=1-1, to=1-2]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "{G=(B\Rightarrow-)}", curve={height=-12pt}, from=1-2, to=1-1]
+	\arrow["\dashv"{anchor=center, rotate=-90}, draw=none, from=0, to=1]
+\end{tikzcd}\]
+\[FG(C) = (B\Rightarrow C) \times B\]
+% https://q.uiver.app/#q=WzAsNixbMSwzLCIoQlxcUmlnaHRhcnJvdyBDKSBcXHRpbWVzIEIiXSxbMiwzLCJDIl0sWzAsNCwiKFxcbGFtYmRhIHguZihhLHgpLGIpIl0sWzQsNCwiZihhLGIpIl0sWzEsMiwiQVxcdGltZXMgQiJdLFswLDAsIihhLGIpIl0sWzAsMSwiXFx2YXJlcHNpbG9uX0MiLDJdLFsyLDMsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCwxLCJmIl0sWzQsMCwiXFx0aWxkZXtmfSBcXHRpbWVzIDFfQiIsMix7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFs1LDIsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNSwzLCIiLDIseyJjdXJ2ZSI6LTEsInN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=
+\[\begin{tikzcd}
+	{(a,b)} \\
+	\\
+	& {A\times B} \\
+	& {(B\Rightarrow C) \times B} & C \\
+	{(\lambda x.f(a,x),b)} &&&& {f(a,b)}
+	\arrow["{\varepsilon_C}"', from=4-2, to=4-3]
+	\arrow[maps to, from=5-1, to=5-5]
+	\arrow["f", from=3-2, to=4-3]
+	\arrow["{\tilde{f} \times 1_B}"', dashed, from=3-2, to=4-2]
+	\arrow[maps to, from=1-1, to=5-1]
+	\arrow[curve={height=-12pt}, maps to, from=1-1, to=5-5]
+\end{tikzcd}\]
+\[\tilde{f}: A\rightarrow (B\Rightarrow C)\]
+\[\tilde{f} :: a \mapsto \lambda x. f(a,x)\]
+\[\tilde{f} :: a \mapsto f(a,-)\]
+Notation mapping of the same thing.
+\end{example}
+
+
+
+
+\end{document}
