@@ -1,0 +1,216 @@
+% Please do not change %
+\documentclass[11pt]{article} % font size
+\usepackage[margin=1in]{geometry} % margins
+\usepackage{amsmath,amsthm,amssymb} % for the  common "math symbols"
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[shortlabels]{enumitem} % for enumeration
+\usepackage{booktabs} % if you need tables
+\usepackage{listings}
+\usepackage{color}
+\usepackage{quiver}
+\usepackage{ulem}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% \theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{definition}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{note}[theorem]{Note}
+
+\lstset{
+  frame=none,
+  xleftmargin=2pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\ttfamily\tiny\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=haskell,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\small\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
+% Feel free to include additional packages (if needed), but make sure it does not override the margin/font requirements.
+%
+\setlength{\parindent}{0pt} % no indent for new paragraphs.
+\setlength{\parskip}{5pt} % distance between paragraphs, which will be used when you have a blank line in your LaTeX code.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Categories, Proofs, and Processes: \\Lecture 11 Naturality}
+%
+\author{Wira Azmoon Ahmad}
+\date{8 Feb 2024}
+%
+\begin{document}
+%
+\maketitle
+
+%You may use the usual \LaTeX\ environments to structure your answers:
+%\begin{align}
+%        \label{basegnn}
+%        \mathbf{h}_u^{(t+1)} = \sigma \bigg( \mathbf{W}_\text{self}^{(t)} \mathbf{h}_u^{(t)}  + \mathbf{W}_\text{neigh}^{(t)} \sum_{v \in N(u)} \mathbf{h}_v^{(t)} + \mathbf{b}^{(t)} \bigg): 
+%\end{align}
+
+
+%\begin{table}[h]
+%\caption{A simple table.}
+%\centering
+%\begin{tabular}[t]{lrrrr}
+%\toprule
+%Graphs & Can & Be  & Fun & Too \\ 
+%\midrule 
+%$G_1$ & $1$  & $2$ & $3$ & $4$ \\ 
+%$G_2$ & $-1$  & $-2$ & $-3$ & $-4$ \\ 
+%$G_3$ & $0.1$  & $0.2$ & $0.3$ & $0.4$ \\ 
+%\bottomrule
+%\end{tabular}
+%\label{tab}
+%\end{table}
+
+% A functor $F:\mathcal{C} \rightarrow \mathcal{D}$ is
+% \begin{itemize}
+%     \item \textbf{faithful} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is injective;
+%     \item \textbf{full} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is surjective
+% \end{itemize}
+
+
+\addtocounter{section}{4}
+\section{Yoneda's Lemma}
+\subsection{Motivation}
+There are lots of Hom-functors, one for every $A\in\text{Ob}(\mathcal{C})$.
+... but they are all related by natural transformations.
+\[t:\mathcal{C}(-,A)\rightarrow\mathcal{C}(-,B) := \{t_C : \mathcal{C}(C,A)\rightarrow\mathcal{C}(C,B)\}\]
+For $f:C\rightarrow D$,
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXG1hdGhjYWx7Q30oRCxBKSJdLFsxLDAsIlxcbWF0aGNhbHtDfShDLEEpIl0sWzAsMSwiXFxtYXRoY2Fse0N9KEQsQikiXSxbMSwxLCJcXG1hdGhjYWx7Q30oRCxCKSJdLFswLDEsIlxcbWF0aGNhbHtDfShmLEEpIl0sWzAsMiwidF9EIiwyXSxbMiwzLCJcXG1hdGhjYWx7Q30oZixCKSIsMl0sWzEsMywidF9DIl1d
+\[\begin{tikzcd}
+	{\mathcal{C}(D,A)} & {\mathcal{C}(C,A)} \\
+	{\mathcal{C}(D,B)} & {\mathcal{C}(D,B)}
+	\arrow["{\mathcal{C}(f,A)}", from=1-1, to=1-2]
+	\arrow["{t_D}"', from=1-1, to=2-1]
+	\arrow["{\mathcal{C}(f,B)}"', from=2-1, to=2-2]
+	\arrow["{t_C}", from=1-2, to=2-2]
+\end{tikzcd}\]
+The contravariant Hom-functor fixes the first element, the natural transfomration fixes the second element.
+\begin{claim}[Ex. 55]
+    For $g:A\rightarrow B$,
+    \[t:= \mathcal{C}(-,g) := \{t_C = \mathcal{C}(C,g) : \mathcal{C}(C,A)\rightarrow\mathcal{C}(C,B)\}\]
+    $\mathcal{C}(-,g)$ is a natural transformation.
+\end{claim}
+\begin{proof}
+    % https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXG1hdGhjYWx7Q30oRCxBKSJdLFszLDAsIlxcbWF0aGNhbHtDfShDLEEpIl0sWzAsMywiXFxtYXRoY2Fse0N9KEQsQikiXSxbMywzLCJcXG1hdGhjYWx7Q30oRCxCKSJdLFsxLDEsImgiXSxbMiwxLCJoXFxjaXJjIGYiXSxbMSwyLCJnXFxjaXJjIGgiXSxbMiwyLCJnXFxjaXJjIGggXFxjaXJjIGYiXSxbMCwxLCJcXG1hdGhjYWx7Q30oZixBKSJdLFswLDIsInRfRCIsMl0sWzIsMywiXFxtYXRoY2Fse0N9KGYsQikiLDJdLFsxLDMsInRfQyJdLFs0LDUsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw2LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzUsNywiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs2LDcsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=
+\[\begin{tikzcd}
+	{\mathcal{C}(D,A)} &&& {\mathcal{C}(C,A)} \\
+	& h & {h\circ f} \\
+	& {g\circ h} & {g\circ h \circ f} \\
+	{\mathcal{C}(D,B)} &&& {\mathcal{C}(D,B)}
+	\arrow["{\mathcal{C}(f,A)}", from=1-1, to=1-4]
+	\arrow["{t_D}"', from=1-1, to=4-1]
+	\arrow["{\mathcal{C}(f,B)}"', from=4-1, to=4-4]
+	\arrow["{t_C}", from=1-4, to=4-4]
+	\arrow[maps to, from=2-2, to=2-3]
+	\arrow[maps to, from=2-2, to=3-2]
+	\arrow[maps to, from=2-3, to=3-3]
+	\arrow[maps to, from=3-2, to=3-3]
+\end{tikzcd}\]
+\end{proof}
+
+\begin{lemma}[Faux-neda]
+    There exists a bijection
+    \[\phi : \text{Nat}(\mathcal{C}(-,A), \mathcal{C}(-,B))\cong \mathcal{C}(A,B)\]
+    \label{faux}
+\end{lemma}
+
+\subsection{Yoneda's Lemma}
+\begin{lemma}[Yoneda's Lemma]
+    For any functor $H:\mathcal{C}^{op} \rightarrow\textbf{Set}$, and $A\in \text{Ob}(\mathcal{C})$,
+    there exists a bijection (imagine $H=\mathcal{C}(-,B)$)
+    \[\phi : \text{Nat}(\mathcal{C}(-,A), H)\cong H\ A\]
+    \label{yo}
+\end{lemma}
+
+\begin{proof}
+Take a natural transformation $t:\mathcal{C}(-,A)\rightarrow H$. We need an element $u\in H\ A$.
+\[t_A:\mathcal{C}(A,A)\rightarrow H\ A\]
+Let
+\[u:= t_A(1_A)\in H\ A, \quad \phi(t) = t_A(1_A)\]
+
+For the inverse, take some $u\in H\ A$, and build a natural transformation $t$ from it.
+\[t_C: \mathcal{C}(C,A) \rightarrow H\ C\]
+\[t_C(g) := H\ g\ u\]
+Need to show that $t$ is natural. $\forall f:C\rightarrow D$,
+% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXG1hdGhjYWx7Q30oRCxBKSJdLFszLDAsIlxcbWF0aGNhbHtDfShDLEEpIl0sWzAsMywiSFxcIEQiXSxbMywzLCJIXFwgQyJdLFsxLDEsImciXSxbMiwxLCJnXFxjaXJjIGYiXSxbMSwyLCJIXFwgZ1xcIHUiXSxbMiwyLCJIZihIXFwgZ1xcIHUpIl0sWzAsMSwiXFxtYXRoY2Fse0N9KGYsQSkiXSxbMCwyLCJ0X0QiLDJdLFsyLDMsIkhcXCBmIiwyXSxbMSwzLCJ0X0MiXSxbNCw1LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzQsNiwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs1LDcsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNiw3LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV1d
+\[\begin{tikzcd}
+	{\mathcal{C}(D,A)} &&& {\mathcal{C}(C,A)} \\
+	& g & {g\circ f} \\
+	& {H\ g\ u} & {Hf(H\ g\ u)} \\
+	{H\ D} &&& {H\ C}
+	\arrow["{\mathcal{C}(f,A)}", from=1-1, to=1-4]
+	\arrow["{t_D}"', from=1-1, to=4-1]
+	\arrow["{H\ f}"', from=4-1, to=4-4]
+	\arrow["{t_C}", from=1-4, to=4-4]
+	\arrow[maps to, from=2-2, to=2-3]
+	\arrow[maps to, from=2-2, to=3-2]
+	\arrow[maps to, from=2-3, to=3-3]
+	\arrow[maps to, from=3-2, to=3-3]
+\end{tikzcd}\]
+\[Hf(H\ g\ u) = (Hf\circ Hg)u = H(g\circ f) u\]
+since $H$ is contravariant.
+
+\[\phi(t) = t_A(1_A)\in H\ A\]
+\[\psi(u) = t,\quad t_C(g) = H\ g\ u\]
+\[\phi(\psi(u)) = \phi(t) = t_A(1_A) = H\ 1_A\ u = 1_{H\ A}\ u = u\]
+
+\[\psi(\phi(s)) = \psi(s_A(1_A)) = t, \quad t_C(g) = (H\ g) (s_A(1_A))\]
+\begin{equation}
+\begin{aligned}
+    t_C(g) &= (H\ g \circ s_A)\ 1_A \\
+    &= s_C\ \mathcal{C}(g,A)\ 1_A\\
+    &= s_C(g)
+\end{aligned}
+\end{equation}
+For $g:C\rightarrow A$,
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXG1hdGhjYWx7Q30oQSxBKSJdLFsxLDAsIlxcbWF0aGNhbHtDfShDLEEpIl0sWzAsMSwiSFxcIEEiXSxbMSwxLCJIXFwgQyJdLFswLDEsIlxcbWF0aGNhbHtDfShnLEEpIl0sWzAsMiwic19BIiwyXSxbMiwzLCJIXFwgZyIsMl0sWzEsMywiY19BIl1d
+\[\begin{tikzcd}
+	{\mathcal{C}(A,A)} & {\mathcal{C}(C,A)} \\
+	{H\ A} & {H\ C}
+	\arrow["{\mathcal{C}(g,A)}", from=1-1, to=1-2]
+	\arrow["{s_A}"', from=1-1, to=2-1]
+	\arrow["{H\ g}"', from=2-1, to=2-2]
+	\arrow["{c_A}", from=1-2, to=2-2]
+\end{tikzcd}\]
+
+\end{proof}
+
+\begin{corollary}
+    Yoneda's Lemma [\ref{yo}] $\implies$ Faux-neda [\ref{faux}].
+\end{corollary}
+\begin{example}
+    \[\phi : \text{Nat}(\mathcal{C}(-,A), H)\cong H\ A\]
+    If $H = \mathcal{C}(-,B)$, then $\psi(f) : \mathcal{C}(-,A)\rightarrow \mathcal{C}(-,B)$,
+    \[\psi(f)_C (g) = \mathcal{C}(g,B)(f) = f\circ g\]
+    so $\psi(f) = \mathcal{C}(A,f)$
+    \[\phi(t) = \mathcal{C}(A,f)(1_A) = f\]
+\end{example}
+
+\end{document}

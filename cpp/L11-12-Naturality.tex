@@ -1,0 +1,282 @@
+% Please do not change %
+\documentclass[11pt]{article} % font size
+\usepackage[margin=1in]{geometry} % margins
+\usepackage{amsmath,amsthm,amssymb} % for the  common "math symbols"
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[shortlabels]{enumitem} % for enumeration
+\usepackage{booktabs} % if you need tables
+\usepackage{listings}
+\usepackage{color}
+\usepackage{quiver}
+\usepackage{ulem}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% \theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{definition}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{note}[theorem]{Note}
+
+\lstset{
+  frame=none,
+  xleftmargin=2pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\ttfamily\tiny\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=haskell,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\small\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
+% Feel free to include additional packages (if needed), but make sure it does not override the margin/font requirements.
+%
+\setlength{\parindent}{0pt} % no indent for new paragraphs.
+\setlength{\parskip}{5pt} % distance between paragraphs, which will be used when you have a blank line in your LaTeX code.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Categories, Proofs, and Processes: \\Lecture 11 Naturality}
+%
+\author{Wira Azmoon Ahmad}
+\date{8 Feb 2024}
+%
+\begin{document}
+%
+\maketitle
+
+%You may use the usual \LaTeX\ environments to structure your answers:
+%\begin{align}
+%        \label{basegnn}
+%        \mathbf{h}_u^{(t+1)} = \sigma \bigg( \mathbf{W}_\text{self}^{(t)} \mathbf{h}_u^{(t)}  + \mathbf{W}_\text{neigh}^{(t)} \sum_{v \in N(u)} \mathbf{h}_v^{(t)} + \mathbf{b}^{(t)} \bigg): 
+%\end{align}
+
+
+%\begin{table}[h]
+%\caption{A simple table.}
+%\centering
+%\begin{tabular}[t]{lrrrr}
+%\toprule
+%Graphs & Can & Be  & Fun & Too \\ 
+%\midrule 
+%$G_1$ & $1$  & $2$ & $3$ & $4$ \\ 
+%$G_2$ & $-1$  & $-2$ & $-3$ & $-4$ \\ 
+%$G_3$ & $0.1$  & $0.2$ & $0.3$ & $0.4$ \\ 
+%\bottomrule
+%\end{tabular}
+%\label{tab}
+%\end{table}
+
+% A functor $F:\mathcal{C} \rightarrow \mathcal{D}$ is
+% \begin{itemize}
+%     \item \textbf{faithful} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is injective;
+%     \item \textbf{full} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is surjective
+% \end{itemize}
+
+
+\addtocounter{section}{3}
+\section{Naturality}
+Functors treat categories as objects. We can treat functors themselves as objects, so what are the arrows?
+
+\subsection{Motivating Examples}
+Suppose a category $\mathcal{C}$ has products, we have two isomorphic ternary products.
+\[(A\times B)\times C \cong A\times (B\times C)\]
+Note that this isomorphism does not really depend on the specific objects and arrows involved,
+i.e. the following commutes
+
+\subsubsection[]{Associators}
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCIoQVxcdGltZXMgQilcXHRpbWVzIEMiXSxbMSwwLCIoQSdcXHRpbWVzIEIpXFx0aW1lcyBDIl0sWzAsMSwiQVxcdGltZXMgKEJcXHRpbWVzIEMpIl0sWzEsMSwiQSdcXHRpbWVzIChCXFx0aW1lcyBDKSJdLFswLDFdLFswLDIsImkiLDJdLFsxLDMsImknIl0sWzIsM11d
+\[\begin{tikzcd}
+	{(A\times B)\times C} & {(A'\times B)\times C} \\
+	{A\times (B\times C)} & {A'\times (B\times C)}
+	\arrow[from=1-1, to=1-2]
+	\arrow["i"', from=1-1, to=2-1]
+	\arrow["{i'}", from=1-2, to=2-2]
+	\arrow[from=2-1, to=2-2]
+\end{tikzcd}\]
+More generally we have
+\[(-\times -)\times - : \mathcal{C} \times \mathcal{C} \times \mathcal{C} \rightarrow \mathcal{C}\]
+\[-\times (-\times -) : \mathcal{C} \times \mathcal{C} \times \mathcal{C} \rightarrow \mathcal{C}\]
+
+\subsubsection{Lists}
+Consider the list constructor
+\[x_0 : [x_1,x_2,...,x_n] = [x_0,x_1,x_2,...,x_n]\]
+"Liste" constructor in reverse
+\[[x_n,x_{n-1},...,x_1]:x_0 = [x_n,x_{n-1},...,x_1,x_0]\]
+
+Consider the functor \texttt{List} : \textbf{Set} $\rightarrow$ \textbf{Set},
+which maps a set $X$ to \texttt{List}$(X)$, the set of all finite lists with elements in $X$.
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXHRleHR0dHtMaXN0fShYKSJdLFsxLDAsIlxcdGV4dHR0e0xpc3R9KFkpIl0sWzAsMSwiXFx0ZXh0dHR7TGlzdH0oWCkiXSxbMSwxLCJcXHRleHR0dHtMaXN0fShZKSJdLFsxLDMsIlxcdGV4dHR0e3JldmVyc2V9Il0sWzAsMSwiXFx0ZXh0dHR7TGlzdH0oZikiXSxbMCwyLCJcXHRleHR0dHtyZXZlcnNlfSIsMl0sWzIsMywiXFx0ZXh0dHR7TGlzdH0oZikiLDJdXQ==
+\[\begin{tikzcd}
+	{\texttt{List}(X)} & {\texttt{List}(Y)} \\
+	{\texttt{List}(X)} & {\texttt{List}(Y)}
+	\arrow["{\texttt{reverse}}", from=1-2, to=2-2]
+	\arrow["{\texttt{List}(f)}", from=1-1, to=1-2]
+	\arrow["{\texttt{reverse}}"', from=1-1, to=2-1]
+	\arrow["{\texttt{List}(f)}"', from=2-1, to=2-2]
+\end{tikzcd}\]
+
+\subsubsection{More Examples}
+Consider functiors $G:\underline{2}_{\rightrightarrows}\rightarrow \textbf{Set}$.
+% https://q.uiver.app/#q=WzAsMyxbMSwwLCJcXGJ1bGxldCJdLFsyLDAsIlxcYnVsbGV0Il0sWzAsMCwiXFx1bmRlcmxpbmV7Mn1fe1xccmlnaHRyaWdodGFycm93c30iXSxbMCwxLCIiLDIseyJjdXJ2ZSI6LTF9XSxbMCwxLCIiLDAseyJjdXJ2ZSI6MX1dLFsyLDAsIj0iLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=
+\[\begin{tikzcd}
+	{\underline{2}_{\rightrightarrows}} & \bullet & \bullet
+	\arrow[curve={height=-6pt}, from=1-2, to=1-3]
+	\arrow[curve={height=6pt}, from=1-2, to=1-3]
+	\arrow["{=}"{description}, draw=none, from=1-1, to=1-2]
+\end{tikzcd}\] 
+corresponds to directed graphs
+% https://q.uiver.app/#q=WzAsMixbMCwwLCJFIl0sWzEsMCwiViJdLFswLDEsInMiLDAseyJjdXJ2ZSI6LTF9XSxbMCwxLCJ0IiwyLHsiY3VydmUiOjF9XV0=
+\[\begin{tikzcd}
+	E & V
+	\arrow["s", curve={height=-6pt}, from=1-1, to=1-2]
+	\arrow["t"', curve={height=6pt}, from=1-1, to=1-2]
+\end{tikzcd}\]
+where $E\subseteq V\times V$.
+% https://q.uiver.app/#q=WzAsNixbMSwwLCJFIl0sWzIsMCwiViJdLFsxLDEsIkUnIl0sWzIsMSwiViciXSxbMCwwLCJcXHRleHR7R3JhcGggMX0iXSxbMCwxLCJcXHRleHR7R3JhcGggMn0iXSxbMCwxLCJzIl0sWzAsMiwiaCIsMl0sWzIsMywicyciLDJdLFsxLDMsImgiXV0=
+\[\begin{tikzcd}
+	{\text{Graph 1}} & E & V \\
+	{\text{Graph 2}} & {E'} & {V'}
+	\arrow["s", from=1-2, to=1-3]
+	\arrow["h"', from=1-2, to=2-2]
+	\arrow["{s'}"', from=2-2, to=2-3]
+	\arrow["h", from=1-3, to=2-3]
+\end{tikzcd}\]
+is a graph homomorphism.
+\subsubsection{Unnatural transfomration}
+\[\texttt{reverse}_{\texttt{Bool}}: \texttt{List}(X)\rightarrow \texttt{List}(X)
+:= \begin{cases}
+    \texttt{reverse list} & \text{if } X = \texttt{Bool}\\
+    \texttt{id} & \text{otherwise}
+\end{cases}\]
+Consider the function $\texttt{odd}: \mathbb{N} \rightarrow \texttt{Bool}$
+(True if $n\in\mathbb{N}$ is odd, False otherwise).
+\[\texttt{reverse}_{\texttt{Bool}} \circ \texttt{list odd}([1,3,2]) = [F,T,T]\]
+\[\texttt{list odd}\circ\texttt{reverse}_{\texttt{Bool}}  ([1,3,2]) = [T,T,F]\]
+Because the function cares about the types inside, it's unnatural.
+The diagram will not commute.
+
+\clearpage
+\subsection{Natural Transfomrations}
+\begin{definition}
+Let $F,G:\mathcal{C} \rightarrow \mathcal{D}$ be functors.
+A \underline{natural transformation}
+\[t:F\rightarrow G\]
+is a family of morphisms in $\mathcal{D}$ indexed by objects $A$ of $\mathcal{C}$,
+\[\{t_A:F\ A \rightarrow G\ A\}_{A\in \text{Ob}(\mathcal{C})}\]
+such that, for all $f:A\rightarrow B$, the following diagram commutes
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJGXFwgQSJdLFsxLDAsIkZcXCBCIl0sWzAsMSwiR1xcIEEiXSxbMSwxLCJHXFwgQiJdLFswLDEsIkZcXCBmIl0sWzAsMiwidF9BIiwyXSxbMiwzLCJHXFwgZiIsMl0sWzEsMywidF9CIl1d
+\[\begin{tikzcd}
+	{F\ A} & {F\ B} \\
+	{G\ A} & {G\ B}
+	\arrow["{F\ f}", from=1-1, to=1-2]
+	\arrow["{t_A}"', from=1-1, to=2-1]
+	\arrow["{G\ f}"', from=2-1, to=2-2]
+	\arrow["{t_B}", from=1-2, to=2-2]
+\end{tikzcd}\]
+This condition is called naturality.
+\end{definition}
+\begin{definition}
+    If each $t_A$ is an isomorphism, we say $t$ is a \underline{natural isomorphism}:
+    \[t:F\cong G\]
+\end{definition}
+
+\begin{note}
+	A natural isomorphism is precisely an isomorphism in the functor category 
+	\[\text{Func}(\mathcal{C},\mathcal{D}):=\mathcal{D}^{\mathcal{C}}\]
+\end{note}
+	
+\addtocounter{subsection}{3}
+\subsection{Equivalence of categories}
+\begin{definition}
+    An \underline{equivalence of categories} consists of a pair of functors
+    \[E:\mathcal{C} \rightarrow \mathcal{D}\]
+    \[F:\mathcal{D} \rightarrow \mathcal{C}\]
+    and a pair of natural isomorphisms
+    \[\alpha : 1_{\mathcal{C}} \cong F\circ E\]
+    \[\beta : 1_{\mathcal{D}} \cong E\circ F\]
+    $F$ is the \underline{pseudo-inverse} of $E$.
+    $\mathcal{C},\mathcal{D}$ are then said to be equivalent, denoted $\mathcal{C}\simeq \mathcal{D}$.
+\end{definition}
+\begin{note}
+    This is an \underline{alternative} definition to a functor being an equivalence.
+\end{note}
+
+\begin{proposition}
+    If functor $F:\mathcal{C}\rightarrow\mathcal{D}$ is (part of) an equivalence of categories,
+    it is an equivalence - full, faithful, and 
+    \[\forall D\in\text{Ob}(\mathcal{D}),\exists C\in\text{Ob}(\mathcal{C}). F\ C \cong D\]
+\end{proposition}
+\begin{proof}
+For faithfulness, take $E:\mathcal{D}\rightarrow \mathcal{C}$ such that
+\[\alpha : 1_{\mathcal{C}} \cong EF\]
+\[\beta : 1_{\mathcal{D}} \cong FE\]
+are natural transformations in $\mathcal{C}$, for any object $C$, we have $\alpha_C : C \cong EF(C)$ and
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJDIl0sWzEsMCwiQyciXSxbMCwxLCJFRihDKSJdLFsxLDEsIkVGKEMnKSJdLFswLDEsImYiXSxbMCwyLCJcXGFscGhhX0MiLDJdLFsyLDMsIkVGKGYpIiwyXSxbMSwzLCJcXGFscGhhX3tDJ30iXV0=
+\[\begin{tikzcd}
+	C & {C'} \\
+	{EF(C)} & {EF(C')}
+	\arrow["f", from=1-1, to=1-2]
+	\arrow["{\alpha_C}"', from=1-1, to=2-1]
+	\arrow["{EF(f)}"', from=2-1, to=2-2]
+	\arrow["{\alpha_{C'}}", from=1-2, to=2-2]
+\end{tikzcd}\]
+Thus if $F(f)=F(f')$ then $EF(f)=EF(f')$ and so $f=f'$. So $F$ is faithful since
+\[F_{C,C'}:\mathcal{C}(C,C')\rightarrow \mathcal{D}(F(C),F(C'))\]
+is surjective.
+
+For fullness, consider any arrow $h:F(C) \rightarrow F(C')$ in $\mathcal{D}$. 
+We note that $C\cong EF(C)$ and $C'\cong EF(C')$. So consider $E(h)$ then there is an
+\[f = (\alpha_{C'})^{-1} \circ E(h) \circ \alpha_C : C\rightarrow C'\]
+where $\alpha_C,\alpha_{C'}$ are iso. By naturality we have $F(f):F(C)\rightarrow F(C')$ that
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJDIl0sWzEsMCwiQyciXSxbMCwxLCJFRihDKSJdLFsxLDEsIkVGKEMnKSJdLFswLDEsImYiXSxbMCwyLCJcXGFscGhhX0MiLDJdLFsyLDMsIkVGKGYpIiwyXSxbMSwzLCJcXGFscGhhX3tDJ30iXV0=
+\[\begin{tikzcd}
+	C & {C'} \\
+	{EF(C)} & {EF(C')}
+	\arrow["f", from=1-1, to=1-2]
+	\arrow["{\alpha_C}"', from=1-1, to=2-1]
+	\arrow["{EF(f)}"', from=2-1, to=2-2]
+	\arrow["{\alpha_{C'}}", from=1-2, to=2-2]
+\end{tikzcd}\]
+So $EF(f) = E(h) : EF(C) \rightarrow EF(C')$. Since $E$ is faithful, $EF(f)=E(h)\implies F(f) = h$, so $F$ is full.
+
+For essential surjectivity on objects for any $D\in\text{Ob}(\mathcal{D})$, we have
+\[t:1_{\mathcal{D}}\cong FE\]
+so for any $D\in\text{Ob}(\mathcal{D})$,
+\[\beta_D : D \cong FED = F(ED)\]
+for $ED\in \text{Ob}(\mathcal{C})$.
+\end{proof}
+
+\subsection{Representable functors}
+\begin{definition}
+    A functor $F:\mathcal{C}\rightarrow\textbf{Set}$ is said to be \underline{representable}
+    if it is naturally isomorphic to the covariant Hom-functor at $A$,
+    $\mathcal{C}(A,-):\mathcal{C}\rightarrow\textbf{Set}$ for some $A$.
+\end{definition}
+\begin{example}
+    Forgetful functor $U:\textbf{Mon}\rightarrow\textbf{Set}$.
+    We want that there is a monoid $Z$ such that for all $M$,
+    \[\textbf{Mon}(Z,M) \cong U(M), \quad Z(\mathbb{N}, +, 0)\]
+\end{example}
+
+\end{document}
