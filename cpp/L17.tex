@@ -25,6 +25,7 @@
 \newtheorem{fact}[theorem]{Fact}
 \theoremstyle{definition}
 \newtheorem{example}[theorem]{Example}
+\newtheorem{note}[theorem]{Note}
 
 \lstset{
   frame=none,
@@ -55,7 +56,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{Categories, Proofs, and Processes: \\Lecture 17}
+\title{Categories, Proofs, and Processes: \\Lecture 17 Adjunctions}
 %
 \author{Wira Azmoon Ahmad}
 \date{27 Feb 2024}
@@ -93,9 +94,9 @@
 % \end{itemize}
 
 
-\section*{Adjunctions}
-\addtocounter{section}{1}
-\subsection*{Unit}
+\addtocounter{section}{6}
+\section{Adjunctions}
+\subsection{Unit}
 % https://q.uiver.app/#q=WzAsMixbMCwwLCJcXG1hdGhjYWx7Q30iXSxbMSwwLCJcXG1hdGhjYWx7RH0iXSxbMCwxLCJGIiwwLHsiY3VydmUiOi0yfV0sWzEsMCwiRyIsMCx7ImN1cnZlIjotMn1dLFsyLDMsIiIsMCx7ImxldmVsIjoxLCJzdHlsZSI6eyJuYW1lIjoiYWRqdW5jdGlvbiJ9fV1d
 \[\begin{tikzcd}
 	{\mathcal{C}} & {\mathcal{D}}
@@ -182,16 +183,16 @@ Last equality by $\eta$ expansion.
 
 \end{example}
 
-\subsubsection*{Notes}
+\subsubsection{Notes}
 \begin{itemize}
     \item Example: $X$ is set, $GF(X)$ is a list.
     \item More useful for the left adjoints.
 \end{itemize}
 
-\subsection*{Bijection}
+\subsection{Bijection}
 \[\mathcal{D}(F(X),Y) \cong \mathcal{C}(X,G(Y))\]
 
-\subsection*{Co-Unit}
+\subsection{Co-Unit}
 % https://q.uiver.app/#q=WzAsMixbMCwwLCJcXG1hdGhjYWx7Q30iXSxbMSwwLCJcXG1hdGhjYWx7RH0iXSxbMCwxLCJGIiwwLHsiY3VydmUiOi0yfV0sWzEsMCwiRyIsMCx7ImN1cnZlIjotMn1dLFsyLDMsIiIsMCx7ImxldmVsIjoxLCJzdHlsZSI6eyJuYW1lIjoiYWRqdW5jdGlvbiJ9fV1d
 \[\begin{tikzcd}
 	{\mathcal{C}} & {\mathcal{D}}
@@ -213,8 +214,9 @@ where
 	\arrow["{\varepsilon_Y}"', from=2-1, to=2-2]
 \end{tikzcd}\]
 
-\subsubsection*{Notes}
+\begin{note}
 Co-unit is some kind of evaluation.
+\end{note}
 
 \begin{example}
 Makes more sense as unit, co-unit version.

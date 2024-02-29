@@ -163,7 +163,7 @@ where $E\subseteq V\times V$.
 	\arrow["h", from=1-3, to=2-3]
 \end{tikzcd}\]
 is a graph homomorphism.
-\subsubsection{Unnatural transfomration}
+\subsubsection{Unnatural transformation}
 \[\texttt{reverse}_{\texttt{Bool}}: \texttt{List}(X)\rightarrow \texttt{List}(X)
 := \begin{cases}
     \texttt{reverse list} & \text{if } X = \texttt{Bool}\\
@@ -177,7 +177,7 @@ Because the function cares about the types inside, it's unnatural.
 The diagram will not commute.
 
 \clearpage
-\subsection{Natural Transfomrations}
+\subsection{Natural Transformations}
 \begin{definition}
 Let $F,G:\mathcal{C} \rightarrow \mathcal{D}$ be functors.
 A \underline{natural transformation}
@@ -208,7 +208,7 @@ This condition is called naturality.
 	
 \addtocounter{subsection}{3}
 \subsection{Equivalence of categories}
-\begin{definition}
+\begin{definition}[Def. 57 (pg. 38)]
     An \underline{equivalence of categories} consists of a pair of functors
     \[E:\mathcal{C} \rightarrow \mathcal{D}\]
     \[F:\mathcal{D} \rightarrow \mathcal{C}\]
@@ -222,7 +222,7 @@ This condition is called naturality.
     This is an \underline{alternative} definition to a functor being an equivalence.
 \end{note}
 
-\begin{proposition}
+\begin{proposition}[Ex. 1.4.4(2)(b)$\Rightarrow$(a)]
     If functor $F:\mathcal{C}\rightarrow\mathcal{D}$ is (part of) an equivalence of categories,
     it is an equivalence - full, faithful, and 
     \[\forall D\in\text{Ob}(\mathcal{D}),\exists C\in\text{Ob}(\mathcal{C}). F\ C \cong D\]

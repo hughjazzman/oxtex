@@ -1,0 +1,315 @@
+% Please do not change %
+\documentclass[11pt]{article} % font size
+\usepackage[margin=1in]{geometry} % margins
+\usepackage{amsmath,amsthm,amssymb} % for the  common "math symbols"
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[shortlabels]{enumitem} % for enumeration
+\usepackage{booktabs} % if you need tables
+\usepackage{listings}
+\usepackage{color}
+\usepackage{quiver}
+\usepackage{ulem}
+\usepackage{wasysym}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% \theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{definition}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{note}[theorem]{Note}
+
+\lstset{
+  frame=none,
+  xleftmargin=2pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\ttfamily\tiny\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=haskell,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\small\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
+% Feel free to include additional packages (if needed), but make sure it does not override the margin/font requirements.
+%
+\setlength{\parindent}{0pt} % no indent for new paragraphs.
+\setlength{\parskip}{5pt} % distance between paragraphs, which will be used when you have a blank line in your LaTeX code.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Categories, Proofs, and Processes: \\Lecture 17 Adjunctions}
+%
+\author{Wira Azmoon Ahmad}
+\date{27 Feb 2024}
+%
+\begin{document}
+%
+\maketitle
+
+%You may use the usual \LaTeX\ environments to structure your answers:
+%\begin{align}
+%        \label{basegnn}
+%        \mathbf{h}_u^{(t+1)} = \sigma \bigg( \mathbf{W}_\text{self}^{(t)} \mathbf{h}_u^{(t)}  + \mathbf{W}_\text{neigh}^{(t)} \sum_{v \in N(u)} \mathbf{h}_v^{(t)} + \mathbf{b}^{(t)} \bigg): 
+%\end{align}
+
+
+%\begin{table}[h]
+%\caption{A simple table.}
+%\centering
+%\begin{tabular}[t]{lrrrr}
+%\toprule
+%Graphs & Can & Be  & Fun & Too \\ 
+%\midrule 
+%$G_1$ & $1$  & $2$ & $3$ & $4$ \\ 
+%$G_2$ & $-1$  & $-2$ & $-3$ & $-4$ \\ 
+%$G_3$ & $0.1$  & $0.2$ & $0.3$ & $0.4$ \\ 
+%\bottomrule
+%\end{tabular}
+%\label{tab}
+%\end{table}
+
+% A functor $F:\mathcal{C} \rightarrow \mathcal{D}$ is
+% \begin{itemize}
+%     \item \textbf{faithful} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is injective;
+%     \item \textbf{full} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is surjective
+% \end{itemize}
+
+
+\addtocounter{section}{7}
+\section{Monoidal Categories}
+\begin{definition}[Informal]
+    Monoidal categories are categories with a "parallel" composition $\otimes$.
+\end{definition}
+\subsection{Motivating Examples}
+\begin{example}[$\textbf{Set}, \times$]
+\[f: A\rightarrow B, \quad g: C\rightarrow D\]
+\[f\times g: A\times C \rightarrow B\times D\]
+\[(f\times g)(a,c) = (f(a),g(c))\]
+% https://q.uiver.app/#q=WzAsNixbMSwwLCJBXFx0aW1lcyBDIl0sWzAsMCwiQSJdLFsyLDAsIkMiXSxbMCwxLCJCIl0sWzIsMSwiRCJdLFsxLDEsIkJcXHRpbWVzIEQiXSxbMCwxLCJcXHBpXzEiLDJdLFswLDIsIlxccGlfMiJdLFsxLDMsImYiLDJdLFsyLDQsImciXSxbNSwzLCJcXHBpXzEnIl0sWzUsNCwiXFxwaV8yJyIsMl0sWzAsNSwiZlxcdGltZXMgZyIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==
+\[\begin{tikzcd}
+	A & {A\times C} & C \\
+	B & {B\times D} & D
+	\arrow["{\pi_1}"', from=1-2, to=1-1]
+	\arrow["{\pi_2}", from=1-2, to=1-3]
+	\arrow["f"', from=1-1, to=2-1]
+	\arrow["g", from=1-3, to=2-3]
+	\arrow["{\pi_1'}", from=2-2, to=2-1]
+	\arrow["{\pi_2'}"', from=2-2, to=2-3]
+	\arrow["{f\times g}", dashed, from=1-2, to=2-2]
+\end{tikzcd}\]
+
+
+Any $\mathcal{C}$ with products
+\[f\times g:= \langle f\circ \pi_1, g\circ \pi_2\rangle\]
+
+\begin{equation}
+    \begin{aligned}
+        (f'\times g')\circ (f\times g) &= (f'\times g') \circ \langle f \circ \pi_1, g\ circ \pi_2\rangle\\
+        &= \langle f' \circ f \circ \pi_1, g' \circ g \circ \pi_2\rangle\\
+        &= (f' \circ f)\times (g' \circ g) \quad \text{(interchange law)}
+    \end{aligned}
+\end{equation}
+\end{example}
+
+\begin{example}[$\textbf{Set}, +$]
+$+$ is the disjoint union.
+\[f: A\rightarrow B, \quad g: C\rightarrow D\]
+\[f+ g: A+ C \rightarrow B+ D\]
+\[(f+ g)(a,c) = \begin{cases}
+    f(x) & \text{if } x \in A\\
+    g(x) & \text{if } x \in C\\
+\end{cases}
+\]
+
+In $\mathcal{C}$ with coproducts:
+\[f+g = [\iota_1 \circ f, \iota_2 \circ g]\]
+"Co-tupling of maps"
+% https://q.uiver.app/#q=WzAsNixbMSwwLCJBKyBDIl0sWzAsMCwiQSJdLFsyLDAsIkMiXSxbMCwxLCJCIl0sWzIsMSwiRCJdLFsxLDEsIkIrIEQiXSxbMSwwLCJcXGlvdGFfMSJdLFsyLDAsIlxcaW90YV8yIiwyXSxbMSwzLCJmIiwyXSxbMiw0LCJnIl0sWzMsNSwiXFxpb3RhXzEnIiwyXSxbNCw1LCJcXGlvdGFfMiciXSxbMCw1LCJmKyBnIiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d
+\[\begin{tikzcd}
+	A & {A+ C} & C \\
+	B & {B+ D} & D
+	\arrow["{\iota_1}", from=1-1, to=1-2]
+	\arrow["{\iota_2}"', from=1-3, to=1-2]
+	\arrow["f"', from=1-1, to=2-1]
+	\arrow["g", from=1-3, to=2-3]
+	\arrow["{\iota_1'}"', from=2-1, to=2-2]
+	\arrow["{\iota_2'}", from=2-3, to=2-2]
+	\arrow["{f+ g}", dashed, from=1-2, to=2-2]
+\end{tikzcd}\]
+\[(f'+g') \circ (f+g) = (f'\circ f) + (g' \circ g)\]
+
+\end{example}
+
+\subsection{Non-Examples}
+\begin{example}[$\textbf{Rel}, \times$]
+$\times$ is not a product or a coproduct since relations are non-separable.
+Let
+\[\mathbb{B} = \{0,1\}\]
+\[S = \{*\mapsto (0,0), * \mapsto (1,1)\}\]
+\[R = \{*\mapsto 0, * \mapsto 1\}\]
+% https://q.uiver.app/#q=WzAsNCxbMSwxLCJcXHsqXFx9Il0sWzEsMCwiXFxtYXRoYmJ7Qn1cXHRpbWVzXFxtYXRoYmJ7Qn0iXSxbMCwwLCJcXG1hdGhiYntCfSJdLFsyLDAsIlxcbWF0aGJie0J9Il0sWzAsMSwiUyIsMl0sWzEsMiwiXFxwaV8xIiwyXSxbMCwyXSxbMCwzXSxbMSwzLCJcXHBpXzIiXV0=
+\[\begin{tikzcd}
+	{\mathbb{B}} & {\mathbb{B}\times\mathbb{B}} & {\mathbb{B}} \\
+	& {\{*\}}
+	\arrow["S"', from=2-2, to=1-2]
+	\arrow["{\pi_1}"', from=1-2, to=1-1]
+	\arrow[from=2-2, to=1-1]
+	\arrow[from=2-2, to=1-3]
+	\arrow["{\pi_2}", from=1-2, to=1-3]
+\end{tikzcd}\]
+\[S' = \begin{cases}
+    * \mapsto (0,0)\\
+    * \mapsto (0,1)\\
+    * \mapsto (1,0)\\
+    * \mapsto (1,1)
+\end{cases}
+\]
+$S'\neq S$, no unique relation.
+\end{example}
+\begin{example}[$\textbf{Vect}_{\mathbb{C}}, \otimes$]
+$\otimes$ is the tensor product.
+\end{example}
+
+\subsection{Definitions}
+\begin{definition}
+    A monoidal category $(\mathcal{C},\otimes, I)$ is a category $\mathcal{C}$ 
+    with a functor $\otimes:\mathcal{C} \times \mathcal{C} \rightarrow \mathcal{C}$
+    called the \underline{monoidal product}, 
+    an object $I\in \text{Ob}(\mathcal{C})$ called the unit
+    and natural isomorphisms
+    \[\alpha_{A,B,C}: (A\otimes B)\otimes C \xrightarrow[]{\sim} A\otimes (B\otimes C)\]
+    \[\lambda_A : I \otimes A \xrightarrow[]{\sim}, \quad \rho_A : A\otimes I \xrightarrow[]{\sim} A \]
+    satisfying 2 \underline{coherence conditions}.
+\end{definition}
+\begin{example}
+    \[\{(a,b),c | a,b,c\} \cong \{a,(b,c) | a,b,c\}\]
+\end{example}
+\begin{definition}
+    A monoidal category is \underline{strict} if $\alpha,\lambda,\rho$ are all identities.
+\end{definition}
+\begin{claim}
+Any monoidal category is equivalent to a strict category.
+\end{claim}
+
+\subsection{Aside: Term rewrite systems}
+\begin{definition}
+    A signature 
+    \[\Sigma = \{\otimes: 2, I: 0\}\]
+    where $\otimes$ is a symbol, $2,0$ are arities, with arity $0\Rightarrow$ constant.
+\end{definition}
+\begin{definition}
+A term $t\in T_{\Sigma} (V)$ for some set $V$ (variables) 
+is a tree whose nodes are in $\Sigma$ and leaves are in $V$.
+\end{definition}
+\begin{example}
+    \[V = \{x,y,z\}, \quad T_{\Sigma} V \ni \begin{cases}
+        (x \otimes x) \otimes x\\
+        I \otimes I \\
+        (x\otimes y) \otimes z\\
+        ...
+    \end{cases}\]
+\end{example}
+\begin{definition}
+    A rewrite rule is a pair of terms
+    \[(x\otimes y) \otimes z \xrightarrow[]{R_1}  x \otimes (y \otimes z)\]
+    \[I \otimes x \xrightarrow[]{R_2} x\]
+    \[x \otimes I \xrightarrow[]{R_3} x\]
+    Rewrite rules can be applied by
+\begin{enumerate}
+    \item substituting variables
+    \item replacing a sub-term
+\end{enumerate}
+For 
+\[x\mapsto a, y\mapsto b, z\mapsto I\]
+\[(a\otimes b)\otimes I \xrightarrow[]{R_1'} a\otimes (b\otimes I)\]
+\[((a \otimes b)\otimes I) \otimes d \xrightarrow[]{R_1' \otimes d} (a\otimes (b\otimes I))\otimes d\]
+\end{definition}
+\begin{definition}
+    "Good" rewrite systems are:
+\begin{itemize}
+    \item terminating (all sequences $t\rightarrow ... \rightarrow t'$ are finite)
+    \item confluent:
+    \[ \forall t_1,t_2. t\rightrightarrows\rightrightarrows\rightrightarrows t_1,t_2
+    \exists t_3. t_1,t_2\rightrightarrows\rightrightarrows\rightrightarrows t_3\]
+\end{itemize}
+Terminating + confluent $\implies$ unique normal forms.
+\end{definition}
+\begin{example}[Confluence]
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCIoeFxcb3RpbWVzIEkpXFxvdGltZXMgeSJdLFswLDEsInhcXG90aW1lcyB5Il0sWzEsMCwieFxcb3RpbWVzIChJXFxvdGltZXMgeSkiXSxbMCwxXSxbMCwyXSxbMiwxXV0=
+\[\begin{tikzcd}
+	{(x\otimes I)\otimes y} & {x\otimes (I\otimes y)} \\
+	{x\otimes y}
+	\arrow[from=1-1, to=2-1]
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=1-2, to=2-1]
+\end{tikzcd}\]
+\end{example}
+
+\begin{definition}
+"Coherence = confluence + commuting diagrams"
+% https://q.uiver.app/#q=WzAsOCxbMCwyLCJUIl0sWzEsMV0sWzIsMCwiVF8xIl0sWzMsMV0sWzQsMiwiVF8zIl0sWzEsM10sWzIsNCwiVF8yIl0sWzMsM10sWzAsMV0sWzEsMl0sWzIsM10sWzMsNF0sWzAsNV0sWzUsNl0sWzYsN10sWzcsNF1d
+\[\begin{tikzcd}
+	&& {T_1} \\
+	& {} && {} \\
+	T &&&& {T_3} \\
+	& {} && {} \\
+	&& {T_2}
+	\arrow[from=3-1, to=2-2]
+	\arrow[from=2-2, to=1-3]
+	\arrow[from=1-3, to=2-4]
+	\arrow[from=2-4, to=3-5]
+	\arrow[from=3-1, to=4-2]
+	\arrow[from=4-2, to=5-3]
+	\arrow[from=5-3, to=4-4]
+	\arrow[from=4-4, to=3-5]
+\end{tikzcd}\]
+commutes.
+\end{definition}
+
+\begin{definition}[MacLane's coherence conditions]
+% https://q.uiver.app/#q=WzAsOSxbMSwwLCIoQVxcb3RpbWVzIEkpIFxcb3RpbWVzIEIiXSxbMSwxLCJBXFxvdGltZXMgKEkgXFxvdGltZXMgQikiXSxbMiwxLCJBXFxvdGltZXMgQiJdLFswLDQsIigoQVxcb3RpbWVzIEIpXFxvdGltZXMgQylcXG90aW1lcyBEIl0sWzEsNSwiKEFcXG90aW1lcyAoQlxcb3RpbWVzIEMpKVxcb3RpbWVzIEQiXSxbMSwzLCIoQVxcb3RpbWVzIEIpXFxvdGltZXMgKENcXG90aW1lcyBEKSJdLFszLDQsIkFcXG90aW1lcyAoQlxcb3RpbWVzIChDXFxvdGltZXMgRCkpIl0sWzIsNSwiQVxcb3RpbWVzICgoQlxcb3RpbWVzIEMpXFxvdGltZXMgRCkiXSxbNSw0XSxbMCwxLCJcXGFscGhhIiwyXSxbMCwyLCJcXHJobyBcXG90aW1lcyBCIl0sWzEsMiwiQVxcb3RpbWVzIFxcbGFtYmRhIiwyXSxbMyw0LCJcXGFscGhhXFxvdGltZXMgRCIsMl0sWzMsNSwiXFxhbHBoYSJdLFs1LDYsIlxcYWxwaGFfe0FcXG90aW1lcyBCLCBDLER9Il0sWzQsNywiXFxhbHBoYSIsMl0sWzcsNiwiQVxcb3RpbWVzIFxcYWxwaGEiLDJdXQ==
+\[\begin{tikzcd}
+	& {(A\otimes I) \otimes B} \\
+	& {A\otimes (I \otimes B)} & {A\otimes B} \\
+	\\
+	& {(A\otimes B)\otimes (C\otimes D)} \\
+	{((A\otimes B)\otimes C)\otimes D} &&& {A\otimes (B\otimes (C\otimes D))} && {} \\
+	& {(A\otimes (B\otimes C))\otimes D} & {A\otimes ((B\otimes C)\otimes D)}
+	\arrow["\alpha"', from=1-2, to=2-2]
+	\arrow["{\rho \otimes B}", from=1-2, to=2-3]
+	\arrow["{A\otimes \lambda}"', from=2-2, to=2-3]
+	\arrow["{\alpha\otimes D}"', from=5-1, to=6-2]
+	\arrow["\alpha", from=5-1, to=4-2]
+	\arrow["{\alpha_{A\otimes B, C,D}}", from=4-2, to=5-4]
+	\arrow["\alpha"', from=6-2, to=6-3]
+	\arrow["{A\otimes \alpha}"', from=6-3, to=5-4]
+\end{tikzcd}\]
+$(\Delta)$ (top) and $(\pentagon)$ (bottom) coherence.
+\end{definition}
+\begin{theorem}[Coherence]
+    All formal$^*$ diagrams of $\lambda,\rho,\alpha$ commute.
+\end{theorem}
+
+
+\end{document}
