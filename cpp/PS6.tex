@@ -110,15 +110,17 @@ Suppose $x,y\in P, x\leq y$. Then
 So $h$ is monotone.
 \end{proof}
 
-\begin{claim}
+\begin{proposition}
   $U$ has a left adjoint.
-\end{claim}
+\end{proposition}
+\begin{proof}
 Define the functor $F:\textbf{Set} \rightarrow \textbf{SL}$
 \[F(X) = (\mathcal{P}(X), \subseteq)\]
 \[F(f: X\rightarrow Y) : \mathcal{P}(X) \rightarrow \mathcal{P}(Y) := A \mapsto \{f(a) | a\in A\}\]
 which is the covariant powerset functor for arrows, so functoriality is satisfied.
 
-The functor preserves least upper bounds $\forall f:X\rightarrow Y$ in \textbf{Set},
+Note that $\bigvee S = \bigvee \{A | A\in S\} = \bigvee_{A\in S} A$.
+The functor on arrows preserves least upper bounds where $\forall f:X\rightarrow Y$ in \textbf{Set},
 \begin{equation}
 \begin{aligned}
   F(f)\left(\bigvee S\right) &= F(f)\left(\bigcup_{A\in S} A\right)\\
@@ -130,39 +132,80 @@ The functor preserves least upper bounds $\forall f:X\rightarrow Y$ in \textbf{S
 \end{aligned}
 \end{equation}
 
+\begin{claim}
+  $F:\textbf{Set} \rightarrow \textbf{SL}$ as defined is the left adjoint of $U$.
+\end{claim}
+$F$ is the left adjoint of $U$, iff $\forall A\in\text{Ob}(\textbf{Set})$,
+there exists a unit $\eta_A : A\rightarrow UFA$ such that 
+\[\forall f: A\rightarrow B,\exists! \hat{f}:\mathcal{P}(A) \rightarrow B\]
+where $f\in\text{Ar}(\textbf{Set}),\hat{f}\in\text{Ar}(\textbf{SL})$, the following diagram commutes
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJBIl0sWzEsMCwiXFxtYXRoY2Fse1B9KEEpIl0sWzEsMSwiQiJdLFswLDEsIlxcZXRhX0EiXSxbMSwyLCJcXGhhdHtmfSIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFswLDIsImYiLDJdXQ==
+\[\begin{tikzcd}
+	A & {\mathcal{P}(A)} \\
+	& B
+	\arrow["{\eta_A}", from=1-1, to=1-2]
+	\arrow["{U(\hat{f})}", dashed, from=1-2, to=2-2]
+	\arrow["f"', from=1-1, to=2-2]
+\end{tikzcd}\]
 For each object $C\in\text{Ob}(\textbf{Set})$, define the unit arrow $\eta_C : C\rightarrow UFC$
-\[\eta_C(a) = \{a\}\]
-From $f:A\rightarrow B$, we can construct an arrow in \textbf{SL}
-\[\hat{f} : \mathcal{P}(A) \rightarrow B := A \mapsto \bigvee F(f)(A)\]
+where $UFC=\mathcal{P}(C)$
+\[\eta_C(c) = \{c\}\]
+From an arrow $f:A\rightarrow B$ in \textbf{Set}, we can construct an arrow in \textbf{SL}
+\[\hat{f} : \mathcal{P}(A) \rightarrow B := X \mapsto \bigvee F(f)(X)\]
 where $U(\hat{f}) = \hat{f}$.
-Then
+Then $\forall a\in A$,
 \[(U(\hat{f}) \circ \eta_A) (a) = \hat{f} (\{a\}) = f(a)\]
-\[\forall a, f(a) = U(\hat{f}) \circ \eta_A (a)\]
 So $f = U(\hat{f}) \circ \eta_A$.
 
-Suppose there's another $g: \mathcal{P}(A) \rightarrow B$ such that $f = U(g) \circ \eta_A$.
+Suppose there's another $g: \mathcal{P}(A) \rightarrow B$ such that $f = U(g) \circ \eta_A = g\circ\eta_A$.
 Then it also preserves least upper bounds where $\forall X\subseteq A$,
-\[g(\bigvee \{X\}) = g(X) = \bigvee \{g(a) | a \in X\} = \bigvee F(f)(X) \]
+\begin{equation}
+\begin{aligned}
+  g(X) &= g\left(\bigvee \{\{a\} | a\in X\}\right)\\
+  &= \bigvee \{g(\{a\}) | a\in X\} \quad \text{(by def. of arrow in SL)}\\
+  &= \bigvee \{ g\circ \eta_A (a) | a\in X\} \quad\text{(since $\eta_A(a)=\{a\}$)}\\
+  &= \bigvee \{f(a) | a\in X\}\\
+  &= \bigvee F(f)(X)\\
+  &= \hat{f}(X)
+\end{aligned}
+\end{equation}
 so $g=\hat{f}$ is unique.
- 
-% Let $f:A\rightarrow B$ be an arrow in \textbf{Set}
-% such that 
-% \[(B,\leq_B)\in \text{Ob}(\textbf{SL}),\quad A\in\text{Ob}(\textbf{Set})\]
-% \[U(B,\leq_B)=B\in\text{Ob}(\textbf{Set})\]
-% so
-% \[F(A) = (\mathcal{P}(A), \subseteq) \in\text{Ob}(\textbf{SL})\]
-% We need to show a bijection
-% \[\theta_{A,B}: \textbf{Set}(A,U(B,\leq_B)) \cong \textbf{SL}(F(A), (B,\leq_B))\]
-% Equivalently,
-% \[\theta_{A,B}: \textbf{Set}(A,B) \cong \textbf{SL}((\mathcal{P}(A), \subseteq), (B,\leq_B))\]
+Thus, $F$ is the left adjoint of $U$.
+\end{proof}
 
 
-
-
-
-
+\clearpage
 \section*{Question 2}
 \addtocounter{section}{1}
+
+\begin{proposition}
+  The contravariant powerset functor $\mathcal{P}:\textbf{Set}^{\text{op}}\rightarrow\textbf{Set}$
+  is its own left adjoint.
+\end{proposition}
+\begin{proof}
+$\mathcal{P}^{op}$ is the left adjoint of $\mathcal{P}$ iff $\forall X\in\text{Ob}(\textbf{Set})$, there exists a unit
+\[\eta_X : X \rightarrow X\]
+such that $\forall f: X\rightarrow \mathcal{P}(Y)$ in \textbf{Set},
+$\exists! \hat{f}: \mathcal{P}^{op}(X) \rightarrow Y$ in $\textbf{Set}^{\text{op}}$
+where the diagram commutes
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJYIl0sWzEsMCwiXFxtYXRoY2Fse1B9XFxtYXRoY2Fse1B9KFgpIl0sWzEsMSwiXFxtYXRoY2Fse1B9KFkpIl0sWzAsMSwiXFxldGFfQSJdLFsxLDIsIlxcbWF0aGNhbHtQfShcXGhhdHtmfSkiLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMCwyLCJmIiwyXV0=
+\[\begin{tikzcd}
+	X & X \\
+	& {\mathcal{P}(Y)}
+	\arrow["{\eta_X}", from=1-1, to=1-2]
+	\arrow["{\mathcal{P}(\hat{f})}", dashed, from=1-2, to=2-2]
+	\arrow["f"', from=1-1, to=2-2]
+\end{tikzcd}\]
+Define $\forall X\in\text{Ob}(\textbf{Set}),\eta_X = 1_X$.
+
+Define $\hat{f} = \mathcal{P}^{op}(f)$.
+Then $\mathcal{P}(\hat{f}) = \mathcal{P}(\mathcal{P}^{op}(f)) = f$
+so $f\circ 1_X = f$.
+
+Let $g: \mathcal{P}^{op}(X) \rightarrow Y$ such that $\mathcal{P}(g)\circ 1_X = f$.
+Then $\mathcal{P}(g)=f$, so $\mathcal{P}^{op}\mathcal{P}(g)=g= \mathcal{P}^{op}(f)$ is unique.
+
+\end{proof}
 
 \section*{Question 3}
 \addtocounter{section}{1}
