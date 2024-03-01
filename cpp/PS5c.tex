@@ -1,0 +1,587 @@
+% Please do not change %
+\documentclass[11pt]{article} % font size
+\usepackage[margin=1in]{geometry} % margins
+\usepackage{amsmath,amsthm,amssymb} % for the  common "math symbols"
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[shortlabels]{enumitem} % for enumeration
+\usepackage{booktabs} % if you need tables
+\usepackage{listings}
+\usepackage{color}
+\usepackage{quiver}
+\usepackage{bbm}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% \theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{definition}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+
+\lstset{
+  frame=none,
+  xleftmargin=2pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\ttfamily\tiny\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=haskell,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\small\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
+% Feel free to include additional packages (if needed), but make sure it does not override the margin/font requirements.
+%
+\setlength{\parindent}{0pt} % no indent for new paragraphs.
+\setlength{\parskip}{5pt} % distance between paragraphs, which will be used when you have a blank line in your LaTeX code.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Categories, Proofs, and Processes: \\Assignment 5}
+%
+\author{Wira Azmoon Ahmad}
+\date{26 Feb 2024}
+%
+\begin{document}
+%
+\maketitle
+
+%You may use the usual \LaTeX\ environments to structure your answers:
+%\begin{align}
+%        \label{basegnn}
+%        \mathbf{h}_u^{(t+1)} = \sigma \bigg( \mathbf{W}_\text{self}^{(t)} \mathbf{h}_u^{(t)}  + \mathbf{W}_\text{neigh}^{(t)} \sum_{v \in N(u)} \mathbf{h}_v^{(t)} + \mathbf{b}^{(t)} \bigg): 
+%\end{align}
+
+
+%\begin{table}[h]
+%\caption{A simple table.}
+%\centering
+%\begin{tabular}[t]{lrrrr}
+%\toprule
+%Graphs & Can & Be  & Fun & Too \\ 
+%\midrule 
+%$G_1$ & $1$  & $2$ & $3$ & $4$ \\ 
+%$G_2$ & $-1$  & $-2$ & $-3$ & $-4$ \\ 
+%$G_3$ & $0.1$  & $0.2$ & $0.3$ & $0.4$ \\ 
+%\bottomrule
+%\end{tabular}
+%\label{tab}
+%\end{table}
+
+% A functor $F:\mathcal{C} \rightarrow \mathcal{D}$ is
+% \begin{itemize}
+%     \item \textbf{faithful} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is injective;
+%     \item \textbf{full} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is surjective
+% \end{itemize}
+
+\section*{Question 1}
+\addtocounter{section}{1}
+\subsection*{(a)}
+The set-indexed product of a set of objects $\{A_i\}_{i\in I}$ is the Cartesian product
+\[\prod_{i\in I}A_i = \left\{g: I \rightarrow \bigcup_{i \in I} A_i \middle| \forall i\in I: g(i) \in A_i\right\}\]
+with its arrows $\pi_j(g) = g(j)$ for all $j\in I$.
+
+Let $C$ be an object with a set of arrows $f_i:C\rightarrow A_i$.
+Then the unique arrow $\langle f_i \rangle_{i\in I}$ is defined where for all $c\in C$,
+\[\langle f_i \rangle_{i\in I}(c) := i \mapsto f_i(c)\]
+For each $j\in I$, and for all $c\in C$,
+\begin{equation}
+\begin{aligned}
+    \pi_j \circ \langle f_i \rangle_{i\in I} (c) &= \pi_j(i \mapsto f_i(c))\\
+    &= (i \mapsto f_i(c))(j)\\
+    &= f_j(c)
+\end{aligned}
+\end{equation}
+so $\forall j\in I, \pi_j \circ \langle f_i \rangle_{i\in I} = f_j$.
+% https://q.uiver.app/#q=WzAsNSxbMSwwLCJcXHByb2RfaSBBX2kiXSxbMCwxLCJcXGRvdHMiXSxbMSwxLCJBX2oiXSxbMywyLCJDIl0sWzIsMSwiXFxkb3RzIl0sWzAsMiwiXFxwaV9qIiwxXSxbMywwLCJcXGxhbmdsZSBmX2lcXHJhbmdsZV9pIiwyLHsiY3VydmUiOjMsInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFszLDIsImZfaSIsMV0sWzMsNCwiXFxkb3RzIiwxXSxbMCw0LCJcXGRvdHMiLDFdLFswLDEsIlxcZG90cyIsMV0sWzMsMSwiXFxkb3RzIiwxXV0=
+\[\begin{tikzcd}
+	& {\prod_i A_i} \\
+	\dots & {A_j} & \dots \\
+	&&& C
+	\arrow["{\pi_j}"{description}, from=1-2, to=2-2]
+	\arrow["{\langle f_i\rangle_i}"', curve={height=18pt}, dashed, from=3-4, to=1-2]
+	\arrow["{f_i}"{description}, from=3-4, to=2-2]
+	\arrow["\dots"{description}, from=3-4, to=2-3]
+	\arrow["\dots"{description}, from=1-2, to=2-3]
+	\arrow["\dots"{description}, from=1-2, to=2-1]
+	\arrow["\dots"{description}, from=3-4, to=2-1]
+\end{tikzcd}\]
+Suppose there is another arrow $h: C\rightarrow\prod_{i\in I}A_i$ 
+such that $\forall j\in I, \pi_j \circ h = f_j$.
+Then $\forall c\in C$,
+\begin{equation}
+\begin{aligned}
+    \pi_j \circ h (c) &= \pi_j(h(c))\\
+    &= h(c)(j)\\
+    h(c)(j)&= f_j(c)\\
+    \implies h(c) &:: j \mapsto f_j(c)
+\end{aligned}
+\end{equation}
+So $h=\langle f_i \rangle_{i\in I}$ and the arrow is unique.
+
+\subsection*{(b)}
+When $|I|=2$, we get binary products.
+The product of 2 objects $A_i,A_j$ for $i,j\in I$ is the object $A_i \times A_j$
+with arrows $A_i\xleftarrow[]{\pi_i} A_i\times A_j \xrightarrow[]{\pi_j} A_j$
+such that for any object $C$ and pair of arrows $A_i\xleftarrow[]{f_i} C \xrightarrow[]{f_j} A_j$,
+there is a unique arrow $\langle f_i, f_j\rangle:C\rightarrow A_i \times A_j$
+such that $\pi_i \circ \langle f_i, f_j\rangle=f_i$ and $\pi_j \circ \langle f_i, f_j\rangle=f_j$.
+
+When $|I|=0$, we get terminal objects.
+The nullary product for $I=\emptyset$ is the terminal object $T$
+such that for any object $C$, the arrow $\tau_C:C\rightarrow T$,
+is the unique arrow from $C$ to $T$.
+
+\subsection*{(c)}
+Let $(L, \gamma)$ be the limit of $D:\mathcal{I}\rightarrow \mathcal{C}$.
+Then the arrows are defined as 
+\[\{\gamma_J : L\ \rightarrow D\ J\}_{J\in \text{Ob}(\mathcal{I})}\]
+where the only arrows in $\mathcal{J}$ are identities $1_J$ so $D\ 1_J = 1_{D\ J}$.
+Since $(L, \gamma)$ is the terminal object in \textbf{Cone}$(D)$,
+for every other cone to $D, (A, \delta)$,
+there is a unique arrow 
+$g : A\rightarrow L$ such that $\forall J\in \text{Ob}(\mathcal{I}), \gamma_J \circ g = \delta_J$.
+% https://q.uiver.app/#q=WzAsMyxbMCwxLCJBIl0sWzEsMCwiRFxcIEoiXSxbMSwxLCJMIl0sWzAsMSwiXFxkZWx0YV9KIl0sWzIsMSwiXFxnYW1tYV9KIiwyXSxbMCwyLCJnIiwyXV0=
+\[\begin{tikzcd}
+	& {D\ J} \\
+	A & L
+	\arrow["{\delta_J}", from=2-1, to=1-2]
+	\arrow["{\gamma_J}"', from=2-2, to=1-2]
+	\arrow["g"', from=2-1, to=2-2]
+\end{tikzcd}\]
+
+By using the functor $S: \textbf{Set} \rightarrow \textbf{Cat}$ from Assignment 3 Exercise 1,
+let $S\ I = \mathcal{I}$, so there's an isomorphism $\phi: I \cong \text{Ob}(\mathcal{I})$.
+Then set $\forall j\in I$,
+\begin{itemize}
+    \item $D\ \phi(j) := A_j$
+    \item $L := \prod_{j\in I} A_j$
+    \item $\gamma_{\phi(j)} := \pi_j$
+    \item $A := C$
+    \item $\delta_{\phi(j)} := f_j$
+    \item $g:=\langle f_j\rangle_{j\in I}$
+\end{itemize}
+so the limit of the diagram matches the defintion of the set-indexed products.
+% https://q.uiver.app/#q=WzAsNSxbMSwwLCJMIl0sWzAsMSwiXFxkb3RzIl0sWzEsMSwiRFxcIFxccGhpKGopIl0sWzMsMiwiQSJdLFsyLDEsIlxcZG90cyJdLFswLDIsIlxcZ2FtbWFfe1xccGhpKGopfSIsMV0sWzMsMCwiZyIsMix7ImN1cnZlIjozLCJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMywyLCJcXGRlbHRhX3tcXHBoaShqKX0iLDFdLFszLDQsIlxcZG90cyIsMV0sWzAsNCwiXFxkb3RzIiwxXSxbMCwxLCJcXGRvdHMiLDFdLFszLDEsIlxcZG90cyIsMV1d
+\[\begin{tikzcd}
+	& L \\
+	\dots & {D\ \phi(j)} & \dots \\
+	&&& A
+	\arrow["{\gamma_{\phi(j)}}"{description}, from=1-2, to=2-2]
+	\arrow["g"', curve={height=18pt}, dashed, from=3-4, to=1-2]
+	\arrow["{\delta_{\phi(j)}}"{description}, from=3-4, to=2-2]
+	\arrow["\dots"{description}, from=3-4, to=2-3]
+	\arrow["\dots"{description}, from=1-2, to=2-3]
+	\arrow["\dots"{description}, from=1-2, to=2-1]
+	\arrow["\dots"{description}, from=3-4, to=2-1]
+\end{tikzcd}\]
+
+{\color{teal}
+% https://q.uiver.app/#q=WzAsNixbMSwwLCJXIl0sWzAsMSwiRF9pIl0sWzIsMSwiRF9pIl0sWzUsMSwiXFxwcm9kX3tpXFxpblxcdGV4dHtPYn0oXFxtYXRoY2Fse0l9KX0gRF9pIl0sWzQsMSwiRF9pIl0sWzUsMCwiVyJdLFswLDEsIndfaiIsMl0sWzAsMiwid19pIl0sWzEsMiwiRFxcIHsxX2l9IiwyXSxbMyw0LCJcXHBpX2kiLDJdLFs1LDQsIndfaSIsMl0sWzUsMywiIiwyLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d
+\[\begin{tikzcd}
+	& W &&&& W \\
+	{D_i} && {D_i} && {D_i} & {\prod_{i\in\text{Ob}(\mathcal{I})} D_i}
+	\arrow["{w_j}"', from=1-2, to=2-1]
+	\arrow["{w_i}", from=1-2, to=2-3]
+	\arrow["{D\ {1_i}}"', from=2-1, to=2-3]
+	\arrow["{\pi_i}"', from=2-6, to=2-5]
+	\arrow["{w_i}"', from=1-6, to=2-5]
+	\arrow[dashed, from=1-6, to=2-6]
+\end{tikzcd}\]
+}
+are the same thing.
+
+\subsection*{(d)}
+\begin{proposition}
+    If $\mathcal{D}$ has all set-indexed products, then so too does the functor category
+    $[\mathcal{C},\mathcal{D}]$.
+\end{proposition}
+\begin{proof}
+Suppose $\mathcal{D}$ has all set-indexed products.
+
+Let $I$ be the set of indices, and $\{F_i:\mathcal{C}\rightarrow \mathcal{D}\}_{i\in I}$ 
+be a set of functors.
+First, we construct the product functor $\prod_{i\in I} F_i:\mathcal{C}\rightarrow \mathcal{D}$ 
+and prove its functoriality.
+\[\prod_{i\in I} F_i (C) := \prod_{i\in I} (F_i\ C)\]
+\[\prod_{i\in I} F_i (f: C\rightarrow C') := \prod_{i\in I} (f_i: F_i\ C \rightarrow F_i\ C' )
+:= \langle f_i \circ \pi_i \rangle_{i\in I}\]
+where $\pi_i:\prod_{i\in I} F_i\rightarrow F_i\ C$, which exists in $\mathcal{D}$.
+
+Let $C\xrightarrow[]{f} C'\xrightarrow[]{g} C''$ be arrows.
+\begin{equation}
+\begin{aligned}
+    \prod_{i\in I} F_i (g \circ f) &= \langle (g\circ f)_i \circ \pi_i \rangle_{i\in I}\\
+    &= \prod_{i\in I}(g\circ f)_i \circ\langle \pi_i \rangle_{i\in I}\\
+    &= \prod_{i\in I}g_i \circ \prod_{i\in I}f_i \circ\langle \pi_i \rangle_{i\in I}\\
+    &= \langle g_i \circ \pi_i \rangle_{i\in I} \circ \prod_{i\in I}f_i \circ\langle \pi_i \rangle_{i\in I}\\
+    &= \langle g_i \circ \pi_i \rangle_{i\in I} \circ \langle f_i \circ \pi_i \rangle_{i\in I} \\
+    &= \prod_{i\in I} F_i (g) \circ \prod_{i\in I} F_i (f)
+\end{aligned}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+    \prod_{i\in I} F_i (1_C) &= \langle 1_{F_i\ C} \circ \pi_i \rangle_{i\in I}\\
+    &= \langle \pi_i \rangle_{i\in I}\\
+    &= \prod_{i\in I} 1_{F_i\ C} \\
+    &= 1_{\prod_{i\in I} (F_i\ C)} \\
+    &= 1_{\prod_{i\in I} F_i (C)} \\
+\end{aligned}
+\end{equation}
+So the product functor satisfies functoriality.
+
+Next, we define and show the naturality of the functor projections.
+For an arbitrary natural transformation $t_j: \prod_i F_i \rightarrow F_j$, 
+define $\forall C$ in $\mathcal{C}$, 
+\[t_{j,C} = \pi_{j,C} : \prod_i F_i\ C \rightarrow F_j\ C\]
+which exists as a projection in $\mathcal{D}$.
+Let $f: C\rightarrow C'$ be an arrow in $\mathcal{C}$, 
+and $f_j: F_j\ C \rightarrow F_j\ C'$ be an arrow in $\mathcal{D}$.
+Then by the property of the product, we have
+\[f_j \circ \pi_{j,C} = \pi_{j,C'} \circ \langle f_i\circ \pi_i\rangle_i\]
+So naturality is satisfied.
+
+% https://q.uiver.app/#q=WzAsOSxbMiwxLCJcXHByb2RfaSBGX2lcXCBDIl0sWzMsMSwiXFxwcm9kX2kgRl9pXFwgQyciXSxbMiwyLCJGX2pcXCBDIl0sWzMsMiwiRl9qXFwgQyciXSxbMCwxLCJcXHByb2RfaSBGX2kiXSxbMCwyLCJGX2oiXSxbMCwwLCJHIl0sWzIsMCwiR1xcIEMiXSxbMywwLCJHXFwgQyciXSxbMCwxLCJcXGxhbmdsZSBmX2lcXGNpcmMgXFxwaV9pXFxyYW5nbGVfaSJdLFswLDIsIlxccGlfe2osQ30iLDFdLFsxLDMsIlxccGlfe2osQyd9IiwxXSxbMiwzLCJmX2oiLDJdLFs0LDUsInQiLDJdLFs2LDQsIlxcbGFuZ2xlIHNfaVxccmFuZ2xlX2kiLDFdLFs3LDAsIlxcbGFuZ2xlIHNfe2ksQ31cXHJhbmdsZV9pIiwxXSxbNyw4LCJHXFwgZiJdLFs4LDEsIlxcbGFuZ2xlIHNfe2ksQ31cXHJhbmdsZV9pIiwxXSxbNiw1LCJzX2oiLDIseyJjdXJ2ZSI6NH1dLFs3LDIsInNfe2osQ30iLDIseyJjdXJ2ZSI6NX1dLFs4LDMsInNfe2osQyd9IiwwLHsiY3VydmUiOi01fV1d
+\[\begin{tikzcd}
+	G && {G\ C} & {G\ C'} \\
+	{\prod_i F_i} && {\prod_i F_i\ C} & {\prod_i F_i\ C'} \\
+	{F_j} && {F_j\ C} & {F_j\ C'}
+	\arrow["{\langle f_i\circ \pi_i\rangle_i}", from=2-3, to=2-4]
+	\arrow["{\pi_{j,C}}"{description}, from=2-3, to=3-3]
+	\arrow["{\pi_{j,C'}}"{description}, from=2-4, to=3-4]
+	\arrow["{f_j}"', from=3-3, to=3-4]
+	\arrow["t"', from=2-1, to=3-1]
+	\arrow["{\langle s_i\rangle_i}"{description}, from=1-1, to=2-1]
+	\arrow["{\langle s_{i,C}\rangle_i}"{description}, from=1-3, to=2-3]
+	\arrow["{G\ f}", from=1-3, to=1-4]
+	\arrow["{\langle s_{i,C}\rangle_i}"{description}, from=1-4, to=2-4]
+	\arrow["{s_j}"', curve={height=24pt}, from=1-1, to=3-1]
+	\arrow["{s_{j,C}}"', curve={height=30pt}, from=1-3, to=3-3]
+	\arrow["{s_{j,C'}}", curve={height=-30pt}, from=1-4, to=3-4]
+\end{tikzcd}\]
+Let again $f: C\rightarrow C'$ be an arrow in $\mathcal{C}$, 
+% and $f_j: F_j\ C \rightarrow F_j\ C'$ be an arrow in $\mathcal{D}$.
+Suppose we have some functor $G$ and a set of natural transformations $s_i: G\rightarrow F_i$.
+Define the natural transformation $\langle s_i \rangle_i: G\rightarrow \prod_i F_i$ such that
+\[ \langle s_i \rangle_{i,C} = \langle s_{i,C} \rangle_i: G\ C \rightarrow \prod_i F_i\ C\]
+By naturality of $s_i$, we have 
+\[f_i \circ s_{i,C} = s_{i,C'}\circ G\ f\]
+From the property of the product, we have that 
+\[\pi_{j,C} \circ \langle s_i\rangle_{i, C} = s_{j, C},\quad
+\pi_{j,C'} \circ \langle s_i\rangle_{i, C'} = s_{j, C'}\]
+Then these imply that
+\[f_j \circ \pi_{j,C} \circ \langle s_i\rangle_{i, C} = \pi'_j \circ \langle s_i\rangle_{i, C'} \circ G\ f\]
+\[\pi_{j,C'} \circ \langle f_i\circ \pi_i\rangle_i \circ \langle s_i\rangle_{i, C} 
+= \pi_{j,C'} \circ \langle s_i\rangle_{i, C'} \circ G\ f\]
+Since this is true $\forall j\in I$, then by the property of the product, there is the unique arrow
+\[\langle f_i\circ \pi_i\rangle_i \circ \langle s_i\rangle_{i, C} =\langle s_i\rangle_{i, C'} \circ G\ f
+:G\ C\rightarrow \prod_i F_i\ C'\]
+So the naturality of $\langle s_i \rangle_i$ is satisfied.
+Since $\forall C$ in $\mathcal{C}$, and $\forall j\in I$, we have some $\pi_{j,C}$ that 
+\[\pi_{j,C} \circ \langle s_i\rangle_{i, C} = s_{j, C}\]
+where $t_j=\pi_{j,C}$, then
+\[\forall j \in I: t_j \circ \langle s_i\rangle_i = s_j\]
+
+Now, we show the uniqueness of the natural transformation. 
+Suppose there is some other natural transformation $u:G\rightarrow \prod_i F_i$ 
+such that $\forall j\in I,t_j \circ u = s_j$.
+Then for all $C$ in $\mathcal{C}$, $\forall j\in I, \pi_j \circ u_C = s_{j,C}$ for some $\pi_j$.
+Then there is a set of mappings 
+\[\pi_j \circ u_C = s_{j,C} : G\ C \rightarrow F_j\ C\]
+By property of the product, there is a unique mapping
+\[\langle\pi_i \circ u_C\rangle_i = \langle s_{i,C}\rangle_i: G\ C\rightarrow \prod_i F_i\ C\]
+such that $\forall j\in I, \pi_j \circ \langle\pi_i \circ u_C\rangle_i = s_{j,C}$.
+Then for all $C$ in $\mathcal{C}$,
+\begin{equation}
+\begin{aligned}
+    s_{j,C} &= \pi_j\circ \langle\pi_i \circ u_C\rangle_i\\
+    &= \pi_j\circ\langle\pi_i\rangle_i \circ u_C\\
+    &= \pi_j\circ 1_{\prod_i F_i\ C} \circ u_C\\
+    &= \pi_j \circ u_C\\
+\end{aligned}
+\end{equation}
+By property of the product, there is the unique arrow 
+\[\langle s_{i,C}\rangle_i = \langle \pi_i \circ u_C\rangle_i = u_C: G\ C \rightarrow \prod_i F_i\ C\]
+So $\forall C$ in $\mathcal{C},u_C=\langle s_{i,C}\rangle_i$.
+Thus, $\langle s_i\rangle_i: G \rightarrow \prod_i F_i$ is the unique natural transformation
+that satisfies the properties defined above.
+\end{proof}
+{\color{teal}
+\[D:\mathcal{I} \rightarrow [\mathcal{C}, \mathcal{D}]\]
+\[\lim_{\mathcal{I}} (-) : [\mathcal{I}, \mathcal{D}] \rightarrow \mathcal{D}\]
+\[(\lim_{\mathcal{I}} D) (C) = \lim_{\mathcal{I}} (D_C)\]
+\[f:C\rightarrow C', \quad D_C \rightarrow D_{C'}\]
+}
+
+\subsection*{(e)}
+\begin{proposition}
+    The Yoneda embedding $Y : \mathcal{C} \rightarrow [\mathcal{C}^{op}, \textbf{Set}]$
+    preserves set-indexed products, when they exist.
+\end{proposition}
+\begin{proof}
+Suppose $\mathcal{C}$ has set-indexed products.
+Let $\{C_i\}_i$ be a set of objects in $\mathcal{C}$ with the product, object $\prod_i C_i$,
+with arrows $\pi_j:\prod_i C_i \rightarrow C_j$.
+We show that for the set of objects $\{Y\ C_i\}_i := {\mathcal{C}(-,C_i)}_i$ in $[\mathcal{C}^{op}, \textbf{Set}]$,
+the object with arrows
+\[Y\ \prod_i C_i:= \mathcal{C}(-,\prod_i C_i)\]
+\[\forall j\in I, Y\ \pi_j := \mathcal{C}(-,\pi_j) : \mathcal{C}(-,\prod_i C_i) \rightarrow \mathcal{C}(-,C_j)\]
+is their set-indexed product.
+
+By theorem from lectures, $Y$ is full and faithful.
+Hence, there is an bijection between sets of arrows 
+\[\phi_{A,B} : \mathcal{C}(A,B) \cong [\mathcal{C}^{op}, \textbf{Set}](Y\ A, Y\ B)\]
+Then by the property of the product, 
+since for any object $C'$ and set of arrows $f_i:C'\rightarrow C_i$ in $\mathcal{C}$,
+there is the unique arrow $\langle f_i\rangle_i : C'\rightarrow \prod_i C_i$ 
+such that $\forall j\in I, \pi_j \circ \langle f_i\rangle_i = f_j$.
+For the corresponding objects $Y\ C', \{Y\ C_i\}_i, Y\ \prod_i C_i$,
+with the set of arrows $\{Y\ f_i\}_i=\{\phi_{C',C_i}(f_i)\}_i $ in $[\mathcal{C}^{op}, \textbf{Set}]$, 
+there must be the unique arrow 
+\[Y\ \langle f_i\rangle_i=(\phi_{C',\prod_i C_i})(\langle f_i\rangle_i) : Y\ C'\rightarrow Y\ \prod_i C_i\]
+such that $\forall j\in I, (Y\ \pi_j) \circ (Y\ \langle f_i\rangle_i) = (Y\ f_j)$.
+The embedding preserves set-indexed products when they exist.
+
+\end{proof}
+Yoneda embedding preserves all limits.
+\[F:\mathcal{C} \rightarrow \mathcal{D}\]
+\[F(X\times Y) \rightarrow F\ X \times F\ Y\]
+% https://q.uiver.app/#q=WzAsNCxbMSwxLCJGXFwgWCBcXHRpbWVzIEZcXCBZIl0sWzAsMiwiRlxcIFgiXSxbMiwyLCJcXGJ1bGxldCJdLFsxLDAsIkYoWFxcdGltZXMgWSkiXSxbMCwxLCJcXHBpXzIiLDJdLFswLDIsIlxccGlfMiJdLFszLDEsIkZcXCBcXHBpXzEiLDIseyJjdXJ2ZSI6Mn1dLFszLDIsIkZcXCBcXHBpXzIiLDAseyJjdXJ2ZSI6LTJ9XSxbMywwLCIiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=
+\[\begin{tikzcd}
+	& {F(X\times Y)} \\
+	& {F\ X \times F\ Y} \\
+	{F\ X} && \bullet
+	\arrow["{\pi_2}"', from=2-2, to=3-1]
+	\arrow["{\pi_2}", from=2-2, to=3-3]
+	\arrow["{F\ \pi_1}"', curve={height=12pt}, from=1-2, to=3-1]
+	\arrow["{F\ \pi_2}", curve={height=-12pt}, from=1-2, to=3-3]
+	\arrow[dashed, from=1-2, to=2-2]
+\end{tikzcd}\]
+Preserving limits is about preserving cones, not apex of cones.
+Look at category of pointed sets.
+
+\[Set_*\quad \{*\}/Set\]
+\[(A,a) \rightarrow (B,b)\]
+\[f:A\rightarrow B := f(a) =b\]
+
+
+\section*{Question 2}
+\addtocounter{section}{1}
+\subsection*{(a)}
+First, define the functor 
+\[\Delta: [\mathcal{P}^{op}, \textbf{Set}] \rightarrow [\mathcal{P}^{op}, \mathcal{B}]\]
+\[\forall C\in\text{Ob}(\mathcal{P}), \Delta(F\ C) = 
+\begin{cases}
+    \emptyset & \text{if } F\ C = \emptyset\\
+    \{*\} & \text{if } F\ C \neq \emptyset
+\end{cases}
+\]
+\[\forall C\in\text{Ob}(\mathcal{P}), \Delta(f_C : F\ C \rightarrow G\ C) =
+\begin{cases}
+    1_{\emptyset} & \text{if } F\ C=G\ C = \emptyset\\
+    \emptyset \rightarrow \{*\} & \text{if } F\ C=\emptyset \wedge G\ C\neq \emptyset\\
+    1_{\{*\}} & \text{if } F\ C\neq\emptyset
+\end{cases} 
+\]
+Functoriality is satisfied since $\forall C\in\text{Ob}(\mathcal{P})$,
+\begin{equation}
+\begin{aligned}
+\Delta(((g: G \rightarrow H) \circ (f: F\rightarrow G))_C) &= 
+\Delta((g_C : G\ C \rightarrow H\ C) \circ (f_C : F\ C \rightarrow G\ C)) \\
+&= 
+\begin{cases}
+    1_{\emptyset} & \text{if } F\ C=G\ C=H\ C=\emptyset\\
+    \emptyset \rightarrow \{*\} & \text{if } F\ C=\emptyset \wedge H\ C\neq \emptyset\\
+    1_{\{*\}} & \text{if } F\ C\neq\emptyset
+\end{cases}\\
+&= 
+\begin{cases}
+    1_{\emptyset}\circ 1_{\emptyset} & \text{if } F\ C=G\ C=\emptyset \wedge G\ C=H\ C=\emptyset\\
+    (\emptyset \rightarrow \{*\}) \circ 1_{\emptyset} 
+    & \text{if } F\ C=\emptyset \wedge (G\ C=\emptyset \wedge  H\ C\neq \emptyset)\\
+    1_{\{*\}} \circ (\emptyset \rightarrow \{*\})
+    & \text{if } (F\ C=\emptyset \wedge G\ C\neq \emptyset) \wedge H\ C \neq \emptyset\\
+    1_{\{*\}} \circ 1_{\{*\}} & \text{if } F\ C\neq\emptyset \wedge G\ C \neq \emptyset
+\end{cases}\\
+&= \Delta(g_C:G\ C\rightarrow H\ C) \circ \Delta(f_C:F\ C\rightarrow G\ C)\\
+\end{aligned}
+\end{equation}
+\[
+\Delta (1_A) = \left.
+\begin{cases}
+    1_{\emptyset} & \text{if } A=\emptyset\\
+    1_{\{*\}} & \text{if } A\neq\emptyset
+\end{cases}
+\right\} = 1_{\Delta A}
+\]
+
+By definition of $\Delta$, there is a bijection on each arrow map $\Delta_{F,G}$
+for each pair of objects $F,G$ in $[\mathcal{P}^{op}, \textbf{Set}]$,
+since all cases are covered, where $\forall A,C\in \text{Ob}(\mathcal{P}),\mathcal{P}(A,C)\in\{\emptyset, \{*\}\}$,
+and there is only a single mapping for each arrow $f$, where $\forall C\in \text{Ob}(\mathcal{P})$,
+\[f_C :
+\begin{cases}
+    1_{\emptyset}\\
+    \emptyset \rightarrow \{\leq\}\\
+    1_{\{\leq\}}
+\end{cases}
+\iff
+\Delta(f_C) = 
+\begin{cases}
+    1_{\emptyset} \\
+    \emptyset \rightarrow \{*\} \\
+    1_{\{*\}}
+\end{cases} 
+\]
+Thus there is a bijection on arrows
+\[\forall A,C\in \text{Ob}(\mathcal{P}), \Delta_{A,C} 
+: [\mathcal{P}^{op}, \textbf{Set}](A,C) \cong [\mathcal{P}^{op}, \mathcal{B}](\Delta A,\Delta C)\]
+Since the Yoneda embedding is full and faithful as proven in lecture,
+combining this with the above bijection on arrows using $\Delta$,
+there is a bijection on arrows for $Y'$ using 
+$\Delta \circ Y : \mathcal{P} \rightarrow [\mathcal{P}^{op}, \mathcal{B}]$.
+So $Y'$ is full and faithful.
+
+% TODO: story of matty
+
+{\color{teal}
+If 2 out of 3 of $f\circ g$ and $f$ are full and faithful, $g$ is also full and faithful.
+
+Inclusion functor
+\[[\mathcal{P}^{op},\mathbbm{2}] \hookrightarrow [\mathcal{P}^{op},\textbf{Set}]\]
+is full and faithful.
+}
+
+\subsection*{(b)}
+From lecture,
+\[\hat{S}: \mathcal{P}^{op}\rightarrow \textbf{Set} ::
+\begin{cases}
+    \hat{S}(A) = 1 & \text{if } A\in S\\
+    \hat{S}(A) = 0 & \text{if } A\notin S
+\end{cases}
+\]
+We have that a downward-closed set $S$ is such that
+\[A\in S \wedge B\leq A \implies B\in S\]
+so define $S_B := B^{\downarrow} := \{A | A \leq B\}$ which satisfies the condition.
+
+Then we can see that
+\[\forall B\in \text{Ob}(\mathcal{P}), \{A | \hat{S}_B (A) = 1\} := \{A | \mathcal{P}(A,B) = \{*\}\} 
+=  \{A | A \leq B\} := S_B\]
+Then any downward-closed set $S_B$ has a corresponding $\hat{S}_B$, 
+so there is a 1-to-1 correspondence.
+
+Representable functors are naturally isomorphic to the covariant Hom-functor $\mathcal{P}(-,A)$ for some $A$,
+which has the correspondence to the set 
+\[\{B | \mathcal{P}(B,A) = \{*\}\} = \{A | A \leq B\} := A^{\downarrow}\]
+
+{\color{teal}
+Downward subset $\rightarrow$ Functor into set
+
+Functor into set $\rightarrow$ Downward subset
+
+$S$ downclosed
+\[\hat{S}(x) = \begin{cases}
+    \mathbbm{1} & \text{if } x\in S\\
+    0 & \text{otherwise}
+\end{cases}
+\]
+\[x\leq y \implies \hat{S}(y) \rightarrow \hat{S}(x)\]
+
+\[F: \mathcal{P}^{op} \rightarrow \mathbbm{2}\]
+\[\{x\in \mathcal{P} | F(x) = \mathbbm{1}\}\]
+
+}
+
+\subsection*{(c)}
+Each functor $\hat{S},\hat{T}$ has a corresponding downward-closed set $S,T$ in $\mathcal{P}$.
+The transformation $\hat{S}\rightarrow\hat{T}$ then has the corresponding subset relationship $S\subseteq T$,
+which is a unique arrow in the preorder of downward-closed sets with binary relation $\subseteq$.
+\subsection*{(d)}
+If $\hat{S}\cong \hat{T}$, then $S\subseteq T \wedge T\subseteq S$, so $S=T$.
+Thus $\hat{S} = \hat{T}$ from the 1-to-1 correspondence.
+\subsection*{(e)}
+By (a), the Yoneda embedding $Y: \mathbb{Q} \rightarrow [\mathbb{Q}^{op}, \textbf{Set}]$
+restricts to a full and faithful functor $Y' : \mathbb{Q} \rightarrow [\mathbb{Q}^{op},\mathcal{B}]$.
+
+By (b), objects in $[\mathbb{Q}^{op},\mathcal{B}]$ are in 1-to-1 correspondence
+with downward-closed sets in $\mathbb{Q}$.
+
+Using Dedekind pre-cuts, each $r\in \mathbb{R}^{\infty}$ is uniquely represented
+by a downward-closed set. 
+Then each $r\in \mathbb{R}^{\infty}$ is in 1-to-1 correspondence with objects in $[\mathbb{Q}^{op},\mathcal{B}]$.
+
+We show that the arrow mapping of $[\mathbb{Q}^{op},\mathcal{B}]$ and $\mathbb{R}^{\infty}$ is bijective.
+
+If $r_1,r_2 \in \mathbb{R}^{\infty}$ such that $r_1\leq r_2$, 
+then there are downward-closed sets $S_{r_1},S_{r_2}$ such that $S_{r_1} \subseteq S_{r_2}$, for surjectivity.
+
+By (c), there is only one arrow between objects $S_a, S_b$ in $[\mathbb{Q}^{op},\mathcal{B}]$, 
+which is mapped to the corresponding inequality $a\leq b$ in $\mathbb{R}^{\infty}$, for injectivity.
+
+$[\mathbb{Q}^{op},\mathcal{B}]$ fully and faithfully embeds $\mathbb{R}^{\infty}$.
+
+
+{\color{teal}
+\[[\mathbb{Q}^{op},\textbf{Set}] \hookrightarrow \mathbb{R}^{\infty}\]
+\[F \rightsquigarrow  F(\mathbbm{1}) \rightsquigarrow 
+\begin{cases}
+    -\infty & \emptyset\\
+    r & S_r\\
+    \infty & \mathbb{Q}
+\end{cases}
+\]
+}
+
+\subsection*{(f)}
+Since $[\mathbb{Q}^{op},\mathcal{B}]$ is a partial order, products of objects are the greatest lower bound.
+Using $\mathbb{Q}$ as the set of indices, and the set of objects 
+$\{F_i: \mathbb{Q}^{op}\rightarrow \mathcal{B}\}_{i\in \mathbb{Q}}$, the product is defined,
+\[\forall q\in \mathbb{Q}, \prod_{i\in \mathbb{Q}} F_i(q) := q^{\downarrow}\]
+which uniquely represents a real number $r\in\mathbb{R}, r > q$
+where $r^{\downarrow} = q^{\downarrow}$.
+Since set-indexed products are limits of diagrams from 1(c), every real number is a limit of rational numbers.
+
+{\color{teal}
+Real number $r\in\mathbb{R}$ represented by $S_r$,
+then $\mathbb{Q}/S_r$ represents unique set.
+
+
+\[\mathcal{C} \rightarrow [\mathcal{C}^{op}, \mathbf{Set}]\]
+\textbf{Set} is very well behaved.
+$[\mathcal{C}^{op}, \mathbf{Set}]$ is always Cartesian closed - 
+"Free completion of $\mathcal{C}$ under colimits".
+Any "nonsense" category $\mathcal{C}$ can be converted to a well behaved category
+
+If $\mathcal{E}$ is a cocomplete category
+
+% https://q.uiver.app/#q=WzAsMyxbMCwxLCJcXG1hdGhjYWx7Q30iXSxbMCwwLCJbXFxtYXRoY2Fse0N9XntvcH0sXFx0ZXh0YmZ7U2V0fV0iXSxbMSwxLCJcXG1hdGhjYWx7RX0iXSxbMCwxLCJZIl0sWzAsMl0sWzEsMl1d
+\[\begin{tikzcd}
+	{[\mathcal{C}^{op},\textbf{Set}]} \\
+	{\mathcal{C}} & {\mathcal{E}}
+	\arrow["Y", from=2-1, to=1-1]
+	\arrow[from=2-1, to=2-2]
+	\arrow[from=1-1, to=2-2]
+\end{tikzcd}\]
+
+}
+
+
+\end{document}
