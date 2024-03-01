@@ -10,9 +10,4 @@ template.tex
 *.pdf
 !PnC/*.pdf
 !qpc/*.pdf
-!cpp/PS1*.pdf
-!cpp/PS2*.pdf
-!cpp/PS3*.pdf
-!cpp/PS4*.pdf
-!cpp/PS5.pdf
-!cpp/L*.pdf
+!cpp/*.pdf

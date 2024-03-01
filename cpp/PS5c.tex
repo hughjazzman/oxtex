@@ -10,6 +10,7 @@
 \usepackage{color}
 \usepackage{quiver}
 \usepackage{bbm}
+\usepackage{CJKutf8}
 \DeclareMathOperator*{\argmax}{argmax}
 \DeclareMathOperator*{\argmin}{argmin}
 
@@ -206,8 +207,8 @@ so the limit of the diagram matches the defintion of the set-indexed products.
 	\arrow["{w_i}"', from=1-6, to=2-5]
 	\arrow[dashed, from=1-6, to=2-6]
 \end{tikzcd}\]
-}
 are the same thing.
+}
 
 \subsection*{(d)}
 \begin{proposition}
@@ -361,6 +362,7 @@ such that $\forall j\in I, (Y\ \pi_j) \circ (Y\ \langle f_i\rangle_i) = (Y\ f_j)
 The embedding preserves set-indexed products when they exist.
 
 \end{proof}
+{\color{teal}
 Yoneda embedding preserves all limits.
 \[F:\mathcal{C} \rightarrow \mathcal{D}\]
 \[F(X\times Y) \rightarrow F\ X \times F\ Y\]
@@ -368,7 +370,7 @@ Yoneda embedding preserves all limits.
 \[\begin{tikzcd}
 	& {F(X\times Y)} \\
 	& {F\ X \times F\ Y} \\
-	{F\ X} && \bullet
+	{F\ X} && {F\ Y}
 	\arrow["{\pi_2}"', from=2-2, to=3-1]
 	\arrow["{\pi_2}", from=2-2, to=3-3]
 	\arrow["{F\ \pi_1}"', curve={height=12pt}, from=1-2, to=3-1]
@@ -378,11 +380,12 @@ Yoneda embedding preserves all limits.
 Preserving limits is about preserving cones, not apex of cones.
 Look at category of pointed sets.
 
-\[Set_*\quad \{*\}/Set\]
+\[\textbf{Set}_*\quad \{*\}/\textbf{Set}\]
 \[(A,a) \rightarrow (B,b)\]
 \[f:A\rightarrow B := f(a) =b\]
+}
 
-
+\clearpage
 \section*{Question 2}
 \addtocounter{section}{1}
 \subsection*{(a)}
@@ -463,11 +466,21 @@ So $Y'$ is full and faithful.
 % TODO: story of matty
 
 {\color{teal}
-If 2 out of 3 of $f\circ g$ and $f$ are full and faithful, $g$ is also full and faithful.
+If $f\circ g$ and $f$ are full and faithful, $g$ is also full and faithful.
 
 Inclusion functor
 \[[\mathcal{P}^{op},\mathbbm{2}] \hookrightarrow [\mathcal{P}^{op},\textbf{Set}]\]
 is full and faithful.
+\begin{CJK}{UTF8}{ipxma}
+% https://q.uiver.app/#q=WzAsMyxbMCwxLCJcXG1hdGhjYWx7UH0iXSxbMSwxLCJbXFxtYXRoY2Fse1B9XntvcH0sXFx0ZXh0YmZ7U2V0fV0iXSxbMSwwLCJbXFxtYXRoY2Fse1B9XntvcH0sXFxtYXRoYmJtezJ9XSJdLFswLDEsIlkiLDJdLFsyLDEsIiIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Imhvb2siLCJzaWRlIjoidG9wIn19fV0sWzAsMiwiWSciXV0=
+\[\begin{tikzcd}
+	& {[\mathcal{P}^{op},\mathbbm{2}]} \\
+	{\mathcal{P}} & {[\mathcal{P}^{op},\textbf{Set}]}
+	\arrow["Y"', from=2-1, to=2-2]
+	\arrow[hook, from=1-2, to=2-2]
+	\arrow["{Y'}", from=2-1, to=1-2]
+\end{tikzcd}\]
+\end{CJK}
 }
 
 \subsection*{(b)}
