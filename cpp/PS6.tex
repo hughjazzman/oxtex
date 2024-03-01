@@ -110,6 +110,55 @@ Suppose $x,y\in P, x\leq y$. Then
 So $h$ is monotone.
 \end{proof}
 
+\begin{claim}
+  $U$ has a left adjoint.
+\end{claim}
+Define the functor $F:\textbf{Set} \rightarrow \textbf{SL}$
+\[F(X) = (\mathcal{P}(X), \subseteq)\]
+\[F(f: X\rightarrow Y) : \mathcal{P}(X) \rightarrow \mathcal{P}(Y) := A \mapsto \{f(a) | a\in A\}\]
+which is the covariant powerset functor for arrows, so functoriality is satisfied.
+
+The functor preserves least upper bounds $\forall f:X\rightarrow Y$ in \textbf{Set},
+\begin{equation}
+\begin{aligned}
+  F(f)\left(\bigvee S\right) &= F(f)\left(\bigcup_{A\in S} A\right)\\
+  &= \left\{f(a) \middle| a \in \bigcup_{A\in S} A\right\}\\
+  &= \bigcup_{A\in S} \{f(a) | a \in A\}\\
+  &= \bigcup_{A\in S} F(f)(A)\\
+  &= \bigvee_{A\in S} F(f)(A)\\
+  &= \bigvee \{ F(f)(A) | A\in S\}
+\end{aligned}
+\end{equation}
+
+For each object $C\in\text{Ob}(\textbf{Set})$, define the unit arrow $\eta_C : C\rightarrow UFC$
+\[\eta_C(a) = \{a\}\]
+From $f:A\rightarrow B$, we can construct an arrow in \textbf{SL}
+\[\hat{f} : \mathcal{P}(A) \rightarrow B := A \mapsto \bigvee F(f)(A)\]
+where $U(\hat{f}) = \hat{f}$.
+Then
+\[(U(\hat{f}) \circ \eta_A) (a) = \hat{f} (\{a\}) = f(a)\]
+\[\forall a, f(a) = U(\hat{f}) \circ \eta_A (a)\]
+So $f = U(\hat{f}) \circ \eta_A$.
+
+Suppose there's another $g: \mathcal{P}(A) \rightarrow B$ such that $f = U(g) \circ \eta_A$.
+Then it also preserves least upper bounds where $\forall X\subseteq A$,
+\[g(\bigvee \{X\}) = g(X) = \bigvee \{g(a) | a \in X\} = \bigvee F(f)(X) \]
+so $g=\hat{f}$ is unique.
+ 
+% Let $f:A\rightarrow B$ be an arrow in \textbf{Set}
+% such that 
+% \[(B,\leq_B)\in \text{Ob}(\textbf{SL}),\quad A\in\text{Ob}(\textbf{Set})\]
+% \[U(B,\leq_B)=B\in\text{Ob}(\textbf{Set})\]
+% so
+% \[F(A) = (\mathcal{P}(A), \subseteq) \in\text{Ob}(\textbf{SL})\]
+% We need to show a bijection
+% \[\theta_{A,B}: \textbf{Set}(A,U(B,\leq_B)) \cong \textbf{SL}(F(A), (B,\leq_B))\]
+% Equivalently,
+% \[\theta_{A,B}: \textbf{Set}(A,B) \cong \textbf{SL}((\mathcal{P}(A), \subseteq), (B,\leq_B))\]
+
+
+
+
 
 
 \section*{Question 2}
