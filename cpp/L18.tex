@@ -250,8 +250,18 @@ For
 \begin{itemize}
     \item terminating (all sequences $t\rightarrow ... \rightarrow t'$ are finite)
     \item confluent:
-    \[ \forall t_1,t_2. t\rightrightarrows\rightrightarrows\rightrightarrows t_1,t_2
-    \exists t_3. t_1,t_2\rightrightarrows\rightrightarrows\rightrightarrows t_3\]
+    \[ \forall t_1,t_2. \left(t
+    \begin{cases}
+        \rightarrow\rightarrow\rightarrow t_1\\
+        \rightarrow\rightarrow\rightarrow t_2
+    \end{cases}\right),
+    \exists t_3. 
+    \left(\left.
+    \begin{cases}
+        t_1 \rightarrow\rightarrow\rightarrow \\
+        t_2 \rightarrow\rightarrow\rightarrow 
+    \end{cases}
+    \right\} t_3\right) \]
 \end{itemize}
 Terminating + confluent $\implies$ unique normal forms.
 \end{definition}
