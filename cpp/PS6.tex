@@ -184,31 +184,133 @@ Thus, $F$ is the left adjoint of $U$.
 \end{proposition}
 \begin{proof}
 $\mathcal{P}^{op}$ is the left adjoint of $\mathcal{P}$ iff $\forall X\in\text{Ob}(\textbf{Set})$, there exists a unit
-\[\eta_X : X \rightarrow X\]
+\[\eta_X : X \rightarrow \mathcal{P}\mathcal{P}(X)\]
 such that $\forall f: X\rightarrow \mathcal{P}(Y)$ in \textbf{Set},
 $\exists! \hat{f}: \mathcal{P}^{op}(X) \rightarrow Y$ in $\textbf{Set}^{\text{op}}$
 where the diagram commutes
 % https://q.uiver.app/#q=WzAsMyxbMCwwLCJYIl0sWzEsMCwiXFxtYXRoY2Fse1B9XFxtYXRoY2Fse1B9KFgpIl0sWzEsMSwiXFxtYXRoY2Fse1B9KFkpIl0sWzAsMSwiXFxldGFfQSJdLFsxLDIsIlxcbWF0aGNhbHtQfShcXGhhdHtmfSkiLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMCwyLCJmIiwyXV0=
 \[\begin{tikzcd}
-	X & X \\
+	X & \mathcal{P}\mathcal{P}(X) \\
 	& {\mathcal{P}(Y)}
 	\arrow["{\eta_X}", from=1-1, to=1-2]
 	\arrow["{\mathcal{P}(\hat{f})}", dashed, from=1-2, to=2-2]
 	\arrow["f"', from=1-1, to=2-2]
 \end{tikzcd}\]
-Define $\forall X\in\text{Ob}(\textbf{Set}),\eta_X = 1_X$.
+Define $\forall X\in\text{Ob}(\textbf{Set}),\eta_X(x) = \{\{x\}\}$.
 
-Define $\hat{f} = \mathcal{P}^{op}(f)$.
-Then $\mathcal{P}(\hat{f}) = \mathcal{P}(\mathcal{P}^{op}(f)) = f$
-so $f\circ 1_X = f$.
+Define 
+\[\hat{f}(y) = \{x | y\in f(x)\}\]
+in \textbf{Set}, with its corresponding arrow in $\textbf{Set}^{op}$.
+Then 
+\[\mathcal{P}(\hat{f})(A) = \{y | \exists S \in A, \forall x \in S, y \in f(x)\}\]
+So
+\begin{equation}
+\begin{aligned}
+\mathcal{P}(\hat{f})\circ \eta_X (x) &= \mathcal{P}(\hat{f})(\{x | y\in f(x)\})\\
+&=\{y | y \in f(x)\}\\
+&= f(x)
+\end{aligned}
+\end{equation}
 
-Let $g: \mathcal{P}^{op}(X) \rightarrow Y$ such that $\mathcal{P}(g)\circ 1_X = f$.
-Then $\mathcal{P}(g)=f$, so $\mathcal{P}^{op}\mathcal{P}(g)=g= \mathcal{P}^{op}(f)$ is unique.
+Let $g: \mathcal{P}^{op}(X) \rightarrow Y$ in \textbf{Set}$^{op}$ such that $\mathcal{P}(g)\circ \eta_X = f$.
+Then $\forall x \in X$,
+\[\mathcal{P}(g)(\{\{x\}\}) = \{g(\{x\})\} = f(x)\subseteq Y\]
+Since $g:Y\rightarrow\mathcal{P}^{op}(X) $ in \textbf{Set} is a function, 
+it must be that $\forall y\in f(x), x \in g(y)$, so
+\[g(y) = \{x | y \in f(x)\}\]
+ $\hat{f} = g$ is the unique morphism.
 
 \end{proof}
 
+\clearpage
 \section*{Question 3}
 \addtocounter{section}{1}
+
+A morphism of graphs $f: (V,E,s,t) \rightarrow (V', E', s',t')$ consists of mappings of
+\begin{itemize}
+  \item vertices, $f_V : V \rightarrow V'$
+  \item edges, $f_E : E \rightarrow E'$
+  \item source, $f_s(s) = s' \iff (\forall e\in E, s(e) = v \implies s'(f_E(e)) = f_V(v))$
+  \item target, $f_t(t) = t' \iff (\forall e\in E, t(e) = v \implies t'(f_E(e)) = f_V(v))$
+\end{itemize}
+
+Define the functor $F: \textbf{Grph} \rightarrow \textbf{Cat}$ with the object map
+\[F :: (V,E,s,t) \mapsto \mathcal{C}\]
+where the category $\mathcal{C}$ has objects $\text{Ob}(\mathcal{C}) = V$,
+and arrows $\text{Ar}(\mathcal{C})$ are freely generated from the composable edges $E$,
+so $E \subseteq\text{Ar}(\mathcal{C})$, and if $e_1,e_2\in E$ are such that $s(e_1)=t(e_2)$, 
+then $e_1\circ e_2 \in\text{Ar}(\mathcal{C})$.
+% \[\text{Ob}(\mathcal{C}) = V\]
+% \[\text{Ar}(\mathcal{C}) = E + \{f : u \circ v | \}\]
+% \[\text{Ar}(\mathcal{C}) = \{f_e : u \rightarrow v | e\in E, s(e) = u \wedge t(e)=v\}\]
+% In other words, the edges in $E$ have a bijection with the arrows in $\mathcal{C}$.
+% \exists \{e_1,...,e_k\}\subseteq E, 
+% (s(e_1) = u) \wedge (t(e_k) = v)\wedge \bigwedge_{i=1}^{k-1} (t(e_i) = s(e_{i+1}))\}\]
+% In other words, in $\mathcal{C}, f:u\rightarrow v \iff \exists$ 
+% a path from $u$ to $v$ in the graph $(V,E,s,t)$ i.e. the vertices are connected from $u$ to $v$.
+
+The composition map is clearly defined from the free generation. 
+The identity map $1_u$ for each object $u$ is included in the free generation,
+from the empty sequence of edges.
+
+Associativity is satisfied since free generation is associative.
+Unit axiom is satisfied since the identity map satisfies the properties of the identity.
+
+$F$ then maps graph homomorphisms in $\mathbf{Grph}$ 
+to functors between the corresponding categories in $\mathbf{Cat}$.
+Let $f:A\rightarrow B$ be in $\text{Ar}(\mathbf{Grph})$.
+
+The object mapping of $Ff$ is clear
+\[Ff : F(A) \rightarrow F(B) := C_v \mapsto D_{f_v(v)}\]
+where $C_v, D_{f_v(v)}$ are the objects in the categories $F(A),F(B)$ 
+representing the vertices $v, f_v(v)$ in the graphs $A,B$ respectively.
+
+$Ff$ maps an arrow $g: C_u\rightarrow C_v$ in the category $F(A)$ 
+to the corresponding arrow $Ff(g): D_{f_v(u)} \rightarrow D_{f_v(v)}$ in $F(B)$.
+$Ff$ also maps identity arrows to identity arrows, which exist due to the free generation.
+
+The identity axiom is clearly satisfied.
+
+% Associativity is also satisfied, since for each freely generated arrow in $F(A)$, 
+% there is a corresponding freely generated arrow in $F(B)$,
+% as the underlying edge in $A$ must have a mapping to an underlying edge in $B$.
+Composition is preserved since free generation preserves it.
+\[Ff(g\circ h) = Ff(g) \circ Ff(h)\]
+Functoriality is satisfied.
+
+$F$ is the left adjoint of $U$, iff $\forall A\in\text{Ob}(\textbf{Grph})$,
+there exists a unit $\eta_A : A\rightarrow UFA$ such that 
+\[\forall f: A\rightarrow U(B),\exists! \hat{f}:F(A) \rightarrow B\]
+where $f\in\text{Ar}(\textbf{Grph}),\hat{f}\in\text{Ar}(\textbf{Cat})$, the following diagram commutes
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJBIl0sWzEsMCwiXFxtYXRoY2Fse1B9KEEpIl0sWzEsMSwiQiJdLFswLDEsIlxcZXRhX0EiXSxbMSwyLCJcXGhhdHtmfSIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFswLDIsImYiLDJdXQ==
+\[\begin{tikzcd}
+	A & {UF(A)} \\
+	& U(B)
+	\arrow["{\eta_A}", from=1-1, to=1-2]
+	\arrow["{U(\hat{f})}", dashed, from=1-2, to=2-2]
+	\arrow["f"', from=1-1, to=2-2]
+\end{tikzcd}\]
+For each object $C=(V,E,s,t)\in\text{Ob}(\textbf{Grph})$, define the unit arrow $\eta_C : C\rightarrow UFC$
+where $\eta_{C,V} = 1_V, \eta_{C,E} = \iota_E$ - the identity map on vertices, and the inclusion map on edges.
+% \begin{itemize}
+%   \item $\eta_{C,V} = 1_V$
+%   \item $\eta_{C,E} = 1_E$
+% \end{itemize}
+% \[\eta_{C,V} = 1_V\]
+
+Then for each $f: A\rightarrow U(B)$, define the arrow $\hat{f}: F(A) \rightarrow B$ 
+where 
+\[\hat{f}(C) = Ff_V(C_V)\] 
+\[\hat{f}(g:C\rightarrow D) = Ff_E(g_E)\]
+with $C_V$ as the underlying vertex representing the object $C$,
+and $g_E$ as the underlying edge representing the arrow $g$.
+The functor $\hat{f}$ satisfies functoriality, since $F$ does.
+
+Then for any object $C\in\text{Ob}(\textbf{Grph})$, 
+\[U(\hat{f})\circ \eta_A(C) = U(\hat{f})(C) = UFf(C) = f(C)\]
+
+$\hat{f}$ is the unique functor.
+
 
 \section*{Question 4}
 \addtocounter{section}{1}
