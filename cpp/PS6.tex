@@ -314,7 +314,60 @@ $\hat{f}$ is the unique functor.
 
 \section*{Question 4}
 \addtocounter{section}{1}
+\subsection{(a)}
+\begin{proposition}
+  If $f$ has a right adjoint, then $f$ preserves least upper bounds.
+\end{proposition}
+\begin{proof}
+Suppose $f$ has a right adjoint $g: Q\rightarrow P$.
+\begin{equation}
+\begin{aligned}
+  &\forall x\in S\subseteq P, x \leq \bigvee S \quad\text{(by upper bound)}\\
+  &\implies \forall x\in S, f(x) \leq f\left(\bigvee S\right) \quad\text{($f$ is monotone)}\\
+  &\implies \bigvee\{f(x) | x\in S\} \leq f\left(\bigvee S\right) \quad\text{(by \textit{least} UB)}
+\end{aligned}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+  &\forall x\in S\subseteq P, f(x) \leq \bigvee\{f(x) | x\in S\} \quad\text{(by upper bound)}\\
+  &\implies \forall x\in S, x \leq g\left(\bigvee\{f(x) | x\in S\}\right) \quad\text{($g$ is right adjoint)}\\
+  &\implies \bigvee S \leq g\left(\bigvee\{f(x) | x\in S\}\right) \quad\text{(by \textit{least} UB)}\\
+  &\implies f\left(\bigvee S\right) \leq \bigvee\{f(x) | x\in S\} \quad\text{($f$ is left adjoint)}
+\end{aligned}
+\end{equation}
+Then since $Q$ is a poset, these imply that
+\[f\left(\bigvee S\right) = \bigvee\{f(x) | x\in S\}\]
+  
+\end{proof}
+\subsection{(b)}
 
+\begin{proposition}
+  If $f$ preserves least upper bounds, then it has a right adjoint $g$ given by
+  \[g(y) = \bigvee \{x\in P | f(x) \leq y\}\]
+\end{proposition}
+\begin{proof}
+Suppose $f$ preserves least upper bounds. We want to show that 
+\[\forall x\in P, z\in Q, x\leq g(z) \iff f(x) \leq z\]
+Let $x\in P, z\in Q$ such that $x\leq g(z)$.
+\begin{equation}
+\begin{aligned}
+  x \leq g(z) &\iff x \leq \bigvee \{x\in P | f(x) \leq z\}\\
+  &\implies f(x) \leq f\left(\bigvee \{x\in P | f(x) \leq z\}\right)\\
+  &\iff f(x) \leq \bigvee \{f(x) | f(x) \leq z\} \quad\text{($f$ preserves LUB)}\\
+  &\iff f(x) \leq z \quad\text{(by \textit{least} UB)}
+\end{aligned}
+\end{equation}
+% $(\impliedby)$ Now let $f(x) \leq z$.
+% \begin{equation}
+% \begin{aligned}
+%   f(x) \leq z 
+% \end{aligned}
+% \end{equation}
 
+\end{proof}
+
+\subsection{(c)}
+
+\subsection{(d)}
 
 \end{document}
