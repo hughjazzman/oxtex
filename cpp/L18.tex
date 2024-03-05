@@ -58,7 +58,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{Categories, Proofs, and Processes: \\Lecture 17 Adjunctions}
+\title{Categories, Proofs, and Processes: \\Lecture 18 Monoidal Categories}
 %
 \author{Wira Azmoon Ahmad}
 \date{27 Feb 2024}
@@ -320,6 +320,120 @@ $(\Delta)$ (top) and $(\pentagon)$ (bottom) coherence.
 \begin{theorem}[Coherence]
     All formal$^*$ diagrams of $\lambda,\rho,\alpha$ commute.
 \end{theorem}
+
+\subsection{Monoidal Categories}
+\begin{definition}
+    String diagram notation 
+    \[f: A\rightarrow B\]
+    \[f: A\otimes B \rightarrow C\otimes D \otimes E\]
+    \[f\otimes g\]
+    \[\sigma_{A,B} = \texttt{swap}_{A,B}\]
+    Symmetry natural isomorphisms.
+\end{definition}
+\begin{definition}
+A symmetric monoidal category (SMC) is a monoidal category with a natural isomorphism
+\[\sigma_{A,B} A\otimes B \xrightarrow[]{\sim} B\otimes A\]
+satisfying:
+\[\sigma_{A,B}^{-1} = \sigma_{B,A}\]
+% https://q.uiver.app/#q=WzAsNixbMCwxLCIoQVxcb3RpbWVzIEIpIFxcb3RpbWVzIEMiXSxbMSwwLCJBXFxvdGltZXMgKEIgXFxvdGltZXMgQykiXSxbMiwwLCIoQlxcb3RpbWVzIEMpXFxvdGltZXMgQSJdLFszLDEsIkJcXG90aW1lcyAoQ1xcb3RpbWVzIEEpIl0sWzEsMiwiKEJcXG90aW1lcyBBKVxcb3RpbWVzIEMiXSxbMiwyLCJCXFxvdGltZXMgKEFcXG90aW1lcyBDKSJdLFswLDEsIlxcYWxwaGEiXSxbMSwyLCJcXHNpZ21hX3tBLEJcXG90aW1lcyBDfSJdLFsyLDMsIlxcYWxwaGEiXSxbMCw0LCJcXHNpZ21hX3tBLEJ9XFxvdGltZXMgMV9DIiwyXSxbNCw1LCJcXGFscGhhIiwyXSxbNSwzLCJcXHNpZ21hX3tBLEN9IiwyXV0=
+\[\begin{tikzcd}
+	& {A\otimes (B \otimes C)} & {(B\otimes C)\otimes A} \\
+	{(A\otimes B) \otimes C} &&& {B\otimes (C\otimes A)} \\
+	& {(B\otimes A)\otimes C} & {B\otimes (A\otimes C)}
+	\arrow["\alpha", from=2-1, to=1-2]
+	\arrow["{\sigma_{A,B\otimes C}}", from=1-2, to=1-3]
+	\arrow["\alpha", from=1-3, to=2-4]
+	\arrow["{\sigma_{A,B}\otimes 1_C}"', from=2-1, to=3-2]
+	\arrow["\alpha"', from=3-2, to=3-3]
+	\arrow["{\sigma_{A,C}}"', from=3-3, to=2-4]
+\end{tikzcd}\]
+\end{definition}
+\begin{note}
+Braided monoidal category makes distinction of over or under swap.
+\end{note}
+\begin{definition}
+    A strict SMC is an SMC where $\alpha=1,\lambda=\rho$.
+    $(\sigma\neq 1!)$.
+\end{definition}
+
+\subsection{Algebriac structures in monoidal categories}
+\begin{definition}
+    A monoid in a strict monoidal category $(\mathcal{C},\otimes, I)$ is an object $X$
+    with morphisms 
+    \[\mu : X\otimes X \rightarrow X, \quad \eta: I\rightarrow A\]
+    satisfying:
+    \begin{itemize}
+        \item \underline{associativity}
+    % https://q.uiver.app/#q=WzAsNCxbMCwwLCJYXFxvdGltZXMgWFxcb3RpbWVzIFgiXSxbMSwwLCJYXFxvdGltZXMgWCJdLFsxLDEsIlxcYnVsbGV0Il0sWzAsMSwiWFxcb3RpbWVzIFgiXSxbMCwxLCJYXFxvdGltZXMgXFxtdSJdLFsxLDIsIlxcbXUiXSxbMCwzLCJcXG11IFxcb3RpbWVzIFgiLDJdLFszLDIsIlxcbXUiLDJdXQ==
+    \[\begin{tikzcd}
+        {X\otimes X\otimes X} & {X\otimes X} \\
+        {X\otimes X} & X
+        \arrow["{X\otimes \mu}", from=1-1, to=1-2]
+        \arrow["\mu", from=1-2, to=2-2]
+        \arrow["{\mu \otimes X}"', from=1-1, to=2-1]
+        \arrow["\mu"', from=2-1, to=2-2]
+    \end{tikzcd}\]
+        \item \underline{left unit}
+    % https://q.uiver.app/#q=WzAsMyxbMCwwLCJYIl0sWzEsMCwiWFxcb3RpbWVzIFgiXSxbMSwxLCJYIl0sWzAsMSwiXFxldGEgXFxvdGltZXMgWCJdLFsxLDIsIlxcbXUiXSxbMCwyLCIxX1giLDJdXQ==
+    \[\begin{tikzcd}
+        X & {X\otimes X} \\
+        & X
+        \arrow["{\eta \otimes X}", from=1-1, to=1-2]
+        \arrow["\mu", from=1-2, to=2-2]
+        \arrow["{1_X}"', from=1-1, to=2-2]
+    \end{tikzcd}\]
+        \item \underline{right unit}
+    % https://q.uiver.app/#q=WzAsMyxbMCwwLCJYIl0sWzEsMCwiWFxcb3RpbWVzIFgiXSxbMSwxLCJYIl0sWzAsMSwiWFxcb3RpbWVzIFxcZXRhIl0sWzEsMiwiXFxtdSJdLFswLDIsIjFfWCIsMl1d
+    \[\begin{tikzcd}
+        X & {X\otimes X} \\
+        & X
+        \arrow["{X\otimes \eta}", from=1-1, to=1-2]
+        \arrow["\mu", from=1-2, to=2-2]
+        \arrow["{1_X}"', from=1-1, to=2-2]
+    \end{tikzcd}\]
+    \end{itemize}
+\end{definition}
+\begin{note}
+    \[(-\otimes X) : \mathcal{C} \rightarrow \mathcal{C}\]
+    \[f \otimes X := f \otimes 1_X : A\otimes X \rightarrow B\otimes X\]
+\end{note}
+
+\begin{example}
+    Monoids in $(\textbf{Set}, \times,\{*\})$ are monoids.
+    \[(X, \mu : X\times X \rightarrow X, \eta : \{*\} \rightarrow X)\]
+    \[a\cdot b := \mu(a,b)\]
+    \[1 := \eta(*)\]
+\begin{itemize}
+    \item Assocativity says
+    \[\forall a,b,c\in X, \mu(A,\mu(b,c)) = \mu(\mu(a,b),c)\]
+    i.e. $a\cdot (b\cdot c) = (a\cdot b) \cdot c$
+    \item Left unit
+    \[\forall a\in X, \mu (\eta(*), a) = a\]
+    i.e. $(1\cdot a) = a$
+    \item Right unit
+    \[\forall a\in X, a\cdot 1 = a\]
+\end{itemize}
+\end{example}
+
+\begin{example}
+Monoids in $(\textbf{Ab}, \times, \{0\})$ -
+where \textbf{Ab} is the category of abelian groups and group homomorphisms - are rings.
+\[(X, \mu: X\times X \rightarrow X, \eta: \{0\} \rightarrow X)\]
+as before, but $X$ is an abelian group and $\mu$ and $\eta$ must be group homomorphisms.
+\[\mu(a+b,c) = \mu(a,c) + \mu(b,c)\]
+\[\mu(a, b+c) = \mu(a,b) + \mu(a, c)\]
+i.e.
+\[(a+b)\cdot c = a\cdot c + b\cdot c\]
+\[a\cdot (b+c) = a\cdot b + a\cdot c\]
+
+\end{example}
+
+\begin{example}
+Monoids in $(\textbf{Vect}_k, \otimes, k)$ are associative algebras,
+$:=$ vector space with multiplication $(-\cdot -)$ which is associative, unital and linear in each argument.
+\[\left(\sum_i \lambda_i v_i\right) \cdot w = \sum_i \lambda_i (v_i\cdot w)\]
+\[v\cdot \left(\sum_i \lambda_i w_i\right) = \sum_i \lambda_i (v\cdot w_i)\]
+\end{example}
 
 
 \end{document}
