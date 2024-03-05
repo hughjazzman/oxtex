@@ -311,7 +311,7 @@ Then for any object $C\in\text{Ob}(\textbf{Grph})$,
 
 $\hat{f}$ is the unique functor.
 
-
+\clearpage
 \section*{Question 4}
 \addtocounter{section}{1}
 \subsection{(a)}
@@ -348,7 +348,7 @@ Then since $Q$ is a poset, these imply that
 \begin{proof}
 Suppose $f$ preserves least upper bounds. We want to show that 
 \[\forall x\in P, z\in Q, x\leq g(z) \iff f(x) \leq z\]
-Let $x\in P, z\in Q$ such that $x\leq g(z)$.
+$(\implies)$ Let $x\in P, z\in Q$ such that $x\leq g(z)$.
 \begin{equation}
 \begin{aligned}
   x \leq g(z) &\iff x \leq \bigvee \{x\in P | f(x) \leq z\}\\
@@ -357,17 +357,49 @@ Let $x\in P, z\in Q$ such that $x\leq g(z)$.
   &\implies f(x) \leq z \quad\text{(by \textit{least} UB)}
 \end{aligned}
 \end{equation}
-% $(\impliedby)$ Now let $f(x) \leq z$.
-% \begin{equation}
-% \begin{aligned}
-%   f(x) \leq z 
-% \end{aligned}
-% \end{equation}
+$(\impliedby)$ Now let $f(x) \leq z$. Note that by LUB, $x\in S \implies x \leq \bigvee S$.
+\begin{equation}
+\begin{aligned}
+  f(x) \leq z &\implies g\circ f(x) \leq g(z)\\
+  &\iff \bigvee \{x'\in P | f(x') \leq f(x)\} \leq \bigvee \{x \in P | f(x) \leq z\}\\
+  &\implies x \leq \bigvee \{x \in P | f(x) \leq z\} \quad\text{($f(x)\leq f(x)$ by reflexivity)} \\
+  &\iff x \leq g(z)
+\end{aligned}
+\end{equation}
 
 \end{proof}
 
 \subsection{(c)}
+\begin{proposition}
+  Complete semi-lattices $P$ also have infema (greatest lower bounds) $\bigwedge S$ for all subsets $S\subseteq P$.
+\end{proposition}
+\begin{proof}
+  Note that the bottom $\bigvee \emptyset = \bot\in P$ exists, where $\forall x\in P, \bot \leq x$,
+  from the existence of LUB for $\emptyset$, 
+  and since $\forall x\in P, x'\in \emptyset, x' \leq x$ is vacuously true.
+
+  Let $S\subseteq P$ be a subset, with $B\subseteq P$ as the set of lower bounds for $S$.
+  Since $\bot\in B, B\neq \emptyset$.
+  Take $\bigvee B$, which exists.
+
+\begin{claim}
+  \[\bigvee B = \bigwedge S\]
+\end{claim}
+Note that just from definitions,
+\[\forall x\in B, x\leq \bigvee B\]
+\[\forall x\in B, y\in S, x\leq y\]
+So $\forall y\in S,y$ is an upper bound of $B$. 
+Then by the \textit{least} UB of set $B$, we must have
+\[\forall y\in S, \bigvee B \leq y\]
+So $\bigwedge S = \bigvee B \in B$ is the GLB of $S$.
+
+\end{proof}
 
 \subsection{(d)}
+From dualising (a) and (b), we have the following
+\begin{corollary}
+  $f:P\rightarrow Q$ has a left adjoint iff $f$ preserves greatest lower bounds.
+\end{corollary}
+
 
 \end{document}
