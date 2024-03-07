@@ -1,0 +1,392 @@
+% Please do not change %
+\documentclass[11pt]{article} % font size
+\usepackage[margin=1in]{geometry} % margins
+\usepackage{amsmath,amsthm,amssymb} % for the  common "math symbols"
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[shortlabels]{enumitem} % for enumeration
+\usepackage{booktabs} % if you need tables
+\usepackage{listings}
+\usepackage{color}
+\usepackage{quiver}
+\usepackage{ulem}
+\usepackage{wasysym}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% \theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{definition}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{note}[theorem]{Note}
+
+\lstset{
+  frame=none,
+  xleftmargin=2pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\ttfamily\tiny\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=haskell,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\small\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
+% Feel free to include additional packages (if needed), but make sure it does not override the margin/font requirements.
+%
+\setlength{\parindent}{0pt} % no indent for new paragraphs.
+\setlength{\parskip}{5pt} % distance between paragraphs, which will be used when you have a blank line in your LaTeX code.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Categories, Proofs, and Processes: \\Lecture 20 Monads}
+%
+\author{Wira Azmoon Ahmad}
+\date{7 Mar 2024}
+%
+\begin{document}
+%
+\maketitle
+
+%You may use the usual \LaTeX\ environments to structure your answers:
+%\begin{align}
+%        \label{basegnn}
+%        \mathbf{h}_u^{(t+1)} = \sigma \bigg( \mathbf{W}_\text{self}^{(t)} \mathbf{h}_u^{(t)}  + \mathbf{W}_\text{neigh}^{(t)} \sum_{v \in N(u)} \mathbf{h}_v^{(t)} + \mathbf{b}^{(t)} \bigg): 
+%\end{align}
+
+
+%\begin{table}[h]
+%\caption{A simple table.}
+%\centering
+%\begin{tabular}[t]{lrrrr}
+%\toprule
+%Graphs & Can & Be  & Fun & Too \\ 
+%\midrule 
+%$G_1$ & $1$  & $2$ & $3$ & $4$ \\ 
+%$G_2$ & $-1$  & $-2$ & $-3$ & $-4$ \\ 
+%$G_3$ & $0.1$  & $0.2$ & $0.3$ & $0.4$ \\ 
+%\bottomrule
+%\end{tabular}
+%\label{tab}
+%\end{table}
+
+% A functor $F:\mathcal{C} \rightarrow \mathcal{D}$ is
+% \begin{itemize}
+%     \item \textbf{faithful} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is injective;
+%     \item \textbf{full} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is surjective
+% \end{itemize}
+
+
+\addtocounter{section}{8}
+\section{Monads}
+\subsection{Monoids on the Category of Endofunctors}
+For $[\mathcal{C},\mathcal{C}]$ the category of endofunctors, with
+\begin{itemize}
+    \item objects - functors 
+    \[F:\mathcal{C} \times \mathcal{C}\]
+    \item morphisms - natural transformations
+    \[\phi: F\rightarrow G\]
+\end{itemize}
+Define 
+\[F\otimes G := FG\]
+\[I := 1_\mathcal{C}\]
+
+\begin{note}
+In what sense can I have a natural transformation in parallel?
+
+Think of $G$ as some structure on the inside, and $F$ as structure on the outside.
+Do some operation on $G$, also doing the same operation on $F$ in parallel
+\end{note}
+
+\subsection{Natural transformations "in parallel"}
+\begin{example}
+Define
+\[\texttt{List} : \textbf{Set} \rightarrow \textbf{Set}\]
+\[X \mapsto \texttt{List}\ X\]
+where \texttt{List}$(X)$ is the set of finite lists and elements of $X$
+\[f: X\rightarrow Y\]
+\[\texttt{List}(f) : \texttt{List}\ X \rightarrow \texttt{List}\ Y\]
+\[[x_1,...,x_k] \mapsto [f(x_1), ... , f(x_k)]\]
+
+Define also
+\[\texttt{BTree}: \textbf{Set} \rightarrow \textbf{Set}\]
+\[X \mapsto \texttt{BTree}\ X\]
+where \texttt{BTree}$(X)$ is the set of finite binary trees with leaves labelled by elements of $X$
+% https://q.uiver.app/#q=WzAsNSxbMiwwLCJcXGJ1bGxldCJdLFsxLDEsIlxcYnVsbGV0Il0sWzAsMiwieF8xIl0sWzIsMiwieF8yIl0sWzMsMSwieF8zIl0sWzAsMSwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxLDIsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwzLCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzAsNCwiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==
+\[\left\{\begin{tikzcd}
+	&& \bullet \\
+	& \bullet && {x_3} \\
+	{x_1} && {x_2}
+	\arrow[no head, from=1-3, to=2-2]
+	\arrow[no head, from=2-2, to=3-1]
+	\arrow[no head, from=2-2, to=3-3]
+	\arrow[no head, from=1-3, to=2-4]
+\end{tikzcd}, ...\right\}\]
+
+\[f: X\rightarrow Y\]
+\[\texttt{BTree}(f) : \texttt{BTree}\ X \rightarrow \texttt{BTree}\ Y\]
+% https://q.uiver.app/#q=WzAsMTIsWzIsMCwiXFxidWxsZXQiXSxbMSwxLCJcXGJ1bGxldCJdLFswLDIsInhfMSJdLFsyLDIsInhfMiJdLFszLDEsInhfMyJdLFs0LDFdLFs1LDFdLFs2LDEsIlxcYnVsbGV0Il0sWzUsMiwiZih4XzEpIl0sWzcsMCwiXFxidWxsZXQiXSxbOCwxLCJmKHhfMykiXSxbNywyLCJmKHhfMikiXSxbMCwxLCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsMiwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxLDMsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCw0LCIiLDIseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzUsNiwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs3LDgsIiIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNyw5LCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzksMTAsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNywxMSwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==
+\[\begin{tikzcd}
+	&& \bullet &&&&& \bullet \\
+	& \bullet && {x_3} & {} & {} & \bullet && {f(x_3)} \\
+	{x_1} && {x_2} &&& {f(x_1)} && {f(x_2)}
+	\arrow[no head, from=1-3, to=2-2]
+	\arrow[no head, from=2-2, to=3-1]
+	\arrow[no head, from=2-2, to=3-3]
+	\arrow[no head, from=1-3, to=2-4]
+	\arrow[maps to, from=2-5, to=2-6]
+	\arrow[no head, from=2-7, to=3-6]
+	\arrow[no head, from=2-7, to=1-8]
+	\arrow[no head, from=1-8, to=2-9]
+	\arrow[no head, from=2-7, to=3-8]
+\end{tikzcd}\]
+
+\end{example}
+
+\begin{theorem}[Informal]
+    It is possible to apply natural transformations "over" or "under" functors. 
+    
+\end{theorem}
+Let
+\[\phi: F\rightarrow F'\]
+\begin{definition}["Over"]
+    \[\phi \otimes G : FG \rightarrow F' G\]
+    \[(\phi \otimes G)_A := \phi_{G\ A} : FGA \rightarrow FG'A\]
+    which is natural as it follows from the naturality of $\phi$
+\end{definition}
+\begin{definition}["Under"]
+    \[G \otimes \phi : GF \rightarrow GF'\]
+    \[(G\otimes \phi)_A := G(\phi_A) : GFA \rightarrow GF'A\]
+\end{definition}
+
+\begin{example}
+\[\texttt{rev} : \texttt{List} \rightarrow \texttt{List}\]
+\[\texttt{rev}_A ([a_1,...,a_k]) = [a_k,...,a_1]\]
+% https://q.uiver.app/#q=WzAsOCxbMCwwLCJcXHRleHR0dHtMaXN0fVxcIEEiXSxbMCwzLCJcXHRleHR0dHtMaXN0fVxcIEEiXSxbMywwLCJcXHRleHR0dHtMaXN0fVxcIEIiXSxbMywzLCJcXHRleHR0dHtMaXN0fVxcIEIiXSxbMSwxLCJbYV8xLC4uLixhX2tdIl0sWzIsMSwiW2YoYV8xKSwuLi4sZihhX2spXSJdLFsxLDIsIlthX2ssLi4uLGFfMV0iXSxbMiwyLCJbZihhX2spLC4uLixmKGFfMSldIl0sWzAsMSwiXFx0ZXh0dHR7cmV2fV9BIl0sWzAsMiwiXFx0ZXh0dHR7TGlzdH0oZikiXSxbMiwzLCJcXHRleHR0dHtyZXZ9X0IiXSxbMSwzLCJcXHRleHR0dHtMaXN0fShmKSIsMl0sWzQsNSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs0LDYsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNiw3LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzUsNywiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==
+\[\begin{tikzcd}
+	{\texttt{List}\ A} &&& {\texttt{List}\ B} \\
+	& {[a_1,...,a_k]} & {[f(a_1),...,f(a_k)]} \\
+	& {[a_k,...,a_1]} & {[f(a_k),...,f(a_1)]} \\
+	{\texttt{List}\ A} &&& {\texttt{List}\ B}
+	\arrow["{\texttt{rev}_A}", from=1-1, to=4-1]
+	\arrow["{\texttt{List}(f)}", from=1-1, to=1-4]
+	\arrow["{\texttt{rev}_B}", from=1-4, to=4-4]
+	\arrow["{\texttt{List}(f)}"', from=4-1, to=4-4]
+	\arrow[maps to, from=2-2, to=2-3]
+	\arrow[maps to, from=2-2, to=3-2]
+	\arrow[maps to, from=3-2, to=3-3]
+	\arrow[maps to, from=2-3, to=3-3]
+\end{tikzcd}\]
+
+\[\texttt{rev} \otimes \texttt{BTree} : 
+\texttt{List} \circ \texttt{BTree} \rightarrow \texttt{List}\circ \texttt{BTree}\]
+
+% https://q.uiver.app/#q=WzAsNSxbMiwwLCJcXGJ1bGxldCJdLFsxLDEsIlxcYnVsbGV0Il0sWzAsMiwieF8xIl0sWzIsMiwieF8yIl0sWzMsMSwieF8zIl0sWzAsMSwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxLDIsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwzLCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzAsNCwiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==
+\[\left[\begin{tikzcd}
+	&& \bullet \\
+	& \bullet && {x_3} \\
+	{x_1} && {x_2}
+	\arrow[no head, from=1-3, to=2-2]
+	\arrow[no head, from=2-2, to=3-1]
+	\arrow[no head, from=2-2, to=3-3]
+	\arrow[no head, from=1-3, to=2-4]
+\end{tikzcd},
+% https://q.uiver.app/#q=WzAsNSxbMSwwLCJcXGJ1bGxldCJdLFsyLDEsIlxcYnVsbGV0Il0sWzAsMSwiYl8xIl0sWzEsMiwiYl8yIl0sWzMsMiwiYl8zIl0sWzAsMSwiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDIsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwzLCIiLDIseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsNCwiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==
+\begin{tikzcd}
+	& \bullet \\
+	{b_1} && \bullet \\
+	& {b_2} && {b_3}
+	\arrow[no head, from=1-2, to=2-3]
+	\arrow[no head, from=1-2, to=2-1]
+	\arrow[no head, from=2-3, to=3-2]
+	\arrow[no head, from=2-3, to=3-4]
+\end{tikzcd}
+% https://q.uiver.app/#q=WzAsMyxbMSwwLCJcXGJ1bGxldCJdLFswLDEsImNfMSJdLFsyLDEsImNfMiJdLFswLDEsIiIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCwyLCIiLDIseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
+\begin{tikzcd}
+	& \bullet \\
+	{c_1} && {c_2}
+	\arrow[no head, from=1-2, to=2-1]
+	\arrow[no head, from=1-2, to=2-3]
+\end{tikzcd}\right]\mapsto\]
+% https://q.uiver.app/#q=WzAsMyxbMSwwLCJcXGJ1bGxldCJdLFswLDEsImNfMSJdLFsyLDEsImNfMiJdLFswLDEsIiIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCwyLCIiLDIseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
+\[\left[\begin{tikzcd}
+	& \bullet \\
+	{c_1} && {c_2}
+	\arrow[no head, from=1-2, to=2-1]
+	\arrow[no head, from=1-2, to=2-3]
+\end{tikzcd},
+% https://q.uiver.app/#q=WzAsNSxbMSwwLCJcXGJ1bGxldCJdLFsyLDEsIlxcYnVsbGV0Il0sWzAsMSwiYl8xIl0sWzEsMiwiYl8yIl0sWzMsMiwiYl8zIl0sWzAsMSwiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDIsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwzLCIiLDIseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsNCwiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==
+\begin{tikzcd}
+	& \bullet \\
+	{b_1} && \bullet \\
+	& {b_2} && {b_3}
+	\arrow[no head, from=1-2, to=2-3]
+	\arrow[no head, from=1-2, to=2-1]
+	\arrow[no head, from=2-3, to=3-2]
+	\arrow[no head, from=2-3, to=3-4]
+\end{tikzcd},
+% https://q.uiver.app/#q=WzAsNSxbMiwwLCJcXGJ1bGxldCJdLFsxLDEsIlxcYnVsbGV0Il0sWzAsMiwieF8xIl0sWzIsMiwieF8yIl0sWzMsMSwieF8zIl0sWzAsMSwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxLDIsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSwzLCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzAsNCwiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==
+\begin{tikzcd}
+	&& \bullet \\
+	& \bullet && {x_3} \\
+	{x_1} && {x_2}
+	\arrow[no head, from=1-3, to=2-2]
+	\arrow[no head, from=2-2, to=3-1]
+	\arrow[no head, from=2-2, to=3-3]
+	\arrow[no head, from=1-3, to=2-4]
+\end{tikzcd}\right]\]
+
+\[\texttt{BTree} \otimes \texttt{rev} : 
+\texttt{BTree} \circ \texttt{List} \rightarrow \texttt{BTree}\circ \texttt{List}\]
+% https://q.uiver.app/#q=WzAsMTIsWzIsMCwiXFxidWxsZXQiXSxbMSwxLCJcXGJ1bGxldCJdLFswLDIsIlthXzEsYV8yXSJdLFsyLDIsIltiXzFdIl0sWzMsMSwiW2NfMSxjXzIsY18zXSJdLFs0LDFdLFs1LDFdLFs1LDIsIlthXzIsYV8xXSJdLFs2LDEsIlxcYnVsbGV0Il0sWzcsMiwiW2JfMV0iXSxbNywwLCJcXGJ1bGxldCJdLFs4LDEsIltjXzMsY18yLGNfMV0iXSxbMCwxLCIiLDIseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsMiwiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxLDMsIiIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCw0LCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzUsNiwiIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFs3LDgsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbOCw5LCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzgsMTAsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMTAsMTEsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=
+\[\begin{tikzcd}
+	&& \bullet &&&&& \bullet \\
+	& \bullet && {[c_1,c_2,c_3]} & {} & {} & \bullet && {[c_3,c_2,c_1]} \\
+	{[a_1,a_2]} && {[b_1]} &&& {[a_2,a_1]} && {[b_1]}
+	\arrow[no head, from=1-3, to=2-2]
+	\arrow[no head, from=2-2, to=3-1]
+	\arrow[no head, from=2-2, to=3-3]
+	\arrow[no head, from=1-3, to=2-4]
+	\arrow[maps to, from=2-5, to=2-6]
+	\arrow[no head, from=3-6, to=2-7]
+	\arrow[no head, from=2-7, to=3-8]
+	\arrow[no head, from=2-7, to=1-8]
+	\arrow[no head, from=1-8, to=2-9]
+\end{tikzcd}\]
+
+\end{example}
+
+\clearpage
+\subsection{Results}
+
+\begin{proposition}
+    For natural transformations
+    \[\phi: F\rightarrow F', \quad \psi: G \rightarrow G'\]
+    we have
+    \[(\phi\otimes G') \circ (F\otimes \psi) = (F' \otimes \psi) \circ (\phi \otimes G) =: \phi \otimes \psi\]
+\end{proposition}
+
+\begin{proof}
+\[(\phi \otimes G')_A \circ (F\otimes \psi)_A = \phi_{G'\ A} \circ F(\psi_A)\]
+\[(F'\otimes \psi)_A \circ (\phi\otimes G)_A = F'(\psi_A) \circ \phi_{G\ A}\]
+Naturality of $\phi$:
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJGR0EiXSxbMSwwLCJGRydBIl0sWzEsMSwiRidHJ0EiXSxbMCwxLCJGJ0dBIl0sWzAsMSwiRihcXHBzaV9BKSJdLFsxLDIsIlxccGhpX3tHJ1xcIEF9Il0sWzAsMywiXFxwaGlfe0dcXCBBfSIsMl0sWzMsMiwiRicoXFxwc2lfQSkiLDJdXQ==
+\[\begin{tikzcd}
+	FGA & {FG'A} \\
+	{F'GA} & {F'G'A}
+	\arrow["{F(\psi_A)}", from=1-1, to=1-2]
+	\arrow["{\phi_{G'\ A}}", from=1-2, to=2-2]
+	\arrow["{\phi_{G\ A}}"', from=1-1, to=2-1]
+	\arrow["{F'(\psi_A)}"', from=2-1, to=2-2]
+\end{tikzcd}\]
+\end{proof}
+
+
+\begin{theorem}
+    $[\mathcal{C}, \mathcal{C}]$ is a strict monoidal category.
+\end{theorem}
+
+\begin{example}
+The monoids in $[\mathcal{C}, \mathcal{C}]$ are functors $F$ with natural transfomrations:
+\[\mu: FF \rightarrow F\]
+\[\eta: 1_{\mathcal{C}} \rightarrow F\]
+that are associative and unital.
+
+Associativity:
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJGRkYiXSxbMSwwLCJGRiJdLFsxLDEsIkYiXSxbMCwxLCJGRiJdLFswLDEsIlxcbXUgXFxvdGltZXMgRiJdLFsxLDIsIlxcbXUiXSxbMCwzLCJGXFxvdGltZXMgXFxtdSIsMl0sWzMsMiwiXFxtdSIsMl1d
+\[\begin{tikzcd}
+	FFF & FF \\
+	FF & F
+	\arrow["{\mu \otimes F}", from=1-1, to=1-2]
+	\arrow["\mu", from=1-2, to=2-2]
+	\arrow["{F\otimes \mu}"', from=1-1, to=2-1]
+	\arrow["\mu"', from=2-1, to=2-2]
+\end{tikzcd}\]
+Left Unit:
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJGPTFfe1xcbWF0aGNhbHtDfX1cXGNpcmMgRiJdLFsxLDAsIkZGIl0sWzEsMSwiRiJdLFswLDEsIlxcZXRhXFxvdGltZXMgRiJdLFsxLDIsIlxcbXUiXSxbMCwyLCIxX3tcXG1hdGhjYWx7Q319IiwyXV0=
+\[\begin{tikzcd}
+	{F=1_{\mathcal{C}}\circ F} & FF \\
+	& F
+	\arrow["{\eta\otimes F}", from=1-1, to=1-2]
+	\arrow["\mu", from=1-2, to=2-2]
+	\arrow["{1_F}"', from=1-1, to=2-2]
+\end{tikzcd}\]
+Right unit:
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJGPSBGIFxcY2lyYyAxX3tcXG1hdGhjYWx7Q319Il0sWzEsMCwiRkYiXSxbMSwxLCJGIl0sWzAsMSwiIEZcXG90aW1lc1xcZXRhIl0sWzEsMiwiXFxtdSJdLFswLDIsIjFfe0Z9IiwyXV0=
+\[\begin{tikzcd}
+	{F= F \circ 1_{\mathcal{C}}} & FF \\
+	& F
+	\arrow["{ F\otimes\eta}", from=1-1, to=1-2]
+	\arrow["\mu", from=1-2, to=2-2]
+	\arrow["{1_{F}}"', from=1-1, to=2-2]
+\end{tikzcd}\]
+    
+\end{example}
+
+\subsection{Monads}
+
+\begin{definition}
+    A monad is a monoid in $[\mathcal{C}, \mathcal{C}]$.
+\end{definition}
+\begin{note}
+    Think of monads as some sort of inductive instruction.
+    E.g.
+    There's always a natural of of flattening lists of lists,
+    or gluing trees of trees.
+\end{note}
+
+\begin{example}
+\texttt{List} is a monad. $\mu_A: \texttt{List}^2\ A \rightarrow \texttt{List}$ is "flatten".
+\[[[a_1^{(1)}, ..., a_{k_1}^{(1)}], [a_1^{(n)}, ..., a_{k_n}^{(n)}]] 
+\mapsto [a_1^{(1)}, ..., a_{k_1}^{(1)}, ..., a_1^{(n)}, ..., a_{k_n}^{(n)}]\]
+\[\eta_A : A \rightarrow \texttt{List}\ A\]
+\[a\in A \mapsto [a]\]
+Associativity:
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXHRleHR0dHtMaXN0fV4zXFwgQSJdLFsxLDAsIlxcdGV4dHR0e0xpc3R9XjJcXCBBIl0sWzEsMSwiXFx0ZXh0dHR7TGlzdH1cXCBBIl0sWzAsMSwiXFx0ZXh0dHR7TGlzdH1eMlxcIEEiXSxbMCwxLCJcXHRleHR0dHtMaXN0fSBcXG90aW1lcyBcXG11Il0sWzEsMiwiXFxtdSJdLFswLDMsIlxcbXUgXFxvdGltZXMgXFx0ZXh0dHR7TGlzdH0iLDJdLFszLDIsIlxcbXUiLDJdXQ==
+\[\begin{tikzcd}
+	{\texttt{List}^3\ A} & {\texttt{List}^2\ A} \\
+	{\texttt{List}^2\ A} & {\texttt{List}\ A}
+	\arrow["{\texttt{List} \otimes \mu}", from=1-1, to=1-2]
+	\arrow["\mu", from=1-2, to=2-2]
+	\arrow["{\mu \otimes \texttt{List}}"', from=1-1, to=2-1]
+	\arrow["\mu"', from=2-1, to=2-2]
+\end{tikzcd}\]
+Unit:
+% https://q.uiver.app/#q=WzAsOCxbMSwxLCJcXHRleHR0dHtMaXN0fVxcIEEiXSxbMiwxLCJcXHRleHR0dHtMaXN0fV4yXFwgQSJdLFsyLDIsIlxcdGV4dHR0e0xpc3R9XFwgQSJdLFswLDAsIlthLGIsY10iXSxbMywwLCJbW2FdLFtiXSxbY11dIl0sWzMsMywiW2EsYixjXSJdLFsxLDIsIlxcdGV4dHR0e0xpc3R9XjJcXCBBIl0sWzAsMywiW1thLGIsY11dIl0sWzAsMSwiXFx0ZXh0dHR7TGlzdH1cXG90aW1lcyBcXGV0YSJdLFswLDIsIjFfQSIsMV0sWzEsMiwiXFxtdSJdLFszLDQsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbNCw1LCIiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzAsNiwiXFxldGFcXG90aW1lc1xcdGV4dHR0e0xpc3R9IiwyXSxbNiwyLCJcXG11IiwyXSxbMyw3LCIiLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzcsNSwiIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dXQ==
+\[\begin{tikzcd}
+	{[a,b,c]} &&& {[[a],[b],[c]]} \\
+	& {\texttt{List}\ A} & {\texttt{List}^2\ A} \\
+	& {\texttt{List}^2\ A} & {\texttt{List}\ A} \\
+	{[[a,b,c]]} &&& {[a,b,c]}
+	\arrow["{\texttt{List}\otimes \eta}", from=2-2, to=2-3]
+	\arrow["{1_A}"{description}, from=2-2, to=3-3]
+	\arrow["\mu", from=2-3, to=3-3]
+	\arrow[maps to, from=1-1, to=1-4]
+	\arrow[maps to, from=1-4, to=4-4]
+	\arrow["{\eta\otimes\texttt{List}}"', from=2-2, to=3-2]
+	\arrow["\mu"', from=3-2, to=3-3]
+	\arrow[maps to, from=1-1, to=4-1]
+	\arrow[maps to, from=4-1, to=4-4]
+\end{tikzcd}\]
+\end{example}
+
+\end{document}
