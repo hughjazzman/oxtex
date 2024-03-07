@@ -396,9 +396,39 @@ So $\bigwedge S = \bigvee B \in B$ is the GLB of $S$.
 \end{proof}
 
 \subsection{(d)}
-From dualising (a) and (b), we have the following
+From  (a) and (b), we have the following
 \begin{corollary}
-  $f:P\rightarrow Q$ has a left adjoint iff $f$ preserves greatest lower bounds.
+  $f:P\rightarrow Q$ has a right adjoint $g: Q\rightarrow P$ iff $f$ preserves least upper bounds, where
+  \[g(y) = \bigvee \{x\in P | f(x) \leq y\}\]
+\end{corollary}
+
+\begin{proposition}
+  If $g$ has a left adjoint, then $g$ preserves greatest lower bounds.
+\end{proposition}
+\begin{proof}
+Suppose $g$ has a right adjoint $f: P\rightarrow Q$.
+\begin{equation}
+\begin{aligned}
+  &\forall y\in S\subseteq Q, \bigwedge S \leq y \quad\text{(by lower bound)}\\
+  &\implies \forall y\in S, g\left(\bigwedge S\right) \leq g(y) \quad\text{($g$ is monotone)}\\
+  &\implies g\left(\bigwedge S\right) \leq \bigwedge \{g(y) | y\in S\} \quad\text{(by \textit{greatest} LB)}
+\end{aligned}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+  &\forall y\in S\subseteq Q, \bigwedge\{g(y) | y\in S\} \leq g(y) \quad\text{(by lower bound)}\\
+  &\implies \forall y\in S, f(\bigwedge\{g(y) | y\in S\}) \leq y \quad\text{($f$ is right adjoint)}\\
+  &\implies f(\bigwedge\{g(y) | y\in S\}) \leq \bigwedge S \quad\text{(by \textit{least} UB)}\\
+  &\implies \bigwedge\{g(y) | y\in S\} \leq g\left(\bigwedge S\right) \quad\text{($g$ is left adjoint)}
+\end{aligned}
+\end{equation}
+Then
+\[g\left(\bigwedge S\right) = \bigwedge \{g(y) | y\in S\}\]
+$g$ preserves greatest lower bounds.
+\end{proof}
+Dualising, we get
+\begin{corollary}
+  $g:Q\rightarrow P$ has a left adjoint iff $g$ preserves greatest lower bounds.
 \end{corollary}
 
 
