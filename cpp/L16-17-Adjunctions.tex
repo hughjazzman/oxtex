@@ -24,8 +24,13 @@
 \theoremstyle{definition}
 \newtheorem{fact}[theorem]{Fact}
 \theoremstyle{definition}
-\newtheorem{example}[theorem]{Example}
+\newtheorem{example/}[theorem]{Example}
 \newtheorem{note}[theorem]{Note}
+
+\newenvironment{example}
+  {\renewcommand{\qedsymbol}{$\blacktriangle$}%
+   \pushQED{\qed}\begin{example/}}
+  {\popQED\end{example/}}
 
 \lstset{
   frame=none,
@@ -96,6 +101,111 @@
 
 \addtocounter{section}{6}
 \section{Adjunctions}
+\subsection{Motivating Example}
+Consider two non-isomorphic posets $(\mathbb{Z},\leq),(\mathbb{R},\leq)$ with the obvious inclusion map
+\[i : (\mathbb{Z},\leq) \hookrightarrow (\mathbb{R},\leq) := z\mapsto z\] 
+which preserves order 
+\[z\leq z' \implies i(z)\leq i(z')\]
+We can't invert $i$, but can "do our best"
+Given $r\in\mathbb{R}$, find some $z$ such that $i(z)=r$.
+\subsubsection{Approximate from below}
+\[f(r) := \text{largest $z$ s.t. }i(z)\leq r\]
+i.e. "floor of $r$". $f$ is the right adjoint of $i$. ($i$ is the left adjoint of $f$.)
+\[i(z')\leq r\iff z' \leq f(r)\]
+\subsubsection{Approximate from above}
+\[c(r) := \text{smallest $z$ s.t. }r\leq i(z)\]
+i.e. "ceiling of $r$". $c$ is the left adjoint of $i$. ($i$ is the right adjoint of $c$.)
+\[r\leq i(z')\iff c(r) \leq z'\]
+% https://q.uiver.app/#q=WzAsMixbMCwwLCJcXG1hdGhiYntafSJdLFsxLDAsIlxcbWF0aGJie1J9Il0sWzAsMSwiaSIsMV0sWzAsMSwiZiIsMCx7ImN1cnZlIjotMn1dLFswLDEsImMiLDIseyJjdXJ2ZSI6Mn1dLFszLDIsIiIsMCx7ImxldmVsIjoxLCJzdHlsZSI6eyJuYW1lIjoiYWRqdW5jdGlvbiJ9fV0sWzIsNCwiIiwwLHsibGV2ZWwiOjEsInN0eWxlIjp7Im5hbWUiOiJhZGp1bmN0aW9uIn19XV0=
+\[\begin{tikzcd}
+	{\mathbb{Z}} & {\mathbb{R}}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "i"{description}, from=1-1, to=1-2]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "f", curve={height=-12pt}, from=1-1, to=1-2]
+	\arrow[""{name=2, anchor=center, inner sep=0}, "c"', curve={height=12pt}, from=1-1, to=1-2]
+	\arrow["\dashv"{anchor=center, rotate=-90}, draw=none, from=1, to=0]
+	\arrow["\dashv"{anchor=center, rotate=-90}, draw=none, from=0, to=2]
+\end{tikzcd}\]
+\begin{definition}
+	In posets, the Galois connection is a special case of an adjunction.
+\end{definition}
+\subsection{Definition}
+\begin{definition}[Adjunction, Def. 68, pg. 45]
+An adjunction from $\mathcal{C}$ to $\mathcal{D}$ is a triple $(F,G,\theta)$, where functors $F,G$,
+% https://q.uiver.app/#q=WzAsMixbMCwwLCJcXG1hdGhjYWx7Q30iXSxbMSwwLCJcXG1hdGhjYWx7RH0iXSxbMCwxLCJGIiwwLHsib2Zmc2V0IjotMX1dLFsxLDAsIkciLDAseyJvZmZzZXQiOi0xfV1d
+\[\begin{tikzcd}
+	{\mathcal{C}} & {\mathcal{D}}
+	\arrow["F", shift left, from=1-1, to=1-2]
+	\arrow["G", shift left, from=1-2, to=1-1]
+\end{tikzcd}\]
+and $\theta$ is a family of bijections
+\[\theta_{A,B} : \mathcal{C}(A,G(B)) \cong \mathcal{D}(F(A), B)\]
+$F$ is \textbf{left adjoint} to $G$, $G$ is \textbf{right adjoint} to $F$.
+\end{definition}
+\subsection{Examples}
+\begin{example}
+	Forgetful Functor on \textbf{Pre}, category of preoders and order-preserving maps.
+	\[U: \textbf{Pre}\rightarrow \textbf{Set}\]
+	\[U :: (P,\leq) \mapsto P,\quad f\mapsto f\]
+
+\begin{note}
+\textbf{Q}: Is there a canonical way to “put the order back”, such that either:
+\begin{enumerate}[label=(\alph*)]
+\item there will always be an arrow $(P,\leq') \rightarrow (P,\leq)$? “Approximating below”
+\item there will always be an arrow $(P,\leq) \rightarrow (P,\leq')$? “Approximating above”
+\end{enumerate}
+\end{note}
+For (a), we can let $a\leq a$ and nothing else.
+\[\implies a \leq' b \implies a = b \implies 1_P(a) \leq 1_P (b)\]
+$1_P$ (the function) is order preserving $\leq'$ is called the discrete order $\leq_d$.
+
+For (b), we can let $a \leq' b$ for all $a, b \in P$
+\[a \leq b \implies 1(a) \leq' 1(b)\]
+$1_P$ is order preserving $\leq'$ is the indiscrete order $\leq_i$
+
+Let $D: \textbf{Set} \rightarrow \textbf{Pre}$
+\[D(A)=(A,\leq)\]
+\[D(f) = f\]
+\[\forall a,b, a \leq b \implies a = b \implies f(a) \leq f(a) \implies f(a) \leq f(b)\]
+Any function out of a discrete order is an order preserving map $\textbf{Pre}((X, \leq ), (Y, \leq)) = \textbf{Set}(X, Y)$
+\[\textbf{Pre}(D A, B) = \textbf{Set}(A, U B)\]
+$D$ is the left adjoint of $U$.
+
+Let $I: \textbf{Set} \rightarrow \textbf{Pre}$
+\[I(A) = (A, \leq )\]
+\[I(f) = f\]
+Any function into the indiscrete preorder is order-preserving. 
+\[a \leq b \implies f(a) \leq b\]
+\[\textbf{Pre}((X, \leq), (Y, \leq )) = \textbf{Set}(X, Y)\]
+\[\textbf{Pre}(A,IB)\cong \textbf{Set}(UA,B) \implies U\dashv I\] 
+$I$ is the right adjoint of $U$.
+% https://q.uiver.app/#q=WzAsMixbMCwwLCJcXHRleHRiZntQcmV9Il0sWzEsMCwiXFx0ZXh0YmZ7U2V0fSJdLFswLDEsIlUiLDFdLFsxLDAsIkQiLDIseyJjdXJ2ZSI6Mn1dLFsxLDAsIkkiLDAseyJjdXJ2ZSI6LTJ9XSxbMywyLCIiLDIseyJsZXZlbCI6MSwic3R5bGUiOnsibmFtZSI6ImFkanVuY3Rpb24ifX1dLFsyLDQsIiIsMix7ImxldmVsIjoxLCJzdHlsZSI6eyJuYW1lIjoiYWRqdW5jdGlvbiJ9fV1d
+\[\begin{tikzcd}
+	{\textbf{Pre}} & {\textbf{Set}}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "U"{description}, from=1-1, to=1-2]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "D"', curve={height=12pt}, from=1-2, to=1-1]
+	\arrow[""{name=2, anchor=center, inner sep=0}, "I", curve={height=-12pt}, from=1-2, to=1-1]
+	\arrow["\dashv"{anchor=center, rotate=-89}, draw=none, from=1, to=0]
+	\arrow["\dashv"{anchor=center, rotate=-91}, draw=none, from=0, to=2]
+\end{tikzcd}\]
+\end{example}
+
+\begin{example}
+	% https://q.uiver.app/#q=WzAsMixbMCwwLCJcXHRleHRiZntTZXR9Il0sWzEsMCwiXFx0ZXh0YmZ7VmVjdH1fe1xcbWF0aGJie1J9fSJdLFswLDEsIlxcbWF0aGJie1J9Wy1dIiwwLHsiY3VydmUiOi0yfV0sWzEsMCwiVSIsMCx7ImN1cnZlIjotMn1dLFsyLDMsIiIsMCx7ImxldmVsIjoxLCJzdHlsZSI6eyJuYW1lIjoiYWRqdW5jdGlvbiJ9fV1d
+\[\begin{tikzcd}
+	{\textbf{Set}} & {\textbf{Vect}_{\mathbb{R}}}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "{\mathbb{R}[-]}", curve={height=-12pt}, from=1-1, to=1-2]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "U", curve={height=-12pt}, from=1-2, to=1-1]
+	\arrow["\dashv"{anchor=center, rotate=-90}, draw=none, from=0, to=1]
+\end{tikzcd}\]
+	\[\mathbb{R}[-] \dashv U\]
+	\[\eta_X : X\rightarrow U\mathbb{R}[X]\] 
+	\[\eta_X :: e_i\in X \mapsto e_i\in U\mathbb{R}[X]\]
+	$R[X]$ is the vector "spanned" by $X$.
+	If $X=\{e_1,e_2,e_3\}$, then $\mathbb{R}[X] \cong \mathbb{R}^3$
+	\[\mathbb{R}[f] : \mathbb{R}[X] \rightarrow\mathbb{R}[Y]\]
+	\[\mathbb{R}[f] (\sum_i r_i e_i) := \sum_i r_i 	f(e_i)\]
+	To find the linear map, just find where the basis elements go.
+\end{example}
 \subsection{Unit}
 % https://q.uiver.app/#q=WzAsMixbMCwwLCJcXG1hdGhjYWx7Q30iXSxbMSwwLCJcXG1hdGhjYWx7RH0iXSxbMCwxLCJGIiwwLHsiY3VydmUiOi0yfV0sWzEsMCwiRyIsMCx7ImN1cnZlIjotMn1dLFsyLDMsIiIsMCx7ImxldmVsIjoxLCJzdHlsZSI6eyJuYW1lIjoiYWRqdW5jdGlvbiJ9fV1d
 \[\begin{tikzcd}
