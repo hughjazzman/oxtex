@@ -10,6 +10,7 @@
 \usepackage{color}
 \usepackage{quiver}
 \usepackage{ulem}
+\usepackage{bbm}
 \DeclareMathOperator*{\argmax}{argmax}
 \DeclareMathOperator*{\argmin}{argmin}
 
@@ -25,8 +26,13 @@
 \theoremstyle{definition}
 \newtheorem{fact}[theorem]{Fact}
 \theoremstyle{definition}
-\newtheorem{example}[theorem]{Example}
+\newtheorem{example/}[theorem]{Example}
 \newtheorem{note}[theorem]{Note}
+
+\newenvironment{example}
+  {\renewcommand{\qedsymbol}{$\blacktriangle$}%
+   \pushQED{\qed}\begin{example/}}
+  {\popQED\end{example/}}
 
 \lstset{
   frame=none,
@@ -59,7 +65,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{Categories, Proofs, and Processes: \\Chapter 3 Limits}
 %
-\author{Wira Azmoon Ahmad}
+\author{Matty Hoban}
 \date{1 Feb 2024}
 %
 \begin{document}
@@ -105,7 +111,7 @@ but we might be interested in situations where where $f(x)=g(x)$ for $x\in Y\sub
 For example, $X=\{0,1\}^{*}$, but only a subset $G$ could encode graphs using this alphabet.
 
 \subsubsection{Definition}
-\begin{definition}
+\begin{definition}[Equaliser, Def. 38, pg. 25]
 Consider a pair of parallel arrows $A\overset{f}{\underset{g}{\rightrightarrows}}B$.
 An \textbf{\textit{\underline{equaliser}}} of $(f,g)$ is an arrow $e: E\rightarrow A$ such that
 \[f\circ e = g\circ e\]
@@ -163,7 +169,7 @@ by uniqueness, so $e$ is monic.
 \end{proof}
 
 \begin{definition}
-    \textbf{Coequaliser} in $\mathcal{C}$ is an equaliser in $\mathcal{C}^{op}$.
+    \underline{Coequaliser} in $\mathcal{C}$ is an equaliser in $\mathcal{C}^{op}$.
 \end{definition}
 \begin{proposition}
     Any coequaliser in any category is epic.
@@ -191,6 +197,7 @@ Then identities exist
 \[1_{E_2}: E_2 \rightarrow E_2 := u_2 \circ u_1\]
 \end{proof}
 
+\clearpage
 \subsection{Pullbacks}
 \subsubsection{Definitions}
 \begin{definition}
@@ -210,7 +217,7 @@ Then identities exist
 	\arrow["g", from=1-2, to=2-2]
 \end{tikzcd}\]
 \end{definition}
-\begin{definition}
+\begin{definition}[Pullback, Def. 35, pg. 23]
     The \textbf{\textit{\underline{pullback}}}\underline{ of f along g} is an $(f,g)$-cone
     such that for any other $(f,g)$-cone $A\xleftarrow[]{p}D \xrightarrow[]{q}B$, 
     there is a unique $h:D'\rightarrow D$ such that $p'=p\circ h, q'=q\circ h$.
@@ -312,6 +319,7 @@ Combine this with the original equaliser and we have
 Unique map $u$, thus $A\xleftarrow[]{\pi_1 \circ e}E \xrightarrow[]{\pi_2 \circ e}B$ is a pullback.
 \end{proof}
 
+\clearpage
 \subsection{Summary}
 Constructs follow similar pattern
 \begin{enumerate}
@@ -324,7 +332,225 @@ Constructs follow similar pattern
     We are exhibiting a \underline{universal (mapping) property} where the unique map is a "unique morphism".
 \end{note}
 
+\clearpage
 \subsection{Limits}
+Instead of taking a diagram and highlighting an object, we could have started with a smaller diagram,
+introduced a new object, and describe its relationship to that diagram.
+\begin{example}
+Binary products coming from the starting category $\mathcal{J}$ which is the discrete category of 2 objects.
+% https://q.uiver.app/#q=WzAsNixbNCwwLCJDIl0sWzMsMSwiRF8wIl0sWzUsMSwiRF8xIl0sWzAsMSwiXFxidWxsZXQiXSxbMSwxLCJcXGJ1bGxldCJdLFswLDAsIlxcbWF0aGNhbHtKfSJdLFswLDEsIlxccGlfMCIsMl0sWzAsMiwiXFxwaV8xIl1d
+\[\begin{tikzcd}
+	{\mathcal{J}} &&&& C \\
+	\bullet & \bullet && {D_0} && {D_1}
+	\arrow["{\pi_0}"', from=1-5, to=2-4]
+	\arrow["{\pi_1}", from=1-5, to=2-6]
+\end{tikzcd}\]
+\end{example}
+\begin{example}
+Pullbacks coming from the starting category $\mathcal{J}$ where
+% https://q.uiver.app/#q=WzAsOCxbMCwxLCIwIl0sWzEsMSwiMSJdLFsyLDEsIjIiXSxbMSwwLCJcXG1hdGhjYWx7Sn0iXSxbNCwwLCJDIl0sWzQsMSwiRF8wIl0sWzUsMCwiRF8yIl0sWzUsMSwiRF8xIl0sWzAsMSwiXFxhbHBoYSJdLFsyLDEsIlxcYmV0YSIsMl0sWzQsNV0sWzQsNl0sWzYsNywiRF97XFxiZXRhfSJdLFs1LDcsIkRfe1xcYWxwaGF9IiwyXV0=
+\[\begin{tikzcd}
+	& {\mathcal{J}} &&& C & {D_2} \\
+	0 & 1 & 2 && {D_0} & {D_1}
+	\arrow["\alpha", from=2-1, to=2-2]
+	\arrow["\beta"', from=2-3, to=2-2]
+	\arrow[from=1-5, to=2-5]
+	\arrow[from=1-5, to=1-6]
+	\arrow["{D_{\beta}}", from=1-6, to=2-6]
+	\arrow["{D_{\alpha}}"', from=2-5, to=2-6]
+\end{tikzcd}\]
+\end{example}
+\begin{example}
+    Unary products come from the single object category $\mathbbm{1}$.
+\end{example}
+\begin{example}
+    Terminal objects come from the empty category.
+\end{example}
 
+\begin{definition}[Diagram, Def. 72, pg. 49]
+    Let $\mathcal{C}$ be a category and $\mathcal{J}$ be an "index" category.
+    A \underline{diagram} of shape/type $\mathcal{J}$ is a functor 
+    \[D : \mathcal{J} \rightarrow \mathcal{C}\]
+    So we can think of objects as indices $i,j,...$ and $D_i := D(i)$, evaluated on object $i$.
+\end{definition}
+\begin{definition}[Cone, pg. 50]
+    A \textbf{\textit{\underline{cone}}} to a diagram $D$ consists of an object $C$ in $\mathcal{C}$
+    and a family of arrows in $\mathcal{C}$
+    \[c_j : C \rightarrow D_j\],
+    one for each object $j\in\text{Ob}(\mathcal{J})$ 
+    such that for each arrow $\alpha: i\rightarrow j$ in $\mathcal{J}$, the following diagram commutes
+    % https://q.uiver.app/#q=WzAsMyxbMCwwLCJDIl0sWzAsMSwiRF9pIl0sWzEsMCwiRF9qIl0sWzAsMSwiY19pIiwyXSxbMCwyLCJjX2oiXSxbMSwyLCJEX3tcXGFscGhhfSIsMl1d
+\[\begin{tikzcd}
+	C & {D_j} \\
+	{D_i}
+	\arrow["{c_i}"', from=1-1, to=2-1]
+	\arrow["{c_j}", from=1-1, to=1-2]
+	\arrow["{D_{\alpha}}"', from=2-1, to=1-2]
+\end{tikzcd}\]
 
+A \underline{morphism of cones} $\theta : (C, c_j) \rightarrow (C',c_j')$ is an arrow $\theta$ in $\mathcal{C}$
+making each of the following triangles commute
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJDIl0sWzEsMCwiQyciXSxbMSwxLCJEX2oiXSxbMCwxLCJcXHRoZXRhIl0sWzEsMiwiY19qJyJdLFswLDIsImNfaiIsMl1d
+\[\begin{tikzcd}
+	C & {C'} \\
+	& {D_j}
+	\arrow["\theta", from=1-1, to=1-2]
+	\arrow["{c_j'}", from=1-2, to=2-2]
+	\arrow["{c_j}"', from=1-1, to=2-2]
+\end{tikzcd}\]
+\end{definition}
+\begin{example}
+For $\mathcal{J} := A\overset{f}{\underset{g}{\rightrightarrows}}B$, 
+we have a cone where the following commute.
+% https://q.uiver.app/#q=WzAsNixbMCwwLCJDIl0sWzEsMCwiRF9CIl0sWzAsMSwiRF9BIl0sWzMsMCwiQyJdLFszLDEsIkRfQSJdLFs0LDAsIkRfQiJdLFswLDEsImNfQiJdLFsyLDEsIkRfZiIsMl0sWzAsMiwiY19BIiwyXSxbMyw0LCJjX0EiLDJdLFszLDUsImNfQiJdLFs0LDUsIkRfZyIsMl1d
+\[\begin{tikzcd}
+	C & {D_B} && C & {D_B} \\
+	{D_A} &&& {D_A}
+	\arrow["{c_B}", from=1-1, to=1-2]
+	\arrow["{D_f}"', from=2-1, to=1-2]
+	\arrow["{c_A}"', from=1-1, to=2-1]
+	\arrow["{c_A}"', from=1-4, to=2-4]
+	\arrow["{c_B}", from=1-4, to=1-5]
+	\arrow["{D_g}"', from=2-4, to=1-5]
+\end{tikzcd}\]
+thus 
+\[c_B=D_f\circ c_A=D_g\circ c_A\]
+Then if we have a morphism of cones so a similar diagram to above commutes, we also have
+\[c_B'=D_f\circ c_A'=D_g\circ c_A'\]
+We have the diagram 
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJDIl0sWzEsMCwiRF9BIl0sWzIsMCwiRF9CIl0sWzAsMSwiRCJdLFswLDEsImNfQSJdLFsxLDIsIkRfZiIsMCx7Im9mZnNldCI6LTF9XSxbMSwyLCJEX2ciLDIseyJvZmZzZXQiOjF9XSxbMywxLCJoIiwyXSxbMywwLCJ1IiwwLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d
+\[\begin{tikzcd}
+	C' & {D_A} & {D_B} \\
+	C
+	\arrow["{c_A}", from=1-1, to=1-2]
+	\arrow["{D_f}", shift left, from=1-2, to=1-3]
+	\arrow["{D_g}"', shift right, from=1-2, to=1-3]
+	\arrow["h"', from=2-1, to=1-2]
+	\arrow["u", from=2-1, to=1-1]
+\end{tikzcd}\]
+We still don't have an equaliser yet since $u$ is not necessarily unique.
+\end{example}
+\begin{definition}[Limit, pg. 50]
+    A \textbf{\textit{\underline{limit}}} for a diagram $D:\mathcal{J} \rightarrow \mathcal{C}$
+    is a terminal object in \textbf{Cone}$(D)$, which is the category of cones in $D$.
+    A \underline{finite limit} is a limit where the category $\mathcal{J}$ in the diagram $D$ is a finite category.
+\end{definition}
+\begin{definition}
+    By dualising, a \underline{colimit} is an initial object in the category of cocones.
+\end{definition}
+\begin{note}
+    For particular categories, limits and colimits may not exist.
+\end{note}
+
+\begin{definition}
+    If $\mathcal{C}$ has limits for all $\mathcal{J}$ being finite then it is \underline{finitely complete}.
+\end{definition}
+\begin{definition}
+    If $\mathcal{C}$ has limits for all small $\mathcal{J}$ it is \underline{complete}.
+\end{definition}
+
+\begin{proposition}
+    $\mathcal{C}$ is finitely complete iff it has finite products and equalisers.
+\end{proposition}
+
+\subsection{Preservation}
+Let $F:\mathcal{C}\rightarrow\mathcal{E}$ be a functor.
+We can compose diagrams with functors.
+i.e. if $D:\mathcal{J} \rightarrow \mathcal{C}$, then $F\circ D:\mathcal{J}\rightarrow\mathcal{E}$
+is a diagram of shape $\mathcal{J}$ in $\mathcal{E}$.
+
+Cones are also subject to functors
+i.e. if $(C,(c_1,...))$ is a cone to $D$ in $\mathcal{C}$,
+then $(FC, (Fc_1,...))$ is a cone to $FD$ in $\mathcal{E}$.
+
+\begin{definition}
+    A functor $F:\mathcal{C}\rightarrow\mathcal{E}$ \underline{preserves limits} of shape $\mathcal{J}$
+    whenever the cone $(C,(c_1,...))$ to $D$ is a limit, 
+    then the cone $(FC, (Fc_1,...))$ is a limit to $FD$.
+\end{definition}
+
+\begin{fact}
+    Covariant Hom-functors $\mathcal{C}(A,-)$ preserve limits.
+
+    Contravariant Hom-functors $\mathcal{C}(-,B)$ preserve colimits.
+\end{fact}
+
+\subsection{Exponentials}
+\subsubsection{Motivating Example}
+Consider a Boolean function $f:\{0,1\}^n \rightarrow \{0,1\}$.
+Describe it as a tuple of length $2^n$, where elements are indexed by the input $x\in\{0,1\}^n$.
+
+Since there are $2^n$ possible inputs, and 2 possible assignments to each input, 
+there are $2^{2^n}$ possible functions.
+
+More generally for two finite sets $A,B$, the set of functions $f:A\rightarrow B$ has cardinality $|B|^{|A|}$.
+
+Let Boolean functions $f(x, \bar{x})$ where $x\in\{0,1\},\bar{x}\in \{0,1\}^{n-1}$.
+
+If we fix a particular value of $x$, we have two possible functions
+\[f_0:\{0,1\}^{n-1}\rightarrow\{0,1\} \quad\text{if } x=0\]
+\[f_1:\{0,1\}^{n-1}\rightarrow\{0,1\} \quad\text{if } x=1\]
+$f_0,f_1$ belong to the set of functions $\{0,1\}^{n-1}\rightarrow\{0,1\}$ of cardinality $2^{2^{n-1}}$.
+
+If we vary $x$ we have a map
+\[\tilde{f}:\{0,1\}\rightarrow\{0,1\}^{2^{n-1}}\]
+From $x$ to the functions $f_x: \{0,1\}^{n-1} \rightarrow \{0,1\} := x \mapsto f(x,\bar{x})$, 
+which is uniquely determined by 
+\[\tilde{f}(x)(\bar{x}) = f_x(\bar{x}) = f(x,\bar{x})\]
+
+\subsubsection{Evaluation}
+In general, for a function $f:A\times B\rightarrow C$, we have the map $\tilde{f}:A\rightarrow C^B$
+such that 
+\[\tilde{f}(a)(b)=f(a,b)\]
+uniquely.
+
+That is, we have an isomorphism of hom-sets:
+\[\textbf{Set}(A\times B,C)\cong \textbf{Set}(A,C^B)\]
+i.e. a bijection of the functions in each set.
+
+We have an \underline{evaluation} function 
+\[\texttt{eval}:C^B\times B\rightarrow C := (g,b) \mapsto g(b)\]
+for $g\in C^B$. 
+
+Evaluation has a \textbf{universal mapping property}
+Given any set $A$ and function
+\[f:A\times B\rightarrow C\]
+there is a unique function 
+\[\tilde{f}: A\rightarrow C^B\]
+such that
+\[\texttt{eval}\circ (\tilde{f}\times 1_B) = f\]
+i.e. for sets,
+\[\texttt{eval}(\tilde{f}(a),b)=f(a,b)\]
+Diagrammatically,
+% https://q.uiver.app/#q=WzAsNSxbMCwxLCJBIl0sWzAsMCwiQ15CIl0sWzEsMSwiQVxcdGltZXMgQiJdLFsxLDAsIkNeQlxcdGltZXMgQiJdLFsyLDAsIkMiXSxbMCwxLCJcXHRpbGRle2Z9Il0sWzIsMywiXFx0aWxkZXtmfVxcdGltZXMxX0IiXSxbMyw0LCJcXHRleHR0dHtldmFsfSJdLFsyLDQsImYiLDFdXQ==
+\[\begin{tikzcd}
+	{C^B} & {C^B\times B} & C \\
+	A & {A\times B}
+	\arrow["{\tilde{f}}", from=2-1, to=1-1]
+	\arrow["{\tilde{f}\times1_B}", from=2-2, to=1-2]
+	\arrow["{\texttt{eval}}", from=1-2, to=1-3]
+	\arrow["f"{description}, from=2-2, to=1-3]
+\end{tikzcd}\]
+
+\subsubsection{Definition}
+\begin{definition}[Exponential, Def. 74, pg. 51]
+Let $\mathcal{C}$ have binary products.
+An \textbf{\textit{\underline{exponential}}} of objects $B,C$ of $\mathcal{C}$ consists of an object
+\[C^B\]
+and arrow
+\[\epsilon:C^B \times B\rightarrow C\]
+s.t. for any object $A$ and arrow
+\[f:A\times B\rightarrow C\]
+there is a unique arrow
+\[\tilde{f}:A\rightarrow C^B\]
+s.t.
+\[\epsilon \circ (\tilde{f}\times 1_B) = f\]
+\end{definition}
+\begin{claim}
+    \[\mathcal{C}(A\times B, C) \cong \mathcal{C}(A,C^B)\]
+\end{claim}
+\begin{definition}[CCC, Def. 78, pg. 52]
+    A category with a terminal object, products, and exponentials is called a
+    \textbf{\underline{Cartesian Closed Category}} (CCC).
+\end{definition}
 \end{document}
