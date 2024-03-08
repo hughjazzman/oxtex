@@ -399,6 +399,25 @@ making each of the following triangles commute
 	\arrow["{c_j}"', from=1-1, to=2-2]
 \end{tikzcd}\]
 \end{definition}
+\begin{note}
+    See the limit as a "gatekeeper" to the rest of the cones.
+    % https://q.uiver.app/#q=WzAsNCxbMSwxLCJcXGxpbV9JIEoiXSxbMCwyLCJKXFwgaSJdLFsyLDIsIkpcXCBqIl0sWzEsMCwiVyJdLFswLDFdLFswLDJdLFsxLDIsIkpcXCBmIiwyXSxbMywxLCIiLDIseyJjdXJ2ZSI6MX1dLFszLDIsIiIsMix7ImN1cnZlIjotMX1dLFszLDBdXQ==
+\[\begin{tikzcd}
+	& W \\
+	& {\lim_I J} \\
+	{J\ i} && {J\ j}
+	\arrow[from=2-2, to=3-1]
+	\arrow[from=2-2, to=3-3]
+	\arrow["{J\ f}"', from=3-1, to=3-3]
+	\arrow[curve={height=6pt}, from=1-2, to=3-1]
+	\arrow[curve={height=-6pt}, from=1-2, to=3-3]
+	\arrow[from=1-2, to=2-2]
+\end{tikzcd}\]
+\end{note}
+\begin{fact}
+    Functors preserve all commutative diagrams and all cones.
+\end{fact}
+
 \begin{example}
 For $\mathcal{J} := A\overset{f}{\underset{g}{\rightrightarrows}}B$, 
 we have a cone where the following commute.
@@ -553,4 +572,7 @@ s.t.
     A category with a terminal object, products, and exponentials is called a
     \textbf{\underline{Cartesian Closed Category}} (CCC).
 \end{definition}
+\begin{fact}
+    Exponentials are right adjoints to products.
+\end{fact}
 \end{document}

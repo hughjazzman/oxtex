@@ -1,0 +1,555 @@
+% Please do not change %
+\documentclass[11pt]{article} % font size
+\usepackage[margin=1in]{geometry} % margins
+\usepackage{amsmath,amsthm,amssymb} % for the  common "math symbols"
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[shortlabels]{enumitem} % for enumeration
+\usepackage{booktabs} % if you need tables
+\usepackage{listings}
+\usepackage{color}
+\usepackage{quiver}
+\usepackage{ulem}
+\usepackage{bbm}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% \theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{definition}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+
+\lstset{
+  frame=none,
+  xleftmargin=2pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\ttfamily\tiny\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=haskell,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\small\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
+% Feel free to include additional packages (if needed), but make sure it does not override the margin/font requirements.
+%
+\setlength{\parindent}{0pt} % no indent for new paragraphs.
+\setlength{\parskip}{5pt} % distance between paragraphs, which will be used when you have a blank line in your LaTeX code.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Categories, Proofs, and Processes: \\Assignment 6}
+%
+\author{Wira Azmoon Ahmad}
+\date{4 Mar 2024}
+%
+\begin{document}
+%
+\maketitle
+
+%You may use the usual \LaTeX\ environments to structure your answers:
+%\begin{align}
+%        \label{basegnn}
+%        \mathbf{h}_u^{(t+1)} = \sigma \bigg( \mathbf{W}_\text{self}^{(t)} \mathbf{h}_u^{(t)}  + \mathbf{W}_\text{neigh}^{(t)} \sum_{v \in N(u)} \mathbf{h}_v^{(t)} + \mathbf{b}^{(t)} \bigg): 
+%\end{align}
+
+
+%\begin{table}[h]
+%\caption{A simple table.}
+%\centering
+%\begin{tabular}[t]{lrrrr}
+%\toprule
+%Graphs & Can & Be  & Fun & Too \\ 
+%\midrule 
+%$G_1$ & $1$  & $2$ & $3$ & $4$ \\ 
+%$G_2$ & $-1$  & $-2$ & $-3$ & $-4$ \\ 
+%$G_3$ & $0.1$  & $0.2$ & $0.3$ & $0.4$ \\ 
+%\bottomrule
+%\end{tabular}
+%\label{tab}
+%\end{table}
+
+% A functor $F:\mathcal{C} \rightarrow \mathcal{D}$ is
+% \begin{itemize}
+%     \item \textbf{faithful} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is injective;
+%     \item \textbf{full} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is surjective
+% \end{itemize}
+{\color{teal}
+3 ways to describe adjunctions
+\begin{enumerate}
+    \item Hom-set adjunctions. For $F:\mathcal{C} \leftrightarrow \mathcal{D} : G$,
+    \[\mathcal{C}(X, G(Y))\cong \mathcal{D}(F(X), Y)\]
+    \item Universal arrows (in class)
+    \item Unit + counit adjunction
+    \[ \eta : 1_{\mathcal{C}} \Rightarrow GF\]
+    \[ \varepsilon : FG \Rightarrow 1_{\mathcal{D}}\]
+    \[\varepsilon F \circ F\eta = 1_F\]
+    \[G\varepsilon \circ \eta G = 1_G\]
+\end{enumerate}
+Naturality of the isomoprhism ensures the naturality of the unit arrow $\eta_X$.
+
+Left adjoints tend to cook up structure,
+right adjoints tend to ignore stuff.
+
+For the forgetful functor $U$,
+% https://q.uiver.app/#q=WzAsMixbMCwwLCJcXHRleHRiZntDYXR9Il0sWzEsMCwiXFx0ZXh0YmZ7U2V0fSJdLFswLDEsIlUiLDFdLFsxLDAsIlxcdGV4dHtpbmRpc2NyZXRlfSIsMix7ImN1cnZlIjoyfV0sWzEsMCwiXFx0ZXh0e2Rpc2NyZXRlfSIsMCx7ImN1cnZlIjotMn1dLFsyLDMsIiIsMSx7ImxldmVsIjoxLCJzdHlsZSI6eyJuYW1lIjoiYWRqdW5jdGlvbiJ9fV0sWzQsMiwiIiwxLHsibGV2ZWwiOjEsInN0eWxlIjp7Im5hbWUiOiJhZGp1bmN0aW9uIn19XV0=
+\[\begin{tikzcd}
+	{\textbf{Cat}} & {\textbf{Set}}
+	\arrow[""{name=0, anchor=center, inner sep=0}, "U"{description}, from=1-1, to=1-2]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "{\text{indiscrete}}"', curve={height=12pt}, from=1-2, to=1-1]
+	\arrow[""{name=2, anchor=center, inner sep=0}, "{\text{discrete}}", curve={height=-12pt}, from=1-2, to=1-1]
+	\arrow["\dashv"{anchor=center, rotate=91}, draw=none, from=0, to=1]
+	\arrow["\dashv"{anchor=center, rotate=89}, draw=none, from=2, to=0]
+\end{tikzcd}\]
+}
+
+\section*{Question 1}
+\addtocounter{section}{1}
+\begin{claim}
+    $h$ is monotone.
+\end{claim}
+\begin{proof}
+Suppose $x,y\in P, x\leq y$. Then
+\begin{equation}
+\begin{aligned}
+    h(x) &\leq \bigvee \{h(x),h(y)\}\quad\text{(by LUB)}\\
+    &= h\left(\bigvee \{x,y\}\right)\\
+    &= h(y) \quad\text{(since $y = \bigvee \{x,y\}$)}
+\end{aligned}
+\end{equation}
+So $h$ is monotone.
+\end{proof}
+{\color{teal}
+\begin{proof}
+\[\bigvee \{x | x\leq y\} = y\]
+\[h(x) \leq \bigvee \{h(x) | x\leq y\} = h\left(\bigvee \{x | x\leq y\}\right)\]
+\end{proof}
+}
+
+\begin{proposition}
+  $U$ has a left adjoint.
+\end{proposition}
+\begin{proof}
+Define the functor $F:\textbf{Set} \rightarrow \textbf{SL}$
+\[F(X) = (\mathcal{P}(X), \subseteq)\]
+\[F(f: X\rightarrow Y) : \mathcal{P}(X) \rightarrow \mathcal{P}(Y) := A \mapsto \{f(a) | a\in A\}\]
+which is the covariant powerset functor for arrows, so functoriality is satisfied.
+
+Note that $\bigvee S = \bigvee \{A | A\in S\} = \bigvee_{A\in S} A$.
+The functor on arrows preserves least upper bounds where $\forall f:X\rightarrow Y$ in \textbf{Set},
+\begin{equation}
+\begin{aligned}
+  F(f)\left(\bigvee S\right) &= F(f)\left(\bigcup_{A\in S} A\right)\\
+  &= \left\{f(a) \middle| a \in \bigcup_{A\in S} A\right\}\\
+  &= \bigcup_{A\in S} \{f(a) | a \in A\}\\
+  &= \bigcup_{A\in S} F(f)(A)\\
+  &= \bigvee_{A\in S} F(f)(A)\\
+  &= \bigvee \{ F(f)(A) | A\in S\}
+\end{aligned}
+\end{equation}
+
+\begin{claim}
+  $F:\textbf{Set} \rightarrow \textbf{SL}$ as defined is the left adjoint of $U$.
+\end{claim}
+$F$ is the left adjoint of $U$, iff $\forall A\in\text{Ob}(\textbf{Set})$,
+there exists a unit $\eta_A : A\rightarrow UFA$ such that 
+\[\forall f: A\rightarrow B,\exists! \hat{f}:\mathcal{P}(A) \rightarrow B\]
+where $f\in\text{Ar}(\textbf{Set}),\hat{f}\in\text{Ar}(\textbf{SL})$, the following diagram commutes
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJBIl0sWzEsMCwiXFxtYXRoY2Fse1B9KEEpIl0sWzEsMSwiQiJdLFswLDEsIlxcZXRhX0EiXSxbMSwyLCJcXGhhdHtmfSIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFswLDIsImYiLDJdXQ==
+\[\begin{tikzcd}
+	A & {\mathcal{P}(A)} \\
+	& B
+	\arrow["{\eta_A}", from=1-1, to=1-2]
+	\arrow["{U(\hat{f})}", dashed, from=1-2, to=2-2]
+	\arrow["f"', from=1-1, to=2-2]
+\end{tikzcd}\]
+For each object $C\in\text{Ob}(\textbf{Set})$, define the unit arrow $\eta_C : C\rightarrow UFC$
+where $UFC=\mathcal{P}(C)$
+\[\eta_C(c) = \{c\}\]
+From an arrow $f:A\rightarrow B$ in \textbf{Set}, we can construct an arrow in \textbf{SL}
+\[\hat{f} : \mathcal{P}(A) \rightarrow B := X \mapsto \bigvee F(f)(X)\]
+where $U(\hat{f}) = \hat{f}$.
+Then $\forall a\in A$,
+\[(U(\hat{f}) \circ \eta_A) (a) = \hat{f} (\{a\}) = f(a)\]
+So $f = U(\hat{f}) \circ \eta_A$.
+
+Suppose there's another $g: \mathcal{P}(A) \rightarrow B$ such that $f = U(g) \circ \eta_A = g\circ\eta_A$.
+Then it also preserves least upper bounds where $\forall X\subseteq A$,
+\begin{equation}
+\begin{aligned}
+  g(X) &= g\left(\bigvee \{\{a\} | a\in X\}\right)\\
+  &= \bigvee \{g(\{a\}) | a\in X\} \quad \text{(by def. of arrow in SL)}\\
+  &= \bigvee \{ g\circ \eta_A (a) | a\in X\} \quad\text{(since $\eta_A(a)=\{a\}$)}\\
+  &= \bigvee \{f(a) | a\in X\}\\
+  &= \bigvee F(f)(X)\\
+  &= \hat{f}(X)
+\end{aligned}
+\end{equation}
+so $g=\hat{f}$ is unique.
+Thus, $F$ is the left adjoint of $U$.
+\end{proof}
+
+{\color{teal}
+Counit
+\[\varepsilon_Q : (\mathcal{P}(Q), \subseteq) \rightarrow (Q, \leq) := S\subseteq Q \mapsto \bigvee S\]
+}
+
+\clearpage
+\section*{Question 2}
+\addtocounter{section}{1}
+
+\begin{proposition}
+  The contravariant powerset functor $\mathcal{P}:\textbf{Set}^{\text{op}}\rightarrow\textbf{Set}$
+  is its own left adjoint.
+\end{proposition}
+\begin{proof}
+$\mathcal{P}^{op}$ is the left adjoint of $\mathcal{P}$ iff $\forall X\in\text{Ob}(\textbf{Set})$, there exists a unit
+\[\eta_X : X \rightarrow \mathcal{P}\mathcal{P}(X)\]
+such that $\forall f: X\rightarrow \mathcal{P}(Y)$ in \textbf{Set},
+$\exists! \hat{f}: \mathcal{P}^{op}(X) \rightarrow Y$ in $\textbf{Set}^{\text{op}}$
+where the diagram commutes
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJYIl0sWzEsMCwiXFxtYXRoY2Fse1B9XFxtYXRoY2Fse1B9KFgpIl0sWzEsMSwiXFxtYXRoY2Fse1B9KFkpIl0sWzAsMSwiXFxldGFfQSJdLFsxLDIsIlxcbWF0aGNhbHtQfShcXGhhdHtmfSkiLDAseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbMCwyLCJmIiwyXV0=
+\[\begin{tikzcd}
+	X & \mathcal{P}\mathcal{P}(X) \\
+	& {\mathcal{P}(Y)}
+	\arrow["{\eta_X}", from=1-1, to=1-2]
+	\arrow["{\mathcal{P}(\hat{f})}", dashed, from=1-2, to=2-2]
+	\arrow["f"', from=1-1, to=2-2]
+\end{tikzcd}\]
+Define $\forall X\in\text{Ob}(\textbf{Set}),\eta_X(x) = \{\{x\}\}$.
+
+Define 
+\[\hat{f}(y) = \{x | y\in f(x)\}\]
+in \textbf{Set}, with its corresponding arrow in $\textbf{Set}^{op}$.
+Then 
+\[\mathcal{P}(\hat{f})(A) = \{y | \exists S \in A, \forall x \in S, y \in f(x)\}\]
+So
+\begin{equation}
+\begin{aligned}
+\mathcal{P}(\hat{f})\circ \eta_X (x) &= \mathcal{P}(\hat{f})(\{x | y\in f(x)\})\\
+&=\{y | y \in f(x)\}\\
+&= f(x)
+\end{aligned}
+\end{equation}
+
+Let $g: \mathcal{P}^{op}(X) \rightarrow Y$ in \textbf{Set}$^{op}$ such that $\mathcal{P}(g)\circ \eta_X = f$.
+Then $\forall x \in X$,
+\[\mathcal{P}(g)(\{\{x\}\}) = \{g(\{x\})\} = f(x)\subseteq Y\]
+Since $g:Y\rightarrow\mathcal{P}^{op}(X) $ in \textbf{Set} is a function, 
+it must be that $\forall y\in f(x), x \in g(y)$, so
+\[g(y) = \{x | y \in f(x)\}\]
+ $\hat{f} = g$ is the unique morphism.
+
+\end{proof}
+
+{\color{teal}
+\begin{proof}
+\begin{fact}
+Exponentials are right adjoints.
+\[-\times Y \dashv (-)^Y\]
+\end{fact}
+\begin{fact}
+    Contravariant powerset functor is a representable functor.
+    \[\exists X, \mathcal{P} \cong \textbf{Set}(-,\mathbbm{2})\]
+\end{fact}
+\begin{equation}
+\begin{aligned}
+    \textbf{Set}(X, \mathcal{P}(Y)) &\cong\textbf{Set}(X, \mathbbm{2}^Y)\\
+    &\cong \textbf{Set}(X\times Y, \mathbbm{2})\\
+    &\cong \textbf{Set}(Y\times X, \mathbbm{2})\\
+    &\cong \textbf{Set}(Y, \mathbbm{2}^X)\\
+    &\cong \textbf{Set}(Y, \mathcal{P}(X))\\
+    &\cong \textbf{Set}^{op}(\mathcal{P}(X), Y)\\
+\end{aligned}
+\end{equation}
+
+\begin{definition}
+    The nerve of $G$ at $X$ is $\mathcal{C}(X, G(-))$.
+\end{definition}
+\[\mathcal{D}(FX, -) \cong \mathcal{C}(X,G(-))\]
+\[\mathcal{D}(FX, FX) \cong \mathcal{C}(X,GFX)\]
+\[1_{FX} \mapsto \eta_X\]
+Yoneda Lemma forces to pick the write unit function.
+
+
+\end{proof}
+}
+
+\clearpage
+\section*{Question 3}
+\addtocounter{section}{1}
+{\color{teal}
+% https://q.uiver.app/#q=WzAsMTAsWzAsMSwiMSJdLFsxLDEsIjAiXSxbMywxLCJFIl0sWzQsMSwiViJdLFswLDAsIlxccmlnaHRyaWdodGFycm93cyJdLFswLDMsIlxccmlnaHRyaWdodGFycm93cyJdLFsxLDMsIlxcdGV4dGJme1NldH0iXSxbMywwLCJcXHRleHRiZntTZXR9Il0sWzMsMiwiSCgxKSJdLFs0LDIsIkgoMCkiXSxbMCwxLCJmIiwwLHsiY3VydmUiOi0yfV0sWzAsMSwiZyIsMSx7ImN1cnZlIjoyfV0sWzIsMywiR2YiLDAseyJvZmZzZXQiOi0xfV0sWzIsMywiR2ciLDIseyJvZmZzZXQiOjF9XSxbNSw2LCJHIiwwLHsib2Zmc2V0IjotMn1dLFs1LDYsIkgiLDIseyJvZmZzZXQiOjN9XSxbMiw4LCJcXGFscGhhXzEiLDJdLFs4LDksIkhnIiwyLHsib2Zmc2V0IjoxfV0sWzgsOSwiSGYiLDAseyJvZmZzZXQiOi0xfV0sWzMsOSwiXFxhbHBoYV8wIl0sWzE0LDE1LCJcXGFscGhhIiwyLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfX1dXQ==
+\[\begin{tikzcd}
+	\rightrightarrows &&& {\textbf{Set}} \\
+	1 & 0 && E & V \\
+	&&& {H(1)} & {H(0)} \\
+	\rightrightarrows & {\textbf{Set}}
+	\arrow["f", curve={height=-12pt}, from=2-1, to=2-2]
+	\arrow["g"{description}, curve={height=12pt}, from=2-1, to=2-2]
+	\arrow["Gf", shift left, from=2-4, to=2-5]
+	\arrow["Gg"', shift right, from=2-4, to=2-5]
+	\arrow[""{name=0, anchor=center, inner sep=0}, "G", shift left=2, from=4-1, to=4-2]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "H"', shift right=3, from=4-1, to=4-2]
+	\arrow["{\alpha_1}"', from=2-4, to=3-4]
+	\arrow["Hg"', shift right, from=3-4, to=3-5]
+	\arrow["Hf", shift left, from=3-4, to=3-5]
+	\arrow["{\alpha_0}", from=2-5, to=3-5]
+	\arrow["\alpha"', shorten <=1pt, shorten >=1pt, Rightarrow, from=0, to=1]
+\end{tikzcd}\]
+\[\alpha_0 : G(0) \rightarrow H(0)\]
+\[\alpha_1 : G(1) \rightarrow H(1)\]
+\[Hg \circ \alpha_1 = \alpha_0 \circ G\]
+The contravariant functor $\rightrightarrows(-,1)$
+\[\rightrightarrows(1,1) = \{1_1\}\]
+\[\rightrightarrows(1,0) = \{f,g\}\]
+\[\rightrightarrows(0,1) = \emptyset\]
+\[\rightrightarrows(0,0) = \{1_0\}\]
+
+Given the functor
+\[\rightrightarrows \xrightarrow[]{G} \textbf{Set}\]
+By Yoneda Lemmma, 
+\[G(X) \cong [\rightrightarrows, \textbf{Set}](\rightrightarrows(X, -), G)\]
+where $X\in \{0,1\}$.
+
+\[\text{Ob}(FG) = G0\]
+\[GF(X,y) = \bigcup_{n\in \mathbb{N}} Path_n(x,y)\]
+\[Path_0(x,y) = \begin{cases}
+    \mathbbm{1} & x = y\\
+    0 & x \neq y
+\end{cases}
+\]
+\[Path_{n+1}(x,y) = \bigcup_{z\in \mathbb{Z}} Path_n (x,z) \times G1(z,y)\]
+}
+
+A morphism of graphs $f: (V,E,s,t) \rightarrow (V', E', s',t')$ consists of mappings of
+\begin{itemize}
+  \item vertices, $f_V : V \rightarrow V'$
+  \item edges, $f_E : E \rightarrow E'$
+  \item source, $f_s(s) = s' \iff (\forall e\in E, s(e) = v \implies s'(f_E(e)) = f_V(v))$
+  \item target, $f_t(t) = t' \iff (\forall e\in E, t(e) = v \implies t'(f_E(e)) = f_V(v))$
+\end{itemize}
+
+Define the functor $F: \textbf{Grph} \rightarrow \textbf{Cat}$ with the object map
+\[F :: (V,E,s,t) \mapsto \mathcal{C}\]
+where the category $\mathcal{C}$ has objects $\text{Ob}(\mathcal{C}) = V$,
+and arrows $\text{Ar}(\mathcal{C})$ are freely generated from the composable edges $E$,
+so $E \subseteq\text{Ar}(\mathcal{C})$, and if $e_1,e_2\in E$ are such that $s(e_1)=t(e_2)$, 
+then $e_1\circ e_2 \in\text{Ar}(\mathcal{C})$.
+% \[\text{Ob}(\mathcal{C}) = V\]
+% \[\text{Ar}(\mathcal{C}) = E + \{f : u \circ v | \}\]
+% \[\text{Ar}(\mathcal{C}) = \{f_e : u \rightarrow v | e\in E, s(e) = u \wedge t(e)=v\}\]
+% In other words, the edges in $E$ have a bijection with the arrows in $\mathcal{C}$.
+% \exists \{e_1,...,e_k\}\subseteq E, 
+% (s(e_1) = u) \wedge (t(e_k) = v)\wedge \bigwedge_{i=1}^{k-1} (t(e_i) = s(e_{i+1}))\}\]
+% In other words, in $\mathcal{C}, f:u\rightarrow v \iff \exists$ 
+% a path from $u$ to $v$ in the graph $(V,E,s,t)$ i.e. the vertices are connected from $u$ to $v$.
+
+The composition map is clearly defined from the free generation. 
+The identity map $1_u$ for each object $u$ is included in the free generation,
+from the empty sequence of edges.
+
+Associativity is satisfied since free generation is associative.
+Unit axiom is satisfied since the identity map satisfies the properties of the identity.
+
+$F$ then maps graph homomorphisms in $\mathbf{Grph}$ 
+to functors between the corresponding categories in $\mathbf{Cat}$.
+Let $f:A\rightarrow B$ be in $\text{Ar}(\mathbf{Grph})$.
+
+The object mapping of $Ff$ is clear
+\[Ff : F(A) \rightarrow F(B) := C_v \mapsto D_{f_v(v)}\]
+where $C_v, D_{f_v(v)}$ are the objects in the categories $F(A),F(B)$ 
+representing the vertices $v, f_v(v)$ in the graphs $A,B$ respectively.
+
+$Ff$ maps an arrow $g: C_u\rightarrow C_v$ in the category $F(A)$ 
+to the corresponding arrow $Ff(g): D_{f_v(u)} \rightarrow D_{f_v(v)}$ in $F(B)$.
+$Ff$ also maps identity arrows to identity arrows, which exist due to the free generation.
+
+The identity axiom is clearly satisfied.
+
+% Associativity is also satisfied, since for each freely generated arrow in $F(A)$, 
+% there is a corresponding freely generated arrow in $F(B)$,
+% as the underlying edge in $A$ must have a mapping to an underlying edge in $B$.
+Composition is preserved since free generation preserves it.
+\[Ff(g\circ h) = Ff(g) \circ Ff(h)\]
+Functoriality is satisfied.
+
+$F$ is the left adjoint of $U$, iff $\forall A\in\text{Ob}(\textbf{Grph})$,
+there exists a unit $\eta_A : A\rightarrow UFA$ such that 
+\[\forall f: A\rightarrow U(B),\exists! \hat{f}:F(A) \rightarrow B\]
+where $f\in\text{Ar}(\textbf{Grph}),\hat{f}\in\text{Ar}(\textbf{Cat})$, the following diagram commutes
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJBIl0sWzEsMCwiXFxtYXRoY2Fse1B9KEEpIl0sWzEsMSwiQiJdLFswLDEsIlxcZXRhX0EiXSxbMSwyLCJcXGhhdHtmfSIsMCx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFswLDIsImYiLDJdXQ==
+\[\begin{tikzcd}
+	A & {UF(A)} \\
+	& U(B)
+	\arrow["{\eta_A}", from=1-1, to=1-2]
+	\arrow["{U(\hat{f})}", dashed, from=1-2, to=2-2]
+	\arrow["f"', from=1-1, to=2-2]
+\end{tikzcd}\]
+For each object $C=(V,E,s,t)\in\text{Ob}(\textbf{Grph})$, define the unit arrow $\eta_C : C\rightarrow UFC$
+where $\eta_{C,V} = 1_V, \eta_{C,E} = \iota_E$ - the identity map on vertices, and the inclusion map on edges.
+% \begin{itemize}
+%   \item $\eta_{C,V} = 1_V$
+%   \item $\eta_{C,E} = 1_E$
+% \end{itemize}
+% \[\eta_{C,V} = 1_V\]
+
+Then for each $f: A\rightarrow U(B)$, define the arrow $\hat{f}: F(A) \rightarrow B$ 
+where 
+\[\hat{f}(C) = Ff_V(C_V)\] 
+\[\hat{f}(g:C\rightarrow D) = Ff_E(g_E)\]
+with $C_V$ as the underlying vertex representing the object $C$,
+and $g_E$ as the underlying edge representing the arrow $g$.
+The functor $\hat{f}$ satisfies functoriality, since $F$ does.
+
+Then for any object $C\in\text{Ob}(\textbf{Grph})$, 
+\[U(\hat{f})\circ \eta_A(C) = U(\hat{f})(C) = UFf(C) = f(C)\]
+
+$\hat{f}$ is the unique functor.
+
+
+
+\clearpage
+\section*{Question 4}
+\addtocounter{section}{1}
+\subsection{(a)}
+\begin{proposition}
+  If $f$ has a right adjoint, then $f$ preserves least upper bounds.
+\end{proposition}
+\begin{proof}
+Suppose $f$ has a right adjoint $g: Q\rightarrow P$.
+\begin{equation}
+\begin{aligned}
+  &\forall x\in S\subseteq P, x \leq \bigvee S \quad\text{(by upper bound)}\\
+  &\implies \forall x\in S, f(x) \leq f\left(\bigvee S\right) \quad\text{($f$ is monotone)}\\
+  &\implies \bigvee\{f(x) | x\in S\} \leq f\left(\bigvee S\right) \quad\text{(by \textit{least} UB)}
+\end{aligned}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+  &\forall x\in S\subseteq P, f(x) \leq \bigvee\{f(x) | x\in S\} \quad\text{(by upper bound)}\\
+  &\implies \forall x\in S, x \leq g\left(\bigvee\{f(x) | x\in S\}\right) \quad\text{($g$ is right adjoint)}\\
+  &\implies \bigvee S \leq g\left(\bigvee\{f(x) | x\in S\}\right) \quad\text{(by \textit{least} UB)}\\
+  &\implies f\left(\bigvee S\right) \leq \bigvee\{f(x) | x\in S\} \quad\text{($f$ is left adjoint)}
+\end{aligned}
+\end{equation}
+Then since $Q$ is a poset, these imply that
+\[f\left(\bigvee S\right) = \bigvee\{f(x) | x\in S\}\]
+  
+\end{proof}
+\subsection{(b)}
+
+\begin{proposition}
+  If $f$ preserves least upper bounds, then it has a right adjoint $g$ given by
+  \[g(y) = \bigvee \{x\in P | f(x) \leq y\}\]
+\end{proposition}
+\begin{proof}
+Suppose $f$ preserves least upper bounds. We want to show that 
+\[\forall x\in P, z\in Q, x\leq g(z) \iff f(x) \leq z\]
+$(\implies)$ Let $x\in P, z\in Q$ such that $x\leq g(z)$.
+\begin{equation}
+\begin{aligned}
+  x \leq g(z) &\iff x \leq \bigvee \{x\in P | f(x) \leq z\}\\
+  &\implies f(x) \leq f\left(\bigvee \{x\in P | f(x) \leq z\}\right)\\
+  &\iff f(x) \leq \bigvee \{f(x) | f(x) \leq z\} \quad\text{($f$ preserves LUB)}\\
+  &\implies f(x) \leq z \quad\text{(by \textit{least} UB)}
+\end{aligned}
+\end{equation}
+$(\impliedby)$ Now let $f(x) \leq z$. Note that by LUB, $x\in S \implies x \leq \bigvee S$.
+\begin{equation}
+\begin{aligned}
+  f(x) \leq z &\implies g\circ f(x) \leq g(z)\\
+  &\iff \bigvee \{x'\in P | f(x') \leq f(x)\} \leq \bigvee \{x \in P | f(x) \leq z\}\\
+  &\implies x \leq \bigvee \{x \in P | f(x) \leq z\} \quad\text{($f(x)\leq f(x)$ by reflexivity)} \\
+  &\iff x \leq g(z)
+\end{aligned}
+\end{equation}
+
+\end{proof}
+
+\subsection{(c)}
+\begin{proposition}
+  Complete semi-lattices $P$ also have infema (greatest lower bounds) $\bigwedge S$ for all subsets $S\subseteq P$.
+\end{proposition}
+\begin{proof}
+  Note that the bottom $\bigvee \emptyset = \bot\in P$ exists, where $\forall x\in P, \bot \leq x$,
+  from the existence of LUB for $\emptyset$, 
+  and since $\forall x\in P, x'\in \emptyset, x' \leq x$ is vacuously true.
+
+  Let $S\subseteq P$ be a subset, with $B\subseteq P$ as the set of lower bounds for $S$.
+  Since $\bot\in B, B\neq \emptyset$.
+  Take $\bigvee B$, which exists.
+
+\begin{claim}
+  \[\bigvee B = \bigwedge S\]
+\end{claim}
+Note that just from definitions,
+\[\forall x\in B, x\leq \bigvee B\]
+\[\forall x\in B, y\in S, x\leq y\]
+So $\forall y\in S,y$ is an upper bound of $B$. 
+Then by the \textit{least} UB of set $B$, we must have
+\[\forall y\in S, \bigvee B \leq y\]
+So $\bigwedge S = \bigvee B \in B$ is the GLB of $S$.
+
+\end{proof}
+
+\subsection{(d)}
+From  (a) and (b), we have the following
+\begin{corollary}
+  $f:P\rightarrow Q$ has a right adjoint $g: Q\rightarrow P$ iff $f$ preserves least upper bounds, where
+  \[g(y) = \bigvee \{x\in P | f(x) \leq y\}\]
+\end{corollary}
+
+\begin{proposition}
+  If $g$ has a left adjoint, then $g$ preserves greatest lower bounds.
+\end{proposition}
+\begin{proof}
+Suppose $g$ has a right adjoint $f: P\rightarrow Q$.
+\begin{equation}
+\begin{aligned}
+  &\forall y\in S\subseteq Q, \bigwedge S \leq y \quad\text{(by lower bound)}\\
+  &\implies \forall y\in S, g\left(\bigwedge S\right) \leq g(y) \quad\text{($g$ is monotone)}\\
+  &\implies g\left(\bigwedge S\right) \leq \bigwedge \{g(y) | y\in S\} \quad\text{(by \textit{greatest} LB)}
+\end{aligned}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+  &\forall y\in S\subseteq Q, \bigwedge\{g(y) | y\in S\} \leq g(y) \quad\text{(by lower bound)}\\
+  &\implies \forall y\in S, f(\bigwedge\{g(y) | y\in S\}) \leq y \quad\text{($f$ is right adjoint)}\\
+  &\implies f(\bigwedge\{g(y) | y\in S\}) \leq \bigwedge S \quad\text{(by \textit{least} UB)}\\
+  &\implies \bigwedge\{g(y) | y\in S\} \leq g\left(\bigwedge S\right) \quad\text{($g$ is left adjoint)}
+\end{aligned}
+\end{equation}
+Then
+\[g\left(\bigwedge S\right) = \bigwedge \{g(y) | y\in S\}\]
+$g$ preserves greatest lower bounds.
+\end{proof}
+Dualising, we get
+\begin{corollary}
+  $g:Q\rightarrow P$ has a left adjoint iff $g$ preserves greatest lower bounds.
+\end{corollary}
+
+{\color{teal}
+Yoneda functor preserves all limits, but is not a right adjoint.
+}
+
+\end{document}
