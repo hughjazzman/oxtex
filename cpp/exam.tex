@@ -1,0 +1,541 @@
+% Please do not change %
+\documentclass[11pt]{article} % font size
+\usepackage[margin=1in]{geometry} % margins
+\usepackage{amsmath,amsthm,amssymb} % for the  common "math symbols"
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[shortlabels]{enumitem} % for enumeration
+\usepackage{booktabs} % if you need tables
+\usepackage{listings}
+\usepackage{color}
+\usepackage{quiver}
+\usepackage{ulem}
+\usepackage{bbm}
+\usepackage{hyperref}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% \theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition/}[theorem]{Definition}
+\theoremstyle{definition}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{example/}[theorem]{Example}
+\newtheorem{note}[theorem]{Note}
+
+\newenvironment{example}{
+  \renewcommand{\qedsymbol}{$\blacktriangle$}%
+  \pushQED{\qed}\begin{example/}
+}{\popQED\end{example/}}
+
+\newenvironment{definition}{
+  \renewcommand{\qedsymbol}{$\blacktriangle$}%
+  \pushQED{\qed}\begin{definition/}}
+{\popQED\end{definition/}}
+
+\renewcommand{\thesubsection}{\alph{subsection}}
+
+% Feel free to include additional packages (if needed), but make sure it does not override the margin/font requirements.
+%
+\setlength{\parindent}{0pt} % no indent for new paragraphs.
+\setlength{\parskip}{5pt} % distance between paragraphs, which will be used when you have a blank line in your LaTeX code.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Categories, Proofs, and Processes: \\Mini-Project}
+%
+\author{1081502}
+\date{Hilary Term}
+%
+\begin{document}
+%
+\maketitle
+
+
+%\begin{table}[h]
+%\caption{A simple table.}
+%\centering
+%\begin{tabular}[t]{lrrrr}
+%\toprule
+%Graphs & Can & Be  & Fun & Too \\ 
+%\midrule 
+%$G_1$ & $1$  & $2$ & $3$ & $4$ \\ 
+%$G_2$ & $-1$  & $-2$ & $-3$ & $-4$ \\ 
+%$G_3$ & $0.1$  & $0.2$ & $0.3$ & $0.4$ \\ 
+%\bottomrule
+%\end{tabular}
+%\label{tab}
+%\end{table}
+
+% A functor $F:\mathcal{C} \rightarrow \mathcal{D}$ is
+% \begin{itemize}
+%     \item \textbf{faithful} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is injective;
+%     \item \textbf{full} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is surjective
+% \end{itemize}
+
+\section{}
+\subsection{}
+\begin{definition}[\cite{Abramsky_2010}]
+A \underline{natural isomorphism} is a natural transformation $t : F \rightarrow G$ 
+where each arrow $t_A$ in its family of arrows is isomorphic:
+\[t_A : F\ A \xrightarrow[]{\cong} G\ A\] 
+\end{definition}
+
+\begin{definition}[\cite{maclane:71}, \cite{nlab:bicategory} \cite{BénabouJean2006Itb}]
+A \textbf{\underline{bicategory}} $B$ consists of
+\begin{itemize}
+    \item A collection of objects $a,b,c,...$ called \textbf{\textit{0-cells}}.
+    \item For each pair of 0-cells, $a,b$, a category $B(a,b)$ where its
+    \begin{itemize}
+        \item Objects are morphisms between $a,b$ called \textbf{\textit{1-cells}}.
+        \item Morphisms between objects are called \textbf{\textit{2-cells}}, or equivalently, natural transformations.
+    \end{itemize}
+    % https://q.uiver.app/#q=WzAsMixbMCwwLCJhIl0sWzEsMCwiYiJdLFswLDEsImYiLDAseyJvZmZzZXQiOi01fV0sWzAsMSwiZyIsMix7Im9mZnNldCI6NX1dLFsyLDMsIlxcZXRhIiwwLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfX1dXQ==
+\[\begin{tikzcd}
+	a & b
+	\arrow[""{name=0, anchor=center, inner sep=0}, "f", shift left=5, from=1-1, to=1-2]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "g"', shift right=5, from=1-1, to=1-2]
+	\arrow["\eta", shorten <=3pt, shorten >=3pt, Rightarrow, from=0, to=1]
+\end{tikzcd}\]
+    \item For each 0-cell $a$, the 1-cell $1_a \in B(a,a)$ called the identity cell at $a$.
+    \item For each triple of 0-cells, $a,b,c$, a bifunctor 
+    \[\circ: B(b,c) \times B(a,b) \rightarrow B(a,c)\]
+    called \textbf{\textit{horizontal composition}}.
+    \item For each 1-cell $f:a \rightarrow b$, the 2-cell identity $1_f:f \Rightarrow f$ called the 2-identity.
+    \item For each triple of 1-cells, $f,g,h:a \rightarrow b$
+    with 2-cells $\eta: f\Rightarrow g, \theta: g\Rightarrow h$, a vertical composite 
+    \[\theta \bullet \eta : f \Rightarrow h\]
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJhIl0sWzEsMCwiYiJdLFszLDAsImEiXSxbNCwwLCJiIl0sWzAsMSwiZiIsMCx7Im9mZnNldCI6LTV9XSxbMCwxLCJoIiwyLHsib2Zmc2V0Ijo1fV0sWzAsMSwiZyIsMV0sWzIsMywiZiIsMCx7Im9mZnNldCI6LTV9XSxbMiwzLCJoIiwyLHsib2Zmc2V0Ijo1fV0sWzYsNSwiXFx0aGV0YSIsMCx7InNob3J0ZW4iOnsic291cmNlIjoyMCwidGFyZ2V0IjoyMH19XSxbNCw2LCJcXGV0YSIsMCx7InNob3J0ZW4iOnsic291cmNlIjoyMCwidGFyZ2V0IjoyMH19XSxbNyw4LCJcXHRoZXRhXFxidWxsZXQgXFxldGEiLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9fV1d
+\[\begin{tikzcd}
+	a & b && a & b
+	\arrow[""{name=0, anchor=center, inner sep=0}, "f", shift left=5, from=1-1, to=1-2]
+	\arrow[""{name=1, anchor=center, inner sep=0}, "h"', shift right=5, from=1-1, to=1-2]
+	\arrow[""{name=2, anchor=center, inner sep=0}, "g"{description}, from=1-1, to=1-2]
+	\arrow[""{name=3, anchor=center, inner sep=0}, "f", shift left=5, from=1-4, to=1-5]
+	\arrow[""{name=4, anchor=center, inner sep=0}, "h"', shift right=5, from=1-4, to=1-5]
+	\arrow["\theta", shorten <=1pt, shorten >=1pt, Rightarrow, from=2, to=1]
+	\arrow["\eta", shorten <=1pt, shorten >=1pt, Rightarrow, from=0, to=2]
+	\arrow["{\theta\bullet \eta}", shorten <=3pt, shorten >=3pt, Rightarrow, from=3, to=4]
+\end{tikzcd}\]
+    \item For each triple of 0-cells $a,b,c$, 1-cells $f,g:a\rightarrow b,\quad h:b\rightarrow c$, 
+    2-cell $\eta : f \Rightarrow g$, a \textbf{\textit{left whiskering}}
+    \[h \triangleleft \eta: h\circ f \Rightarrow h\circ g\]
+    \item For each triple of 0-cells $a,b,c$, 1-cells $f:a\rightarrow b,\quad g,h:b\rightarrow c$, 
+    2-cell $\eta : g \Rightarrow h$, a \textbf{\textit{right whiskering}}
+    \[\eta \triangleright f: g\circ f \Rightarrow h\circ f\]
+    \item Natural isomorphisms $\rho,\lambda$ where for each 1-cell $f: a\rightarrow b$, 
+    components $\rho_f,\lambda_f$ called \textbf{\textit{right and left unitors}} respectively where
+    \[\rho_f : f \circ 1_a \Rightarrow f, \quad \lambda_f : 1_b \circ f \Rightarrow f\]
+    \item A natural isomorphism $\alpha$, 
+    where for each triple of 1-cells $a\xrightarrow[]{f} b\xrightarrow[]{g} c\xrightarrow[]{h} d$,
+    the component $\alpha_{h,g,f}$ called an \textbf{\textit{associator}} defined as
+    \[\alpha_{h,g,f} : h\circ(g\circ f) \Rightarrow (h \circ g) \circ f\]
+\end{itemize}
+such that the following conditions hold
+\begin{itemize}
+    \item The \textit{pentagon identity} is satisfied by the associators - for any quadruple of 1-cells
+    \[a\xrightarrow[]{f} b\xrightarrow[]{g} c\xrightarrow[]{h} d \xrightarrow[]{k} e\]
+    the following pentagon must commute.
+    % https://q.uiver.app/#q=WzAsNSxbMCwwLCJrXFxjaXJjKGhcXGNpcmMoZ1xcY2lyYyBmKSkpIl0sWzEsMCwiKGtcXGNpcmMgaCkgXFxjaXJjIChnXFxjaXJjIGYpIl0sWzAsMSwia1xcY2lyYyAoKGhcXGNpcmMgZylcXGNpcmMgZikiXSxbMiwwLCIoKGtcXGNpcmMgaCkgXFxjaXJjIGcpIFxcY2lyYyBmKSJdLFsyLDEsIihrXFxjaXJjIChoXFxjaXJjIGcpKSBcXGNpcmMgZiJdLFswLDEsIlxcYWxwaGFfe2ssIGgsIGdcXGNpcmMgZn0iXSxbMCwyLCIxX2sgXFx0cmlhbmdsZWxlZnQgXFxhbHBoYV97aCxnLGZ9IiwyXSxbMSwzLCJcXGFscGhhX3trXFxjaXJjIGgsIGcsIGZ9Il0sWzMsNCwiXFxhbHBoYV97ayxoLGd9IFxcdHJpYW5nbGVyaWdodCAxX2YiXSxbMiw0LCJcXGFscGhhX3trLGhcXGNpcmMgZywgZn0iLDJdXQ==
+\[\begin{tikzcd}
+	{k\circ(h\circ(g\circ f)))} & {(k\circ h) \circ (g\circ f)} & {((k\circ h) \circ g) \circ f)} \\
+	{k\circ ((h\circ g)\circ f)} && {(k\circ (h\circ g)) \circ f}
+	\arrow["{\alpha_{k, h, g\circ f}}", from=1-1, to=1-2]
+	\arrow["{1_k \triangleleft \alpha_{h,g,f}}"', from=1-1, to=2-1]
+	\arrow["{\alpha_{k\circ h, g, f}}", from=1-2, to=1-3]
+	\arrow["{\alpha_{k,h,g} \triangleright 1_f}", from=1-3, to=2-3]
+	\arrow["{\alpha_{k,h\circ g, f}}"', from=2-1, to=2-3]
+\end{tikzcd}\]
+    \item The \textit{triangle identity} is satisfied by the unitors - 
+    for any pair of 1-cells $a\xrightarrow[]{f} b\xrightarrow[]{g} c$, the following triangle must commute.
+    % https://q.uiver.app/#q=WzAsMyxbMCwwLCJnXFxjaXJjKDFfYlxcY2lyYyBmKSJdLFswLDEsIihnXFxjaXJjIDFfYikgXFxjaXJjIGYiXSxbMSwxLCJnXFxjaXJjIGYiXSxbMCwxLCJcXGFscGhhX3tnLDFfYixmfSIsMl0sWzAsMiwiMV9nXFx0cmlhbmdsZWxlZnRcXGxhbWJkYV97YSxifSJdLFsxLDIsIlxccmhvX3thLGJ9XFx0cmlhbmdsZXJpZ2h0IDFfZiIsMl1d
+\[\begin{tikzcd}
+	{g\circ(1_b\circ f)} \\
+	{(g\circ 1_b) \circ f} & {g\circ f}
+	\arrow["{\alpha_{g,1_b,f}}"', from=1-1, to=2-1]
+	\arrow["{1_g\triangleleft\lambda_{a,b}}", from=1-1, to=2-2]
+	\arrow["{\rho_{a,b}\triangleright 1_f}"', from=2-1, to=2-2]
+\end{tikzcd}\]
+\end{itemize}
+A bicategory is also called a \textit{weak 2-category}.
+\end{definition}
+
+\clearpage
+\subsection{}
+\begin{definition}[Monoidal Category \cite{Abramsky_2010}]
+\label{def:moncat}
+  A \textbf{\underline{monoidal category}} is a structure $(\mathcal{C}, \otimes, I, \alpha, \lambda, \rho)$ where
+\begin{itemize}
+  \item $\mathcal{C}$ is a category,
+  \item $\otimes: \mathcal{C} \times \mathcal{C} \to \mathcal{C}$ is a functor (\textit{monoidal product}),
+  \item $I$ is a distinguished object of $\mathcal{C}$ (\textit{unit})
+  \item $\alpha, \lambda, \rho$ are natural isomorphisms (\textit{associator, left unitor, right unitor}) 
+  with components
+  \[\alpha_{A,B,C} : A\otimes (B \otimes C) \xrightarrow[]{\cong} (A\otimes B) \otimes C\]
+  \[\lambda_A : I \otimes A \xrightarrow[]{\cong} A, \quad \rho_A : A\otimes I \xrightarrow[]{\cong} A\]
+  such that $\lambda_I = \rho_I : I\otimes I \to I$ and the following diagrams commute.
+% https://q.uiver.app/#q=WzAsOCxbMCwwLCJBXFxvdGltZXMgKEJcXG90aW1lcyhDXFxvdGltZXMgRCkpKSJdLFsxLDAsIihBXFxvdGltZXMgQilcXG90aW1lcyAoQ1xcb3RpbWVzIEQpIl0sWzIsMCwiKChBXFxvdGltZXMgQilcXG90aW1lcyBDKVxcb3RpbWVzIEQpIl0sWzAsMSwiQVxcb3RpbWVzICgoQlxcb3RpbWVzIEMpIFxcb3RpbWVzIEQpIl0sWzIsMSwiKEFcXG90aW1lcyAoQlxcb3RpbWVzIEMpKSBcXG90aW1lcyBEIl0sWzAsMiwiQVxcb3RpbWVzIChJXFxvdGltZXMgQikiXSxbMCwzLCIoQVxcb3RpbWVzIEkpIFxcb3RpbWVzIEIiXSxbMSwzLCJBXFxvdGltZXMgQiJdLFswLDEsIlxcYWxwaGFfe0EsQixDXFxvdGltZXMgRH0iXSxbMSwyLCJcXGFscGhhX3tBXFxvdGltZXMgQiwgQyxEfSJdLFswLDMsIjFfQSBcXG90aW1lcyBcXGFscGhhX3tCLEMsRH0iLDJdLFszLDQsIlxcYWxwaGFfe0EsQlxcb3RpbWVzIEMsRH0iLDJdLFsyLDQsIlxcYWxwaGFfe0EsQixDfVxcb3RpbWVzIDFfRCJdLFs1LDYsIlxcYWxwaGFfe0EsSSxCfSJdLFs1LDcsIjFfQSBcXG90aW1lcyBcXGxhbWJkYV9CIl0sWzYsNywiXFxyaG9fQVxcb3RpbWVzIDFfQiIsMl1d
+\[\begin{tikzcd}
+	{A\otimes (B\otimes(C\otimes D)))} & {(A\otimes B)\otimes (C\otimes D)} & {((A\otimes B)\otimes C)\otimes D)} \\
+	{A\otimes ((B\otimes C) \otimes D)} && {(A\otimes (B\otimes C)) \otimes D} \\
+	{A\otimes (I\otimes B)} \\
+	{(A\otimes I) \otimes B} & {A\otimes B}
+	\arrow["{\alpha_{A,B,C\otimes D}}", from=1-1, to=1-2]
+	\arrow["{\alpha_{A\otimes B, C,D}}", from=1-2, to=1-3]
+	\arrow["{1_A \otimes \alpha_{B,C,D}}"', from=1-1, to=2-1]
+	\arrow["{\alpha_{A,B\otimes C,D}}"', from=2-1, to=2-3]
+	\arrow["{\alpha_{A,B,C}\otimes 1_D}", from=1-3, to=2-3]
+	\arrow["{\alpha_{A,I,B}}", from=3-1, to=4-1]
+	\arrow["{1_A \otimes \lambda_B}", from=3-1, to=4-2]
+	\arrow["{\rho_A\otimes 1_B}"', from=4-1, to=4-2]
+\end{tikzcd}\]
+\end{itemize}
+\end{definition}
+\begin{definition}[\cite{maclane:71}, \cite{nlab:bicategory}]
+A monoidal category $M$ is a bicategory $BM$ with a single object $\bullet$ where
+\begin{itemize}
+    \item Objects $A$ of $M$ become 1-cells $[A]:\bullet \rightarrow \bullet$ of $BM$
+    \item Composition of 1-cells in $BM$ follow the definition
+    \[[A] \circ [B] := [A\otimes B]\]
+    using the monoidal product $\otimes$ of $M$.
+    \item The monoidal unit $I$ in $M$ becomes 
+    the identity cell $1_{\bullet} := [I] : \bullet \rightarrow \bullet$ in $BM$.
+    \item Morphisms $f:A\rightarrow B$ in $M$ become 2-cells $[f] : [A] \Rightarrow [B]$ in $BM$.
+    \item Identity morphisms $1_A$ in $M$ become 2-identities $[1_A]$ in $BM$.
+    \item Natural isomorphism $\alpha$ of $M$ where 
+    \[\alpha_{A,B,C} : (A\otimes B) \otimes C \Rightarrow A\otimes (B\otimes C)\]
+    becomes the associator 
+    \[\alpha_{[A],[B],[C]} : ([A] \circ [B]) \circ [C] \Rightarrow [A] \circ ([B] \circ [C])\]
+    for the natural isomorphism $\alpha$ of $BM$
+    \item Natural isomorphisms $\lambda, \rho$ where each component
+    \[\lambda_A : I \otimes A \Rightarrow A, \quad \rho_A: A \otimes I \Rightarrow A\]
+    of $M$ respectively becomes the left and right unitors
+    \[\lambda_{[A]} : [I] \circ [A] \Rightarrow [A], \quad
+    \rho_{[A]} : [A] \circ [I] \Rightarrow [A]\]
+    for the natural isomorphisms $\lambda, \rho$ of $BM$.
+\end{itemize}
+
+\end{definition}
+
+The coherence conditions then hold, where the following diagrams commute in $BM$ 
+iff the corresponding diagrams \cite{Abramsky_2010} commute in $M$.
+\begin{itemize}
+\item Unitors
+% https://q.uiver.app/#q=WzAsNyxbMCwwLCJbQV1cXGNpcmMoW0ldXFxjaXJjIFtCXSkiXSxbMCwxLCIoW0FdIFxcY2lyYyBbSV0pIFxcY2lyYyBbQl0iXSxbMSwxLCJbQV1cXGNpcmMgW0JdIl0sWzIsMSwiXFxpZmYiXSxbMywwLCJBXFxvdGltZXMgKElcXG90aW1lcyBCKSJdLFszLDEsIihBXFxvdGltZXMgSSkgXFxvdGltZXMgQiJdLFs0LDEsIkFcXG90aW1lcyBCIl0sWzAsMSwiXFxhbHBoYV97W0JdLFtJXSxbQV19IiwyXSxbMCwyLCIxX3tbQV19XFx0cmlhbmdsZWxlZnRcXGxhbWJkYV97W0JdfSJdLFsxLDIsIlxccmhvX3tbQV19XFx0cmlhbmdsZXJpZ2h0IDFfe1tCXX0iLDJdLFs0LDUsIlxcYWxwaGFfe0EsSSxCfSIsMl0sWzQsNiwiMV9BIFxcb3RpbWVzIFxcbGFtYmRhX0IiXSxbNSw2LCJcXHJob19BXFxvdGltZXMxX0IiLDJdXQ==
+\[\begin{tikzcd}
+	{[A]\circ([I]\circ [B])} &&& {A\otimes (I\otimes B)} \\
+	{([A] \circ [I]) \circ [B]} & {[A]\circ [B]} & \iff & {(A\otimes I) \otimes B} & {A\otimes B}
+	\arrow["{\alpha_{[B],[I],[A]}}"', from=1-1, to=2-1]
+	\arrow["{1_{[A]}\triangleleft\lambda_{[B]}}", from=1-1, to=2-2]
+	\arrow["{\rho_{[A]}\triangleright 1_{[B]}}"', from=2-1, to=2-2]
+	\arrow["{\alpha_{A,I,B}}"', from=1-4, to=2-4]
+	\arrow["{1_A \otimes \lambda_B}", from=1-4, to=2-5]
+	\arrow["{\rho_A\otimes1_B}"', from=2-4, to=2-5]
+\end{tikzcd}\]
+\item Associators
+% https://q.uiver.app/#q=WzAsMTEsWzAsMCwiW0FdXFxjaXJjKFtCXVxcY2lyYyhbQ11cXGNpcmMgW0RdKSkpIl0sWzEsMCwiKFtBXVxcY2lyYyBbQl0pIFxcY2lyYyAoW0NdXFxjaXJjIFtEXSkiXSxbMCwxLCJbQV1cXGNpcmMgKChbQl1cXGNpcmMgW0NdKVxcY2lyYyBbRF0pIl0sWzIsMCwiKChbQV1cXGNpcmMgW0JdKSBcXGNpcmMgW0NdKSBcXGNpcmMgW0RdKSJdLFsyLDEsIihbQV1cXGNpcmMgKFtCXVxcY2lyYyBbQ10pKSBcXGNpcmMgW0RdIl0sWzEsMiwiXFxpZmYiXSxbMCwzLCJBXFxvdGltZXMgKEJcXG90aW1lcyhDXFxvdGltZXMgRCkpKSJdLFsxLDMsIihBXFxvdGltZXMgQilcXG90aW1lcyAoQ1xcb3RpbWVzIEQpIl0sWzIsMywiKChBXFxvdGltZXMgQilcXG90aW1lcyBDKVxcb3RpbWVzIEQpIl0sWzAsNCwiQVxcb3RpbWVzICgoQlxcb3RpbWVzIEMpIFxcb3RpbWVzIEQpIl0sWzIsNCwiKEFcXG90aW1lcyAoQlxcb3RpbWVzIEMpKSBcXG90aW1lcyBEIl0sWzAsMSwiXFxhbHBoYV97W0FdLCBbQl0sIFtDXVxcY2lyYyBbRF19Il0sWzAsMiwiMV97W0FdfSBcXHRyaWFuZ2xlbGVmdCBcXGFscGhhX3tbQl0sW0NdLFtEXX0iLDJdLFsxLDMsIlxcYWxwaGFfe1tBXVxcY2lyYyBbQl0sW0NdLFtEXX0iXSxbMyw0LCJcXGFscGhhX3tbQV0sW0JdLFtDXX0gXFx0cmlhbmdsZXJpZ2h0IDFfe1tEXX0iXSxbMiw0LCJcXGFscGhhX3tbQV0sW0JdXFxjaXJjIFtDXSwgW0RdfSIsMl0sWzYsNywiXFxhbHBoYV97QSxCLENcXG90aW1lcyBEfSJdLFs3LDgsIlxcYWxwaGFfe0FcXG90aW1lcyBCLCBDLER9Il0sWzYsOSwiMV9BIFxcb3RpbWVzIFxcYWxwaGFfe0IsQyxEfSIsMl0sWzksMTAsIlxcYWxwaGFfe0EsQlxcb3RpbWVzIEMsRH0iLDJdLFs4LDEwLCJcXGFscGhhX3tBLEIsQ31cXG90aW1lcyAxX0QiXV0=
+\[\begin{tikzcd}
+	{[A]\circ([B]\circ([C]\circ [D])))} & {([A]\circ [B]) \circ ([C]\circ [D])} & {(([A]\circ [B]) \circ [C]) \circ [D])} \\
+	{[A]\circ (([B]\circ [C])\circ [D])} && {([A]\circ ([B]\circ [C])) \circ [D]} \\
+	& \iff \\
+	{A\otimes (B\otimes(C\otimes D)))} & {(A\otimes B)\otimes (C\otimes D)} & {((A\otimes B)\otimes C)\otimes D)} \\
+	{A\otimes ((B\otimes C) \otimes D)} && {(A\otimes (B\otimes C)) \otimes D}
+	\arrow["{\alpha_{[A], [B], [C]\circ [D]}}", from=1-1, to=1-2]
+	\arrow["{1_{[A]} \triangleleft \alpha_{[B],[C],[D]}}"', from=1-1, to=2-1]
+	\arrow["{\alpha_{[A]\circ [B],[C],[D]}}", from=1-2, to=1-3]
+	\arrow["{\alpha_{[A],[B],[C]} \triangleright 1_{[D]}}", from=1-3, to=2-3]
+	\arrow["{\alpha_{[A],[B]\circ [C], [D]}}"', from=2-1, to=2-3]
+	\arrow["{\alpha_{A,B,C\otimes D}}", from=4-1, to=4-2]
+	\arrow["{\alpha_{A\otimes B, C,D}}", from=4-2, to=4-3]
+	\arrow["{1_A \otimes \alpha_{B,C,D}}"', from=4-1, to=5-1]
+	\arrow["{\alpha_{A,B\otimes C,D}}"', from=5-1, to=5-3]
+	\arrow["{\alpha_{A,B,C}\otimes 1_D}", from=4-3, to=5-3]
+\end{tikzcd}\]
+\end{itemize}
+
+\clearpage
+\section{}
+
+\subsection{… , a monoid is a category, …}
+First, we must list the definitions of both a monoid and category.
+\begin{definition}[Monoid \cite{Abramsky_2010}]
+  \label{def:monoid}
+    A \textbf{\underline{monoid}} is a structure $(M,\cdot, 1)$ where $M$ is a set,
+    \[- \cdot - : M\times M \rightarrow M\]
+    is a binary operation, and $1 \in M$, satisfying the axioms $\forall x,y,z\in M$.
+    \[(x\cdot y)\cdot z = x\cdot (y\cdot z),\quad 1\cdot x = x = x\cdot 1\]
+\end{definition}
+\begin{definition}[Category \cite{Abramsky_2010} \cite{nlab:category} \cite{Grothendieck:61}]
+A \textbf{\underline{category}} consists of
+\begin{itemize}
+    \item A collection Ob$(\mathcal{C})$ of \textbf{\textit{objects}}.
+    \item A collection Ar$(\mathcal{C})$ of \textbf{\textit{arrows}} or morphisms.
+    \item For every arrow $f$, an object $s(f)$ called its source or domain, 
+    and an object $t(f)$ called its target or codomain. 
+    An arrow with domain $s(f)=A$ and codomain $t(f)=B$ is denoted $f:A \rightarrow B$.
+    \item For each pair of objects $A,B$, we define the set 
+    \[\mathcal{C}(A,B) := \{f \in \text{Ar}(\mathcal{C}) | f: A\rightarrow B\}\]
+    called the \textbf{\textit{hom-set}}.
+    \item For each pair of morphisms $f$ in $\mathcal{C}(A,B)$, and $g$ in $\mathcal{C}(B,C)$, 
+    a composite morphism  $g\circ f$ in $\mathcal{C}(A,C)$.
+    \[A\xrightarrow[]{f} B \xrightarrow[]{g} C\]
+    \item For each object $A$, an \textbf{\textit{identity}} arrow $1_A : A \rightarrow A$
+\end{itemize}
+where the following axioms are satisfied 
+whenever the domains and codomains match so that compositions are well-defined.
+\begin{itemize}
+    \item Associativity
+    \[\forall f,g,h\in\text{Ar}(\mathcal{C}), h\circ (g\circ f) = (h\circ g)\circ f\]
+    \item Unit
+    \[\forall f:A\rightarrow B, f\circ 1_A = f = 1_B \circ f\]
+\end{itemize}
+\end{definition}
+
+\clearpage
+A monoid $(M,\cdot,1_M)$ can then be defined as a category $\mathcal{M}$ with one object $*$ where
+\begin{itemize}
+    \item Each arrow $f_e:*\rightarrow *$ of the category corresponds to each element $e\in M$ of the monoid.
+    \item The source and target of all arrows are the same object $*$.
+    \item There is a single hom-set $\mathcal{M}(*, *)$.
+    \item Composition $f_b \circ f_a$ corresponds to applying binary operations $-\cdot a \cdot b$
+    \item The identity arrow on $*, 1_{*}$ corresponds to the unit of the monoid $1_M\in M$.
+\end{itemize}
+so the axioms are satisfied in the category $\mathcal{M}$ 
+iff the axioms are satisfied in the monoid $(M,\cdot,1_M)$.
+\begin{itemize}
+    \item Associativity
+    \[\forall f_a,f_b,f_c\in\text{Ar}(\mathcal{M}), f_c\circ (f_b\circ f_a) = (f_c\circ f_b)\circ f_a
+    \iff \forall a,b,c\in M, (a \cdot b) \cdot c = a \cdot (b\cdot c)\]
+    \item Unit
+    \[\forall f_a\in\text{Ar}(\mathcal{M}), f_a\circ 1_{*} = f_a = 1_{*} \circ f_a
+    \iff \forall a\in M, 1_M \cdot a = a = a \cdot 1_M\]
+\end{itemize}
+
+So every monoid is a special kind of category, and categories are the more general concept.
+
+\clearpage
+\subsection{… , a category is a monad, …}
+We note the following definitions.
+\begin{definition}[Strict]
+  A \underline{strict} bicategory is a bicategory where the natural isomorphisms $\alpha,\rho,\lambda$ are identities.
+\end{definition}
+\begin{definition}[Strict 2-category \cite{Lack_2009}]
+  \textbf{\underline{Strict 2-categories}} are strict bicategories. Conversely, bicategories are weak 2-categories.
+\end{definition}
+We can note that bicategories are then the generalisation of strict 2-categories, 
+the notion of a \textit{general 2-category}.
+
+One way to define the concept of monads is the following.
+\begin{note}
+  \[T^2 := T \circ T, \quad T^3 := T \circ T^2\]
+\end{note}
+\begin{definition}[Monad \cite{Abramsky_2010} \cite{Sobociński:2017}]
+\label{def:monad}
+A monad over a category $\mathcal{C}$ is a triple $(T,\eta,\mu)$ 
+where $T:\mathcal{C}\rightarrow\mathcal{C}$ is an endofunctor and 
+$\eta : 1_{\mathcal{C}} \rightarrow T, \mu : T^2 \rightarrow T$ are natural transformations
+such that the following diagram commutes.
+% https://q.uiver.app/#q=WzAsOCxbMCwwLCJUXjMgQSJdLFsxLDAsIlReMkEiXSxbMCwxLCJUXjJBIl0sWzEsMSwiVEEiXSxbMywwLCJUQSJdLFs0LDAsIlReMkEiXSxbMywxLCJUXjIgQSJdLFs0LDEsIlRBIl0sWzAsMSwiXFxtdV97VEF9Il0sWzAsMiwiVFxcbXVfQSIsMl0sWzEsMywiXFxtdV9BIl0sWzIsMywiXFxtdV9BIiwyXSxbNCw1LCJcXGV0YV97VEF9Il0sWzQsNiwiVF97XFxldGEgQX0iLDJdLFs2LDcsIlxcbXVfQSIsMl0sWzUsNywiXFxtdV9BIl0sWzQsNywiMV97VEF9IiwxXV0=
+\[\begin{tikzcd}
+	{T^3 A} & {T^2A} && TA & {T^2A} \\
+	{T^2A} & TA && {T^2 A} & TA
+	\arrow["{\mu_{TA}}", from=1-1, to=1-2]
+	\arrow["{T\mu_A}"', from=1-1, to=2-1]
+	\arrow["{\mu_A}", from=1-2, to=2-2]
+	\arrow["{\mu_A}"', from=2-1, to=2-2]
+	\arrow["{\eta_{TA}}", from=1-4, to=1-5]
+	\arrow["{T_{\eta A}}"', from=1-4, to=2-4]
+	\arrow["{\mu_A}"', from=2-4, to=2-5]
+	\arrow["{\mu_A}", from=1-5, to=2-5]
+	\arrow["{1_{TA}}"{description}, from=1-4, to=2-5]
+\end{tikzcd}\]
+    $\eta$ is the unit, and $\mu$ is the multiplication of the monad.
+\end{definition}
+This definition, however, can easily be generalised using 2-categories.
+
+\begin{definition}[Monad \cite{STREET1972149} \cite{Sobociński:2017}]
+\label{def:monad-gen}
+Let $\mathcal{C}$ denote any bicategory, strict or otherwise.
+A \textbf{\underline{monad}} $(X,S)$ consists of
+\begin{itemize}
+  \item A 0-cell $X$
+  \item A 1-cell $S : X \rightarrow X$
+  \item A pair of 2-cells $\eta: 1_S \rightarrow S, \mu : SS \rightarrow S$
+  called the \textit{unit} and \textit{multiplication} of the monad.
+\end{itemize}
+such that the following diagrams commute, up to a natural isomorphism.
+% https://q.uiver.app/#q=WzAsOCxbMCwwLCJTXjMiXSxbMSwwLCJTXjIiXSxbMCwxLCJTXjIiXSxbMSwxLCJTIl0sWzMsMCwiUyJdLFs0LDAsIlNeMiJdLFszLDEsIlNeMiJdLFs0LDEsIlMiXSxbMCwxLCJcXG11IFMiXSxbMCwyLCJTXFxtdSIsMl0sWzEsMywiXFxtdSJdLFsyLDMsIlxcbXUiLDJdLFs0LDUsIlxcZXRhIFMiXSxbNCw2LCJTXFxldGEiLDJdLFs2LDcsIlxcbXUiLDJdLFs1LDcsIlxcbXUiXSxbNCw3LCIxX1MiLDFdXQ==
+\[\begin{tikzcd}
+	{S^3} & {S^2} && S & {S^2} \\
+	{S^2} & S && {S^2} & S
+	\arrow["{\mu S}", from=1-1, to=1-2]
+	\arrow["S\mu"', from=1-1, to=2-1]
+	\arrow["\mu", from=1-2, to=2-2]
+	\arrow["\mu"', from=2-1, to=2-2]
+	\arrow["{\eta S}", from=1-4, to=1-5]
+	\arrow["S\eta"', from=1-4, to=2-4]
+	\arrow["\mu"', from=2-4, to=2-5]
+	\arrow["\mu", from=1-5, to=2-5]
+	\arrow["{1_S}"{description}, from=1-4, to=2-5]
+\end{tikzcd}\]
+where the following notation is used.
+\[S^2 := S\circ S := SS, \quad S^3 := S \circ S^2 := SSS\]
+\[S\mu := S \triangleleft \mu, \quad \mu S := \mu \triangleright S\]
+\end{definition}
+\begin{definition}
+  If we let the strict 2-category \textbf{Cat} of categories, functors, and natural transformations
+  be the bicategory in Def. \ref{def:monad-gen}, then we get Def. \ref{def:monad}, where
+  \begin{itemize}
+    \item The 0-cell is the category $\mathcal{C}$ in Def. \ref{def:monad}
+    \item The 1-cell is the endofunctor on $T: \mathcal{C} \rightarrow \mathcal{C}$
+    \item The 2-cells are the natural transformations $\mu: T^2 \rightarrow T, \eta: 1_T \rightarrow T$.
+  \end{itemize}
+\end{definition}
+\begin{definition}[Span \cite{nlab:span} \cite{Sobociński:2017}]
+  A span in a category $\mathcal{C}$ from an object $A$ to $B$ is a diagram of the form
+\[A \xleftarrow[]{f} C \xrightarrow[]{g} B\]
+where $C$ is some other object in $\mathcal{C}$
+
+If $\mathcal{C}$ has pullbacks, we can compose spans, so given a span from $A$ to $B$ and $B$ to $C$,
+we can take a pullback and obtain a span from $A$ to $C$.
+% https://q.uiver.app/#q=WzAsOSxbMiwwLCJEXFx0aW1lc19CIEUiXSxbMSwxLCJEIl0sWzMsMSwiRSJdLFswLDIsIkEiXSxbMiwyLCJCIl0sWzQsMiwiQyJdLFs3LDAsIkRcXHRpbWVzX0IgRSJdLFs2LDEsIkEiXSxbOCwxLCJDIl0sWzAsMSwicF9EIiwyXSxbMCwyLCJwX0UiXSxbMSwzLCJmIiwyXSxbMSw0LCJnIiwyXSxbMiw0LCJoIl0sWzIsNSwiayJdLFs2LDcsImZwX0QiLDJdLFs2LDgsImtwX0UiXV0=
+\[\begin{tikzcd}
+	&& {D\times_B E} &&&&& {D\times_B E} \\
+	& D && E &&& A && C \\
+	A && B && C
+	\arrow["{p_D}"', from=1-3, to=2-2]
+	\arrow["{p_E}", from=1-3, to=2-4]
+	\arrow["f"', from=2-2, to=3-1]
+	\arrow["g"', from=2-2, to=3-3]
+	\arrow["h", from=2-4, to=3-3]
+	\arrow["k", from=2-4, to=3-5]
+	\arrow["{fp_D}"', from=1-8, to=2-7]
+	\arrow["{kp_E}", from=1-8, to=2-9]
+\end{tikzcd}\]
+Maps between spans are then functions $f : C \rightarrow C'$ which make the diagram commute.
+% https://q.uiver.app/#q=WzAsNCxbMSwxLCJDIl0sWzAsMiwiQSJdLFsyLDIsIkIiXSxbMSwwLCJDJyJdLFswLDEsImciXSxbMCwyLCJoIiwyXSxbMywxLCJnJyIsMix7ImN1cnZlIjoxfV0sWzMsMiwiZyciLDAseyJjdXJ2ZSI6LTF9XSxbMCwzLCJmIiwyXV0=
+\[\begin{tikzcd}
+	& {C'} \\
+	& C \\
+	A && B
+	\arrow["g", from=2-2, to=3-1]
+	\arrow["h"', from=2-2, to=3-3]
+	\arrow["{g'}"', curve={height=6pt}, from=1-2, to=3-1]
+	\arrow["{h'}", curve={height=-6pt}, from=1-2, to=3-3]
+	\arrow["f"', from=2-2, to=1-2]
+\end{tikzcd}\]
+The bicategory Span$(\mathcal{C})$ then consists of
+\begin{itemize}
+  \item Objects of $\mathcal{C}$ as 0-cells
+  \item Spans as 1-cells
+  \item Maps between spans as 2-cells
+\end{itemize}
+\end{definition}
+  Using the bicategory Span(\textbf{Set}) in Def. \ref{def:monad-gen} for a monad, we get the following.
+\begin{example}[\cite{Sobociński:2017}]
+\[\]
+\begin{itemize}
+  \item The 0-cell is a set $X$
+  \item The endo-1-cell is a span $S$ of the form
+  \[X\xleftarrow[]{\delta_0} Y \xrightarrow[]{\delta_1} X\]
+  \item The unit 2-cell is the function 
+  \[\eta: X\rightarrow Y, \quad \delta_0 \circ \eta (x) = \delta_1 \circ \eta (x) =x\]
+  \item The multiplication 2-cell $SS \rightarrow S$ is the function
+  \[\mu: Y\times_X Y \rightarrow Y, \quad \delta_0\circ \mu (y,y') = \delta_0(y), 
+  \quad \delta_1\circ \mu (y,y') = \delta_1 (y')\]
+  where $Y\times_X Y = \{(y,y') | \delta_1(y) = \delta_0(y')\}$.
+\end{itemize}
+which satisfy the axioms of
+\begin{itemize}
+  \item Associativity
+  \[\mu(\mu(y,y'), y'') = \mu(y, \mu(y', y''))\]
+  \item Unit
+  \[\mu(y, \eta\circ \delta_1 (y)) = y = \mu(\eta \circ \delta_0 (y), y)\]
+\end{itemize}
+\end{example}
+Here the monad of Span(\textbf{Set}) can be described as a category where
+\begin{itemize}
+  \item $X$ is the set of objects
+  \item $Y$ is the set of arrows
+  \item $\delta_0,\delta_1 : Y\to X$ give the domain and codomain of each arrow respectively.
+  \item The function $\eta:X\rightarrow Y$ gives the identity arrows $\eta(x) = 1_x$ for each $x\in X$.
+  \item $Y\times_X Y$ is the set of composable arrows, and $\mu: Y\times_X Y\to Y$ defines composition.
+  \item The associative and unit axioms are defined in the monad as they should be in the category.
+\end{itemize}
+Then, we have that this specific category as being a special case 
+of a monad on the specific bicategory of Span(\textbf{Set}).
+
+\subsection{… , a monad is a monoid, …}
+At the same time, the concept of a monoid on sets $(M,\cdot,1_M)$ can be generalised to categories.
+
+From Def. \ref{def:moncat}, 
+the monoid on $(\textbf{Set}, \times, \{*\})$
+gives rise to the "monoid-as-a-set" from Def. \ref{def:monoid}.
+
+Here we give definitions to aid in the understanding of a monoid in \textbf{Set}. 
+\begin{definition}[\cite{Kissinger:2024}]
+  A strict SMC is an SMC where $\alpha=1,\lambda=\rho$.
+  $(\sigma\neq 1!)$.
+\end{definition}
+\begin{definition}[\cite{Kissinger:2024}]
+  A monoid in a strict monoidal category $(\mathcal{C},\otimes, I)$ is an object $X$
+  with morphisms 
+  \[\mu : X\otimes X \rightarrow X, \quad \eta: I\rightarrow A\]
+  satisfying:
+  \begin{itemize}
+      \item \underline{associativity}
+  % https://q.uiver.app/#q=WzAsNCxbMCwwLCJYXFxvdGltZXMgWFxcb3RpbWVzIFgiXSxbMSwwLCJYXFxvdGltZXMgWCJdLFsxLDEsIlxcYnVsbGV0Il0sWzAsMSwiWFxcb3RpbWVzIFgiXSxbMCwxLCJYXFxvdGltZXMgXFxtdSJdLFsxLDIsIlxcbXUiXSxbMCwzLCJcXG11IFxcb3RpbWVzIFgiLDJdLFszLDIsIlxcbXUiLDJdXQ==
+  \[\begin{tikzcd}
+      {X\otimes X\otimes X} & {X\otimes X} \\
+      {X\otimes X} & X
+      \arrow["{X\otimes \mu}", from=1-1, to=1-2]
+      \arrow["\mu", from=1-2, to=2-2]
+      \arrow["{\mu \otimes X}"', from=1-1, to=2-1]
+      \arrow["\mu"', from=2-1, to=2-2]
+  \end{tikzcd}\]
+      \item \underline{left unit}
+  % https://q.uiver.app/#q=WzAsMyxbMCwwLCJYIl0sWzEsMCwiWFxcb3RpbWVzIFgiXSxbMSwxLCJYIl0sWzAsMSwiXFxldGEgXFxvdGltZXMgWCJdLFsxLDIsIlxcbXUiXSxbMCwyLCIxX1giLDJdXQ==
+  \[\begin{tikzcd}
+      X & {X\otimes X} \\
+      & X
+      \arrow["{\eta \otimes X}", from=1-1, to=1-2]
+      \arrow["\mu", from=1-2, to=2-2]
+      \arrow["{1_X}"', from=1-1, to=2-2]
+  \end{tikzcd}\]
+      \item \underline{right unit}
+  % https://q.uiver.app/#q=WzAsMyxbMCwwLCJYIl0sWzEsMCwiWFxcb3RpbWVzIFgiXSxbMSwxLCJYIl0sWzAsMSwiWFxcb3RpbWVzIFxcZXRhIl0sWzEsMiwiXFxtdSJdLFswLDIsIjFfWCIsMl1d
+  \[\begin{tikzcd}
+      X & {X\otimes X} \\
+      & X
+      \arrow["{X\otimes \eta}", from=1-1, to=1-2]
+      \arrow["\mu", from=1-2, to=2-2]
+      \arrow["{1_X}"', from=1-1, to=2-2]
+  \end{tikzcd}\]
+  \end{itemize}
+\end{definition}
+
+\begin{example}[\cite{Kissinger:2024}], where
+\begin{itemize}
+  \item Objects are a set $X$
+  \item Unit object is a one element set $\{*\}$
+  \item \[a\cdot b := \mu(a,b)\]
+  \item \[1 := \eta(*)\]
+\end{itemize}
+\[(X, \mu : X\times X \rightarrow X, \eta : \{*\} \rightarrow X)\]
+\[a\cdot b := \mu(a,b)\]
+\[1 := \eta(*)\]
+
+\end{example}
+
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\end{document}
