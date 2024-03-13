@@ -4,6 +4,9 @@
 *.log
 *.gz
 
+*.bbl
+*.blg
+
 template.tex
 .DS_Store
 

@@ -198,6 +198,10 @@ A bicategory is also called a \textit{weak 2-category}.
 \end{tikzcd}\]
 \end{itemize}
 \end{definition}
+\begin{definition}
+  \label{def:strict-mon}
+  A monoidal category is \underline{strict} if $\alpha,\lambda,\rho$ are all identities.
+\end{definition}
 \begin{definition}[\cite{maclane:71}, \cite{nlab:bicategory}]
 A monoidal category $M$ is a bicategory $BM$ with a single object $\bullet$ where
 \begin{itemize}
@@ -329,8 +333,11 @@ We note the following definitions.
 \begin{definition}[Strict 2-category \cite{Lack_2009}]
   \textbf{\underline{Strict 2-categories}} are strict bicategories. Conversely, bicategories are weak 2-categories.
 \end{definition}
-We can note that bicategories are then the generalisation of strict 2-categories, 
+We can note that bicategories are then the generalisation of strict 2-categories - 
 the notion of a \textit{general 2-category}.
+\begin{note}
+  A 2-category in this paper refers to any strict or general 2-category, including bicategories.
+\end{note}
 
 One way to define the concept of monads is the following.
 \begin{note}
@@ -401,9 +408,10 @@ where the following notation is used.
 \begin{definition}[Span \cite{nlab:span} \cite{Sobociński:2017}]
   A span in a category $\mathcal{C}$ from an object $A$ to $B$ is a diagram of the form
 \[A \xleftarrow[]{f} C \xrightarrow[]{g} B\]
-where $C$ is some other object in $\mathcal{C}$
+where $C$ is some other object in $\mathcal{C}$.
 
-If $\mathcal{C}$ has pullbacks, we can compose spans, so given a span from $A$ to $B$ and $B$ to $C$,
+If $\mathcal{C}$ has pullbacks \cite{Abramsky_2010}, we can compose spans, 
+so given a span from $A$ to $B$ and $B$ to $C$,
 we can take a pullback and obtain a span from $A$ to $C$.
 % https://q.uiver.app/#q=WzAsOSxbMiwwLCJEXFx0aW1lc19CIEUiXSxbMSwxLCJEIl0sWzMsMSwiRSJdLFswLDIsIkEiXSxbMiwyLCJCIl0sWzQsMiwiQyJdLFs3LDAsIkRcXHRpbWVzX0IgRSJdLFs2LDEsIkEiXSxbOCwxLCJDIl0sWzAsMSwicF9EIiwyXSxbMCwyLCJwX0UiXSxbMSwzLCJmIiwyXSxbMSw0LCJnIiwyXSxbMiw0LCJoIl0sWzIsNSwiayJdLFs2LDcsImZwX0QiLDJdLFs2LDgsImtwX0UiXV0=
 \[\begin{tikzcd}
@@ -460,80 +468,137 @@ which satisfy the axioms of
   \[\mu(y, \eta\circ \delta_1 (y)) = y = \mu(\eta \circ \delta_0 (y), y)\]
 \end{itemize}
 \end{example}
-Here the monad of Span(\textbf{Set}) can be described as a category where
+Here the monad of Span(\textbf{Set}) can be described as a category $\mathcal{C}$ where
 \begin{itemize}
   \item $X$ is the set of objects
   \item $Y$ is the set of arrows
   \item $\delta_0,\delta_1 : Y\to X$ give the domain and codomain of each arrow respectively.
   \item The function $\eta:X\rightarrow Y$ gives the identity arrows $\eta(x) = 1_x$ for each $x\in X$.
+  \item The hom-set for objects $a,b\in X$ is defined by 
+  \[\mathcal{C}(a,b) := \{y\in Y | \delta_0 (y) = a \wedge \delta_1(y) = b \}\]
   \item $Y\times_X Y$ is the set of composable arrows, and $\mu: Y\times_X Y\to Y$ defines composition.
   \item The associative and unit axioms are defined in the monad as they should be in the category.
 \end{itemize}
-Then, we have that this specific category as being a special case 
-of a monad on the specific bicategory of Span(\textbf{Set}).
+\begin{definition}[Locally small category \cite{Abramsky_2010} \cite{nlab:locally_small_category}]
+  A \textbf{locally small category} is a category where all hom-sets are sets.
+\end{definition}
+\begin{definition}[Small category \cite{nlab:locally_small_category}]
+  A \textbf{small category} is a locally small category where its set of objects is a set.
+\end{definition}
+\begin{example}
+  The category of sets and functions, \textbf{Set}, is a locally small, but not small, category.
+\end{example}
+Then, we have that the monad on the bicategory of Span(\textbf{Set}) describes small categories,
+since its set of objects is a set, and its hom-sets are sets.
 
 \subsection{… , a monad is a monoid, …}
 At the same time, the concept of a monoid on sets $(M,\cdot,1_M)$ can be generalised to categories.
 
-From Def. \ref{def:moncat}, 
-the monoid on $(\textbf{Set}, \times, \{*\})$
-gives rise to the "monoid-as-a-set" from Def. \ref{def:monoid}.
+% From Def. \ref{def:moncat}, 
+% the monoid on $(\textbf{Set}, \times, \{*\})$
+% gives rise to the "monoid-as-a-set" from Def. \ref{def:monoid}.
 
-Here we give definitions to aid in the understanding of a monoid in \textbf{Set}. 
-\begin{definition}[\cite{Kissinger:2024}]
-  A strict SMC is an SMC where $\alpha=1,\lambda=\rho$.
-  $(\sigma\neq 1!)$.
-\end{definition}
-\begin{definition}[\cite{Kissinger:2024}]
-  A monoid in a strict monoidal category $(\mathcal{C},\otimes, I)$ is an object $X$
+% Here we give definitions to aid in understanding the "monoid-as-a-set". 
+\begin{note}
+  Since a strict monoidal category $(\mathcal{C},\otimes, I, \alpha, \lambda, \rho)$ 
+  (Def. \ref{def:strict-mon}) is such that $\alpha, \lambda, \rho$ are identities, 
+  it can be described succinctly as $(\mathcal{C},\otimes, I)$.
+\end{note}
+\begin{definition}[Monoid \cite{Kissinger19:2024}]
+  A \textbf{monoid} in a strict monoidal category $(\mathcal{C},\otimes, I)$ is an object $X$
   with morphisms 
-  \[\mu : X\otimes X \rightarrow X, \quad \eta: I\rightarrow A\]
-  satisfying:
-  \begin{itemize}
-      \item \underline{associativity}
-  % https://q.uiver.app/#q=WzAsNCxbMCwwLCJYXFxvdGltZXMgWFxcb3RpbWVzIFgiXSxbMSwwLCJYXFxvdGltZXMgWCJdLFsxLDEsIlxcYnVsbGV0Il0sWzAsMSwiWFxcb3RpbWVzIFgiXSxbMCwxLCJYXFxvdGltZXMgXFxtdSJdLFsxLDIsIlxcbXUiXSxbMCwzLCJcXG11IFxcb3RpbWVzIFgiLDJdLFszLDIsIlxcbXUiLDJdXQ==
-  \[\begin{tikzcd}
-      {X\otimes X\otimes X} & {X\otimes X} \\
-      {X\otimes X} & X
-      \arrow["{X\otimes \mu}", from=1-1, to=1-2]
-      \arrow["\mu", from=1-2, to=2-2]
-      \arrow["{\mu \otimes X}"', from=1-1, to=2-1]
-      \arrow["\mu"', from=2-1, to=2-2]
-  \end{tikzcd}\]
-      \item \underline{left unit}
-  % https://q.uiver.app/#q=WzAsMyxbMCwwLCJYIl0sWzEsMCwiWFxcb3RpbWVzIFgiXSxbMSwxLCJYIl0sWzAsMSwiXFxldGEgXFxvdGltZXMgWCJdLFsxLDIsIlxcbXUiXSxbMCwyLCIxX1giLDJdXQ==
-  \[\begin{tikzcd}
-      X & {X\otimes X} \\
-      & X
-      \arrow["{\eta \otimes X}", from=1-1, to=1-2]
-      \arrow["\mu", from=1-2, to=2-2]
-      \arrow["{1_X}"', from=1-1, to=2-2]
-  \end{tikzcd}\]
-      \item \underline{right unit}
-  % https://q.uiver.app/#q=WzAsMyxbMCwwLCJYIl0sWzEsMCwiWFxcb3RpbWVzIFgiXSxbMSwxLCJYIl0sWzAsMSwiWFxcb3RpbWVzIFxcZXRhIl0sWzEsMiwiXFxtdSJdLFswLDIsIjFfWCIsMl1d
-  \[\begin{tikzcd}
-      X & {X\otimes X} \\
-      & X
-      \arrow["{X\otimes \eta}", from=1-1, to=1-2]
-      \arrow["\mu", from=1-2, to=2-2]
-      \arrow["{1_X}"', from=1-1, to=2-2]
-  \end{tikzcd}\]
-  \end{itemize}
+  \[\mu : X\otimes X \rightarrow X, \quad \eta: I\rightarrow X\]
+  satisfying the commuting diagrams describing associativity and unit axioms respectively.
+% https://q.uiver.app/#q=WzAsOCxbMCwwLCJYXFxvdGltZXMgWFxcb3RpbWVzIFgiXSxbMSwwLCJYXFxvdGltZXMgWCJdLFsxLDEsIlgiXSxbMCwxLCJYXFxvdGltZXMgWCJdLFszLDAsIlgiXSxbNCwwLCJYXFxvdGltZXMgWCJdLFs0LDEsIlgiXSxbMywxLCJYXFxvdGltZXMgWCJdLFswLDEsIjFfWFxcb3RpbWVzIFxcbXUiXSxbMSwyLCJcXG11Il0sWzAsMywiXFxtdSBcXG90aW1lcyAxX1giLDJdLFszLDIsIlxcbXUiLDJdLFs0LDUsIlxcZXRhIFxcb3RpbWVzIDFfWCJdLFs1LDYsIlxcbXUiXSxbNCw2LCIxX1giLDFdLFs0LDcsIjFfWFxcb3RpbWVzIFxcZXRhIiwyXSxbNyw2LCJcXG11IiwyXV0=
+\[\begin{tikzcd}
+	{X\otimes X\otimes X} & {X\otimes X} && X & {X\otimes X} \\
+	{X\otimes X} & X && {X\otimes X} & X
+	\arrow["{1_X\otimes \mu}", from=1-1, to=1-2]
+	\arrow["\mu", from=1-2, to=2-2]
+	\arrow["{\mu \otimes 1_X}"', from=1-1, to=2-1]
+	\arrow["\mu"', from=2-1, to=2-2]
+	\arrow["{\eta \otimes 1_X}", from=1-4, to=1-5]
+	\arrow["\mu", from=1-5, to=2-5]
+	\arrow["{1_X}"{description}, from=1-4, to=2-5]
+	\arrow["{1_X\otimes \eta}"', from=1-4, to=2-4]
+	\arrow["\mu"', from=2-4, to=2-5]
+\end{tikzcd}\]
 \end{definition}
 
-\begin{example}[\cite{Kissinger:2024}], where
-\begin{itemize}
-  \item Objects are a set $X$
-  \item Unit object is a one element set $\{*\}$
-  \item \[a\cdot b := \mu(a,b)\]
-  \item \[1 := \eta(*)\]
-\end{itemize}
+"Monoids-as-a-set" can then be formalised as follows.
+\begin{example}["Monoids-as-a-set" \cite{Kissinger19:2024}]
+Monoids in $(\textbf{Set}, \times, \{*\})$ are monoids 
+% \begin{itemize}
+%   \item Objects are a set $X$
+%   \item Unit object is a one element set $\{*\}$
+%   \item \[a\cdot b := \mu(a,b)\]
+%   \item \[1 := \eta(*)\]
+% \end{itemize}
 \[(X, \mu : X\times X \rightarrow X, \eta : \{*\} \rightarrow X)\]
+where
 \[a\cdot b := \mu(a,b)\]
 \[1 := \eta(*)\]
-
+so $\mu$ is the binary relation, and $\eta(*)$ is the unit.
 \end{example}
+\begin{definition}[\cite{nlab:full_sub-2-category}]
+  The 2-category $C$ is a full sub-2-category of $D$ if there is a 2-functor $F:C\to D$
+  where for all objects $c_1,c_2 \in C$, the component functor $F_{c_1,c_2}$ is an equivalence of categories
+  \[F_{c_1,c_2} : C(c_1,c_2) \xrightarrow[]{\simeq} D(F(c_1), F(c_2))\]
+\end{definition}
 
+Consider a strict 2-category $D$ and an object $c$ so that we have the category $D(c,c)$.
+$D(c,c)$ is a full sub-2-category of $D$, since $D(c,c)$ is a 2-category with one object $c$.
+
+\begin{proposition}
+  $D(c,c)$ is a strict monoidal category.
+\end{proposition}
+\begin{proof}
+\begin{itemize}
+  \item $D(c,c)$ is the category, where objects are 1-cells, and arrows are 2-cells.
+  \item The monoidal product $\otimes$ on 1-cells is composition of 1-cells.
+  \item The unit object is the identity cell at $c, 1_c : c\to c$.
+  \item 1-cells satisfy the associativity and unit axioms, by definition of the strict bicategory $D$,
+  where the associator and unit natural isomorphisms are identities, so 
+  \[(h \circ g) \circ f = h \circ (g \circ f), \quad 1 \circ f = f = f \circ 1\]
+  \item 2-cells satisfy the associativity and unit axioms, by definition of arrows in the category $D(c,c)$
+\end{itemize}
+Thus, the natural transformation associator and unitors are identities, 
+fulfilling the definition of a strict monoidal category.
+\end{proof}
+\begin{note}
+  We denote $D(c,c)$ as $[C,C]$.
+\end{note}
+\begin{example}
+  Then, a monoid on the strict monoidal category $([C,C], \circ, 1_C)$ is 
+  an object $S : C \to C$ with morphisms
+  \[\mu : S \circ S \to S, \quad \eta : 1_C \to S\]
+  where the diagrams commute.
+% https://q.uiver.app/#q=WzAsOCxbMCwwLCJTXjMiXSxbMSwwLCJTXjIiXSxbMCwxLCJTXjIiXSxbMSwxLCJTIl0sWzMsMCwiUyJdLFs0LDAsIlNeMiJdLFszLDEsIlNeMiJdLFs0LDEsIlMiXSxbMCwxLCJcXG11IFMiXSxbMCwyLCJTXFxtdSIsMl0sWzEsMywiXFxtdSJdLFsyLDMsIlxcbXUiLDJdLFs0LDUsIlxcZXRhIFMiXSxbNCw2LCJTXFxldGEiLDJdLFs2LDcsIlxcbXUiLDJdLFs1LDcsIlxcbXUiXSxbNCw3LCIxX1MiLDFdXQ==
+\[\begin{tikzcd}
+	{S^3} & {S^2} && S & {S^2} \\
+	{S^2} & S && {S^2} & S
+	\arrow["{\mu S}", from=1-1, to=1-2]
+	\arrow["S\mu"', from=1-1, to=2-1]
+	\arrow["\mu", from=1-2, to=2-2]
+	\arrow["\mu"', from=2-1, to=2-2]
+	\arrow["{\eta S}", from=1-4, to=1-5]
+	\arrow["S\eta"', from=1-4, to=2-4]
+	\arrow["\mu"', from=2-4, to=2-5]
+	\arrow["\mu", from=1-5, to=2-5]
+	\arrow["{1_S}"{description}, from=1-4, to=2-5]
+\end{tikzcd}\]
+This is precisely the definition of a monad in Def. \ref{def:monad-gen}, which is described with
+\begin{itemize}
+  \item The 0-cell $C$
+  \item The 1-cell $S: C \to C$
+  \item The 2-cells $\mu : S \circ S \to S, \quad \eta : 1_C \to S$
+\end{itemize}
+\end{example}
+Then, a monad is a special kind of monoid on the category $([C,C], \circ, 1_C)$.
+
+\begin{definition}[\cite{Kissinger20:2024}]
+  A monad is a monoid in the category of endofunctors.
+\end{definition}
 
 \bibliographystyle{plain}
 \bibliography{refs}
