@@ -12,6 +12,7 @@
 \usepackage{ulem}
 \usepackage{bbm}
 \usepackage{hyperref}
+\usepackage{cite}
 \DeclareMathOperator*{\argmax}{argmax}
 \DeclareMathOperator*{\argmin}{argmin}
 
@@ -80,15 +81,42 @@
 %     \item \textbf{full} if each map $F_{A,B}:\mathcal{C}(A,B) \rightarrow \mathcal{D}(F\ A, F\ B)$ is surjective
 % \end{itemize}
 
-\section{}
-\subsection{}
+Here, a few definitions which will be used in this paper are listed.
+\begin{definition}[Category \cite{Abramsky_2010, nlab:category, Grothendieck:61}]
+\label{def:cat}
+A \textbf{\underline{category}} consists of
+\begin{itemize}
+    \item A collection Ob$(\mathcal{C})$ of \textbf{\textit{objects}}.
+    \item A collection Ar$(\mathcal{C})$ of \textbf{\textit{arrows}} or morphisms.
+    \item For every arrow $f$, an object $s(f)$ called its source or domain, 
+    and an object $t(f)$ called its target or codomain. 
+    An arrow with domain $s(f)=A$ and codomain $t(f)=B$ is denoted $f:A \rightarrow B$.
+    \item For each pair of objects $A,B$, we define the set 
+    \[\mathcal{C}(A,B) := \{f \in \text{Ar}(\mathcal{C}) | f: A\rightarrow B\}\]
+    called the \textbf{\textit{hom-set}}.
+    \item For each pair of morphisms $f$ in $\mathcal{C}(A,B)$, and $g$ in $\mathcal{C}(B,C)$, 
+    a composite morphism  $g\circ f$ in $\mathcal{C}(A,C)$.
+    \[A\xrightarrow[]{f} B \xrightarrow[]{g} C\]
+    \item For each object $A$, an \textbf{\textit{identity}} arrow $1_A : A \rightarrow A$
+\end{itemize}
+where the following axioms are satisfied 
+whenever the domains and codomains match so that compositions are well-defined.
+\begin{itemize}
+    \item Associativity
+    \[\forall f,g,h\in\text{Ar}(\mathcal{C}), h\circ (g\circ f) = (h\circ g)\circ f\]
+    \item Unit
+    \[\forall f:A\rightarrow B, f\circ 1_A = f = 1_B \circ f\]
+\end{itemize}
+\end{definition}
 \begin{definition}[\cite{Abramsky_2010}]
 A \underline{natural isomorphism} is a natural transformation $t : F \rightarrow G$ 
 where each arrow $t_A$ in its family of arrows is isomorphic:
 \[t_A : F\ A \xrightarrow[]{\cong} G\ A\] 
 \end{definition}
+\section{}
+\subsection{}
 
-\begin{definition}[\cite{maclane:71}, \cite{nlab:bicategory} \cite{BénabouJean2006Itb}]
+\begin{definition}[\cite{maclane:71, nlab:bicategory, BénabouJean2006Itb}]
 A \textbf{\underline{bicategory}} $B$ consists of
 \begin{itemize}
     \item A collection of objects $a,b,c,...$ called \textbf{\textit{0-cells}}.
@@ -138,7 +166,7 @@ A \textbf{\underline{bicategory}} $B$ consists of
     the component $\alpha_{h,g,f}$ called an \textbf{\textit{associator}} defined as
     \[\alpha_{h,g,f} : h\circ(g\circ f) \Rightarrow (h \circ g) \circ f\]
 \end{itemize}
-such that the following conditions hold
+such that the following \textit{coherence} conditions hold
 \begin{itemize}
     \item The \textit{pentagon identity} is satisfied by the associators - for any quadruple of 1-cells
     \[a\xrightarrow[]{f} b\xrightarrow[]{g} c\xrightarrow[]{h} d \xrightarrow[]{k} e\]
@@ -198,11 +226,8 @@ A bicategory is also called a \textit{weak 2-category}.
 \end{tikzcd}\]
 \end{itemize}
 \end{definition}
-\begin{definition}
-  \label{def:strict-mon}
-  A monoidal category is \underline{strict} if $\alpha,\lambda,\rho$ are all identities.
-\end{definition}
-\begin{definition}[\cite{maclane:71}, \cite{nlab:bicategory}]
+
+\begin{definition}[\cite{maclane:71, nlab:bicategory}]
 A monoidal category $M$ is a bicategory $BM$ with a single object $\bullet$ where
 \begin{itemize}
     \item Objects $A$ of $M$ become 1-cells $[A]:\bullet \rightarrow \bullet$ of $BM$
@@ -268,41 +293,15 @@ iff the corresponding diagrams \cite{Abramsky_2010} commute in $M$.
 \section{}
 
 \subsection{… , a monoid is a category, …}
-First, we must list the definitions of both a monoid and category.
+First, we must list the definition of a monoid, with categories being defined as in Def. \ref{def:cat}.
 \begin{definition}[Monoid \cite{Abramsky_2010}]
   \label{def:monoid}
-    A \textbf{\underline{monoid}} is a structure $(M,\cdot, 1)$ where $M$ is a set,
+    A \textbf{\underline{monoid}} is a structure $(M,\cdot, 1_M)$ where $M$ is a set,
     \[- \cdot - : M\times M \rightarrow M\]
-    is a binary operation, and $1 \in M$, satisfying the axioms $\forall x,y,z\in M$.
-    \[(x\cdot y)\cdot z = x\cdot (y\cdot z),\quad 1\cdot x = x = x\cdot 1\]
-\end{definition}
-\begin{definition}[Category \cite{Abramsky_2010} \cite{nlab:category} \cite{Grothendieck:61}]
-A \textbf{\underline{category}} consists of
-\begin{itemize}
-    \item A collection Ob$(\mathcal{C})$ of \textbf{\textit{objects}}.
-    \item A collection Ar$(\mathcal{C})$ of \textbf{\textit{arrows}} or morphisms.
-    \item For every arrow $f$, an object $s(f)$ called its source or domain, 
-    and an object $t(f)$ called its target or codomain. 
-    An arrow with domain $s(f)=A$ and codomain $t(f)=B$ is denoted $f:A \rightarrow B$.
-    \item For each pair of objects $A,B$, we define the set 
-    \[\mathcal{C}(A,B) := \{f \in \text{Ar}(\mathcal{C}) | f: A\rightarrow B\}\]
-    called the \textbf{\textit{hom-set}}.
-    \item For each pair of morphisms $f$ in $\mathcal{C}(A,B)$, and $g$ in $\mathcal{C}(B,C)$, 
-    a composite morphism  $g\circ f$ in $\mathcal{C}(A,C)$.
-    \[A\xrightarrow[]{f} B \xrightarrow[]{g} C\]
-    \item For each object $A$, an \textbf{\textit{identity}} arrow $1_A : A \rightarrow A$
-\end{itemize}
-where the following axioms are satisfied 
-whenever the domains and codomains match so that compositions are well-defined.
-\begin{itemize}
-    \item Associativity
-    \[\forall f,g,h\in\text{Ar}(\mathcal{C}), h\circ (g\circ f) = (h\circ g)\circ f\]
-    \item Unit
-    \[\forall f:A\rightarrow B, f\circ 1_A = f = 1_B \circ f\]
-\end{itemize}
+    is a binary operation, and $1_M \in M$, satisfying the axioms $\forall x,y,z\in M$.
+    \[(x\cdot y)\cdot z = x\cdot (y\cdot z),\quad 1_M\cdot x = x = x\cdot 1_M\]
 \end{definition}
 
-\clearpage
 A monoid $(M,\cdot,1_M)$ can then be defined as a category $\mathcal{M}$ with one object $*$ where
 \begin{itemize}
     \item Each arrow $f_e:*\rightarrow *$ of the category corresponds to each element $e\in M$ of the monoid.
@@ -333,17 +332,16 @@ We note the following definitions.
 \begin{definition}[Strict 2-category \cite{Lack_2009}]
   \textbf{\underline{Strict 2-categories}} are strict bicategories. Conversely, bicategories are weak 2-categories.
 \end{definition}
-We can note that bicategories are then the generalisation of strict 2-categories - 
+\begin{note}
+Bicategories are then the generalisation of strict 2-categories - 
 the notion of a \textit{general 2-category}.
+\end{note}
 \begin{note}
   A 2-category in this paper refers to any strict or general 2-category, including bicategories.
 \end{note}
 
 One way to define the concept of monads is the following.
-\begin{note}
-  \[T^2 := T \circ T, \quad T^3 := T \circ T^2\]
-\end{note}
-\begin{definition}[Monad \cite{Abramsky_2010} \cite{Sobociński:2017}]
+\begin{definition}[Monad \cite{Abramsky_2010, Sobociński:2017}]
 \label{def:monad}
 A monad over a category $\mathcal{C}$ is a triple $(T,\eta,\mu)$ 
 where $T:\mathcal{C}\rightarrow\mathcal{C}$ is an endofunctor and 
@@ -365,19 +363,22 @@ such that the following diagram commutes.
 \end{tikzcd}\]
     $\eta$ is the unit, and $\mu$ is the multiplication of the monad.
 \end{definition}
+\begin{note}
+  \[T^2 := T \circ T, \quad T^3 := T \circ T^2\]
+\end{note}
 This definition, however, can easily be generalised using 2-categories.
 
-\begin{definition}[Monad \cite{STREET1972149} \cite{Sobociński:2017}]
+\begin{definition}[Monad \cite{STREET1972149, Sobociński:2017}]
 \label{def:monad-gen}
-Let $\mathcal{C}$ denote any bicategory, strict or otherwise.
-A \textbf{\underline{monad}} $(X,S)$ consists of
+Let $\mathcal{C}$ denote any bicategory.
+A \textbf{\underline{monad}} $(X,S)$ in $\mathcal{C}$ consists of
 \begin{itemize}
   \item A 0-cell $X$
   \item A 1-cell $S : X \rightarrow X$
   \item A pair of 2-cells $\eta: 1_S \rightarrow S, \mu : SS \rightarrow S$
   called the \textit{unit} and \textit{multiplication} of the monad.
 \end{itemize}
-such that the following diagrams commute, up to a natural isomorphism.
+such that the following diagrams commute.
 % https://q.uiver.app/#q=WzAsOCxbMCwwLCJTXjMiXSxbMSwwLCJTXjIiXSxbMCwxLCJTXjIiXSxbMSwxLCJTIl0sWzMsMCwiUyJdLFs0LDAsIlNeMiJdLFszLDEsIlNeMiJdLFs0LDEsIlMiXSxbMCwxLCJcXG11IFMiXSxbMCwyLCJTXFxtdSIsMl0sWzEsMywiXFxtdSJdLFsyLDMsIlxcbXUiLDJdLFs0LDUsIlxcZXRhIFMiXSxbNCw2LCJTXFxldGEiLDJdLFs2LDcsIlxcbXUiLDJdLFs1LDcsIlxcbXUiXSxbNCw3LCIxX1MiLDFdXQ==
 \[\begin{tikzcd}
 	{S^3} & {S^2} && S & {S^2} \\
@@ -401,18 +402,19 @@ where the following notation is used.
   be the bicategory in Def. \ref{def:monad-gen}, then we get Def. \ref{def:monad}, where
   \begin{itemize}
     \item The 0-cell is the category $\mathcal{C}$ in Def. \ref{def:monad}
-    \item The 1-cell is the endofunctor on $T: \mathcal{C} \rightarrow \mathcal{C}$
+    \item The 1-cell is the endofunctor $T: \mathcal{C} \rightarrow \mathcal{C}$
     \item The 2-cells are the natural transformations $\mu: T^2 \rightarrow T, \eta: 1_T \rightarrow T$.
   \end{itemize}
 \end{definition}
-\begin{definition}[Span \cite{nlab:span} \cite{Sobociński:2017}]
+The notion of monads then make sense for any 2-category.
+\begin{definition}[Span \cite{nlab:span, Sobociński:2017}]
   A span in a category $\mathcal{C}$ from an object $A$ to $B$ is a diagram of the form
 \[A \xleftarrow[]{f} C \xrightarrow[]{g} B\]
 where $C$ is some other object in $\mathcal{C}$.
 
 If $\mathcal{C}$ has pullbacks \cite{Abramsky_2010}, we can compose spans, 
-so given a span from $A$ to $B$ and $B$ to $C$,
-we can take a pullback and obtain a span from $A$ to $C$.
+so given spans $A \xleftarrow[]{f} D \xrightarrow[]{g} B, B\xleftarrow[]{h} E \xrightarrow[]{k}C$,
+we can take a pullback of $g$ along $h$ and obtain a span from $A$ to $C$.
 % https://q.uiver.app/#q=WzAsOSxbMiwwLCJEXFx0aW1lc19CIEUiXSxbMSwxLCJEIl0sWzMsMSwiRSJdLFswLDIsIkEiXSxbMiwyLCJCIl0sWzQsMiwiQyJdLFs3LDAsIkRcXHRpbWVzX0IgRSJdLFs2LDEsIkEiXSxbOCwxLCJDIl0sWzAsMSwicF9EIiwyXSxbMCwyLCJwX0UiXSxbMSwzLCJmIiwyXSxbMSw0LCJnIiwyXSxbMiw0LCJoIl0sWzIsNSwiayJdLFs2LDcsImZwX0QiLDJdLFs2LDgsImtwX0UiXV0=
 \[\begin{tikzcd}
 	&& {D\times_B E} &&&&& {D\times_B E} \\
@@ -427,7 +429,7 @@ we can take a pullback and obtain a span from $A$ to $C$.
 	\arrow["{fp_D}"', from=1-8, to=2-7]
 	\arrow["{kp_E}", from=1-8, to=2-9]
 \end{tikzcd}\]
-Maps between spans are then functions $f : C \rightarrow C'$ which make the diagram commute.
+Maps between spans are then functions $f : C \rightarrow C'$ which make the following diagram commute.
 % https://q.uiver.app/#q=WzAsNCxbMSwxLCJDIl0sWzAsMiwiQSJdLFsyLDIsIkIiXSxbMSwwLCJDJyJdLFswLDEsImciXSxbMCwyLCJoIiwyXSxbMywxLCJnJyIsMix7ImN1cnZlIjoxfV0sWzMsMiwiZyciLDAseyJjdXJ2ZSI6LTF9XSxbMCwzLCJmIiwyXV0=
 \[\begin{tikzcd}
 	& {C'} \\
@@ -446,9 +448,11 @@ The bicategory Span$(\mathcal{C})$ then consists of
   \item Maps between spans as 2-cells
 \end{itemize}
 \end{definition}
-  Using the bicategory Span(\textbf{Set}) in Def. \ref{def:monad-gen} for a monad, we get the following.
+
+\clearpage
 \begin{example}[\cite{Sobociński:2017}]
-\[\]
+\label{ex:mon-spanset}
+  Using the bicategory Span(\textbf{Set}) in Def. \ref{def:monad-gen} for a monad, we get
 \begin{itemize}
   \item The 0-cell is a set $X$
   \item The endo-1-cell is a span $S$ of the form
@@ -477,8 +481,10 @@ Here the monad of Span(\textbf{Set}) can be described as a category $\mathcal{C}
   \item The hom-set for objects $a,b\in X$ is defined by 
   \[\mathcal{C}(a,b) := \{y\in Y | \delta_0 (y) = a \wedge \delta_1(y) = b \}\]
   \item $Y\times_X Y$ is the set of composable arrows, and $\mu: Y\times_X Y\to Y$ defines composition.
-  \item The associative and unit axioms are defined in the monad as they should be in the category.
+  \item The associative and unit axioms are defined in the monad as they should be in the category,
+  as defined using $\mu$ and $\eta$ in Ex. \ref{ex:mon-spanset}.
 \end{itemize}
+To be specific, the type of category referred to so far is a small category, defined as follows.
 \begin{definition}[Locally small category \cite{Abramsky_2010} \cite{nlab:locally_small_category}]
   A \textbf{locally small category} is a category where all hom-sets are sets.
 \end{definition}
@@ -492,18 +498,19 @@ Then, we have that the monad on the bicategory of Span(\textbf{Set}) describes s
 since its set of objects is a set, and its hom-sets are sets.
 
 \subsection{… , a monad is a monoid, …}
-At the same time, the concept of a monoid on sets $(M,\cdot,1_M)$ can be generalised to categories.
+At the same time, the concept of a "monoid-as-a-set" $(M,\cdot,1_M)$ can be generalised to categories.
 
-% From Def. \ref{def:moncat}, 
-% the monoid on $(\textbf{Set}, \times, \{*\})$
-% gives rise to the "monoid-as-a-set" from Def. \ref{def:monoid}.
-
-% Here we give definitions to aid in understanding the "monoid-as-a-set". 
+First, we define the \textit{strict} monoidal category.
+\begin{definition}[\cite{Kissinger19:2024}]
+  \label{def:strict-mon}
+  A monoidal category is \underline{strict} if $\alpha,\lambda,\rho$ are all identities.
+\end{definition}
 \begin{note}
   Since a strict monoidal category $(\mathcal{C},\otimes, I, \alpha, \lambda, \rho)$ 
   (Def. \ref{def:strict-mon}) is such that $\alpha, \lambda, \rho$ are identities, 
   it can be described succinctly as $(\mathcal{C},\otimes, I)$.
 \end{note}
+
 \begin{definition}[Monoid \cite{Kissinger19:2024}]
   A \textbf{monoid} in a strict monoidal category $(\mathcal{C},\otimes, I)$ is an object $X$
   with morphisms 
@@ -527,13 +534,7 @@ At the same time, the concept of a monoid on sets $(M,\cdot,1_M)$ can be general
 
 "Monoids-as-a-set" can then be formalised as follows.
 \begin{example}["Monoids-as-a-set" \cite{Kissinger19:2024}]
-Monoids in $(\textbf{Set}, \times, \{*\})$ are monoids 
-% \begin{itemize}
-%   \item Objects are a set $X$
-%   \item Unit object is a one element set $\{*\}$
-%   \item \[a\cdot b := \mu(a,b)\]
-%   \item \[1 := \eta(*)\]
-% \end{itemize}
+Monoids in $(\textbf{Set}, \times, \{*\})$ are monoids as in Def. \ref{def:monoid}
 \[(X, \mu : X\times X \rightarrow X, \eta : \{*\} \rightarrow X)\]
 where
 \[a\cdot b := \mu(a,b)\]
@@ -547,20 +548,22 @@ so $\mu$ is the binary relation, and $\eta(*)$ is the unit.
 \end{definition}
 
 Consider a strict 2-category $D$ and an object $c$ so that we have the category $D(c,c)$.
-$D(c,c)$ is a full sub-2-category of $D$, since $D(c,c)$ is a 2-category with one object $c$.
+The (strict) 2-category made of the object $c$ with its category $D(c,c)$ is a full sub-2-category of $D$.
 
+\clearpage
 \begin{proposition}
   $D(c,c)$ is a strict monoidal category.
 \end{proposition}
 \begin{proof}
+The strict monoidal category consists of
 \begin{itemize}
-  \item $D(c,c)$ is the category, where objects are 1-cells, and arrows are 2-cells.
-  \item The monoidal product $\otimes$ on 1-cells is composition of 1-cells.
-  \item The unit object is the identity cell at $c, 1_c : c\to c$.
-  \item 1-cells satisfy the associativity and unit axioms, by definition of the strict bicategory $D$,
+  \item $D(c,c)$ as the category, where objects are 1-cells, and arrows are 2-cells.
+  \item The monoidal product $\otimes$ on 1-cells - the composition of 1-cells.
+  \item The unit object - the identity cell at $c, 1_c : c\to c$.
+  \item 1-cells satisfying the associativity and unit axioms, by definition of the strict bicategory $D$,
   where the associator and unit natural isomorphisms are identities, so 
   \[(h \circ g) \circ f = h \circ (g \circ f), \quad 1 \circ f = f = f \circ 1\]
-  \item 2-cells satisfy the associativity and unit axioms, by definition of arrows in the category $D(c,c)$
+  \item 2-cells satisfying the associativity and unit axioms, by definition of arrows in the category $D(c,c)$
 \end{itemize}
 Thus, the natural transformation associator and unitors are identities, 
 fulfilling the definition of a strict monoidal category.
@@ -596,11 +599,29 @@ This is precisely the definition of a monad in Def. \ref{def:monad-gen}, which i
 \end{example}
 Then, a monad is a special kind of monoid on the category $([C,C], \circ, 1_C)$.
 
+By using the strict 2-category of (locally) small categories \textbf{Cat}, 
+the object $C$ is a category, so $[C,C]$ is the category of endofunctors on $C$.
+The following definition can then be obtained.
 \begin{definition}[\cite{Kissinger20:2024}]
   A monad is a monoid in the category of endofunctors.
 \end{definition}
 
-\bibliographystyle{plain}
+\subsection{Conclusion}
+As expressed in the comment section \cite{Sobociński:2017}, 
+there are inconsistencies in using the generalised versus the ordinary definitions of the various terms
+- monoids, category, and monads.
+
+In summary, the above show that
+\begin{itemize}
+  \item A "monoid-as-a-set" is a special type of small category
+  \item A small category is a special type of (generalised) monad
+  \item A (generalised) monad is a special type of (generalised) monoid
+\end{itemize}
+Ultimately, there is no proper circular logic, since the start and end are not the same notion of a monoid.
+However, the same comment does conjecture on whether it might be possible to do so using an $\infty$-category.
+
+\clearpage
+\bibliographystyle{unsrt}
 \bibliography{refs}
 
 \end{document}

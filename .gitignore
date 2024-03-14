@@ -6,6 +6,7 @@
 
 *.bbl
 *.blg
+*.out
 
 template.tex
 .DS_Store
