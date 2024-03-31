@@ -1,0 +1,54 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=Z phase dot] (0) at (0, 0) {$\frac{\pi}{4}$};
+		\node [style=Z phase dot] (1) at (0, -1) {$\frac{3\pi}{4}$};
+		\node [style=Z dot] (2) at (0, -2) {};
+		\node [style=X dot] (3) at (1, -2) {};
+		\node [style=X dot] (5) at (2, -1) {};
+		\node [style=Z phase dot] (6) at (3, -1) {$\frac{\pi}{4}$};
+		\node [style=X dot] (7) at (4, -1) {};
+		\node [style=X dot] (8) at (3, 0) {};
+		\node [style=Z phase dot] (9) at (5, 0) {$\frac{\pi}{4}$};
+		\node [style=X dot] (10) at (5, -2) {};
+		\node [style=Z dot] (11) at (6, -2) {};
+		\node [style=X dot] (12) at (6, 0) {};
+		\node [style=Z phase dot] (13) at (7, 0) {$\frac{\pi}{4}$};
+		\node [style=X phase dot] (14) at (7, -2) {$\frac{\pi}{2}$};
+		\node [style=Z dot] (15) at (8, -2) {};
+		\node [style=Z phase dot] (16) at (9, 0) {$\frac{\pi}{4}$};
+		\node [style=X dot] (17) at (9, -2) {};
+		\node [style=Z phase dot] (18) at (10, -2) {$\frac{\pi}{4}$};
+		\node [style=X dot] (19) at (1.5, -2) {};
+		\node [style=X dot] (20) at (2, -1.75) {};
+		\node [style=X dot] (21) at (2.75, -0.5) {};
+		\node [style=X dot] (22) at (4, -2) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (0) to (5);
+		\draw (0) to (7);
+		\draw (0) to (8);
+		\draw (1) to (3);
+		\draw (1) to (5);
+		\draw (2) to (3);
+		\draw (5) to (6);
+		\draw (6) to (7);
+		\draw (7) to (15);
+		\draw (7) to (13);
+		\draw (7) to (16);
+		\draw (8) to (9);
+		\draw (9) to (10);
+		\draw (9) to (12);
+		\draw (10) to (11);
+		\draw (11) to (12);
+		\draw (11) to (14);
+		\draw (12) to (13);
+		\draw (14) to (15);
+		\draw (15) to (17);
+		\draw (16) to (17);
+		\draw (17) to (18);
+		\draw (19) to (3);
+		\draw (5) to (20);
+		\draw (8) to (21);
+		\draw (10) to (22);
+	\end{pgfonlayer}
+\end{tikzpicture}

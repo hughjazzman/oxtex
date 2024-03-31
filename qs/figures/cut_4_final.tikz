@@ -1,0 +1,11 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=Z phase dot] (3) at (2, -1) {$\frac{\pi}{4}$};
+		\node [style=Z phase dot] (9) at (3.5, 0) {$\frac{7\pi}{4}$};
+		\node [style=Z phase dot] (13) at (2, 0) {$\frac{3\pi}{2}$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=hadamard edge] (3) to (9);
+		\draw [style=hadamard edge] (3) to (13);
+	\end{pgfonlayer}
+\end{tikzpicture}
