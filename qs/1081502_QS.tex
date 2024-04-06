@@ -164,12 +164,12 @@ rather than the best vertex $v_{best} = \max_{w(v)} v_{poss}$, where $w(v)$ is t
 \caption{bestCut}
 \label{alg:bestCutM}
 \begin{algorithmic}[1]
-\Require $g$: GraphS, $vweights\_max$: list[int], $vtiers$: list[int]
+\Require $g$: GraphS, $vweights_{max}$: list[int], $vtiers$: list[int]
 \Ensure list of possible vertices
 \State $maxTier \gets \max(vtiers)$
 \State List of possible vertices $possV \gets []$
-\For{$i$ in range($\text{len}(vweights_max)$)}
-    \State $w \gets vweights\_max[i]$
+\For{$i$ in range($\text{len}(vweights_{max})$)}
+    \State $w \gets vweights_{max}[i]$
     \If{$w \leq 0$ \textbf{or} $vtiers[i] \neq maxTier$}
         \State \textbf{continue}
     \EndIf
