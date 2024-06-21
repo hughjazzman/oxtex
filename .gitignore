@@ -7,6 +7,7 @@
 *.bbl
 *.blg
 *.out
+*.mtc
 
 template.tex
 .DS_Store
@@ -16,3 +17,7 @@ template.tex
 !qpc/*.pdf
 !cpp/*.pdf
 !qs/*.pdf
+!OxThesis/*.pdf
+
+*test*
+OxThesis/.gitignore

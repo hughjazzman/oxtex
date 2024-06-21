@@ -1,0 +1,268 @@
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{tikzit}
+\usepackage{tikzscale}
+\usepackage{keycommand}
+\usepackage{pgfplots}
+
+\graphicspath{{.}{./figures/}}
+
+\input{quantum.tikzstyles}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{definition/}[theorem]{Definition}
+%\newtheorem{fact}[theorem]{Fact}
+\newtheorem{example/}[theorem]{Example}
+\newtheorem{examples}[theorem]{Examples}
+\newtheorem{example*}[theorem]{Example*}
+\newtheorem{examples*}[theorem]{Examples*}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{remark*}[theorem]{Remark*}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{assumption}[theorem]{Assumption}
+
+\newtheorem*{theorem*}{Theorem}
+\newtheorem*{corollary*}{Corollary}
+\newtheorem*{lemma*}{Lemma}
+\newtheorem*{proposition*}{Proposition}
+
+\newenvironment{example}{
+  \renewcommand{\qedsymbol}{$\blacktriangle$}%
+  \pushQED{\qed}\begin{example/}
+}{\popQED\end{example/}}
+
+\newenvironment{definition}{
+  \renewcommand{\qedsymbol}{$\blacktriangle$}%
+  \pushQED{\qed}\begin{definition/}}
+{\popQED\end{definition/}}
+
+\newcommand{\C}{\ensuremath{\mathbb{C}}}
+
+% BRAS AND KETS
+\newcommand{\bra}[1]{\ensuremath{\left\langle #1 \right|}}
+\newcommand{\ket}[1]{\ensuremath{\left|  #1 \right\rangle}}
+\newcommand{\roundket}[1]{\ensuremath{\left|  #1 \right)}}
+\newcommand{\braket}[2]{\ensuremath{\langle#1|#2\rangle}}
+\newcommand{\ketbra}[2]{\ensuremath{\ket{#1}\!\bra{#2}}}
+
+
+\newcommand\cbox[1]{\vcenter{\hbox{#1}}}
+\newcommand{\emptydiag}{\,\tikz{\node[style=empty diagram] (x) {};}\,}
+\newcommand{\scalar}[1]{\,\tikz{\node[style=scalar] (x) {$#1$};}\,}
+
+\newkeycommand{\pointmap}[style=ket][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (-0.3,0) {$#1$};\node [style=none] (3) at (0.9, 0) {};\node [style=none] (3) at (-0.9, 0) {};\draw (x)--(0.7,0);}\,}
+\newkeycommand{\point}[style=ket,estyle=][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (-0.3,0) {$#1$};\draw [\commandkey{estyle}] (x)--(0.7,0);}\,}
+
+\newkeycommand{\copointmap}[style=bra][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (0.3,0) {$#1$};\draw (x)--(-0.7,0);}\,}
+
+\newcommand{\graypointmap}[1]{\point[style=gray ket]{#1}}
+\newcommand{\graycopointmap}[1]{\copointmap[style=gray bra]{#1}}
+
+\newkeycommand{\twopointmap}[style=ket,estyle=][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (-0.3,0) {$#1$};\draw [\commandkey{estyle}] (x)+(0.25,0.2)--(0.7,0.2);\draw [\commandkey{estyle}] (x)+(0.25,-0.2)--(0.7,-0.2);}\,}
+
+
+\newcommand{\pointcopointmap}[2]{\,\tikz{
+  \node[style=bra] (x) at (-0.5,0) {$#2$};\draw (x)--(-1.5,0);
+  \node[style=ket] (y) at (0.5,0) {$#1$};\draw (1.5,0)--(y);
+}\,}
+
+\newcommand{\graypointcopointmap}[2]{\,\tikz{
+  \node[style=gray bra] (x) at (-0.5,0) {$#2$};\draw (x)--(-1.5,0);
+  \node[style=gray ket] (y) at (0.5,0) {$#1$};\draw (1.5,0)--(y);
+}\,}
+
+
+\newkeycommand{\pointbraket}[style1=ket,style2=bra,estyle=][2]{\,%
+\begin{tikzpicture}
+  \begin{pgfonlayer}{nodelayer}
+    \node [style=\commandkey{style1}] (0) at (-0.625, 0) {$#1$};
+    \node [style=\commandkey{style2}] (1) at (0.625, 0) {$#2$};
+  \end{pgfonlayer}
+  \begin{pgfonlayer}{edgelayer}
+    \draw [\commandkey{estyle}] (0) to (1);
+  \end{pgfonlayer}
+\end{tikzpicture}\,}
+
+\newkeycommand{\phase}[style=Z phase dot][1]{\,\begin{tikzpicture}
+    \begin{pgfonlayer}{nodelayer}
+        \node [style=none] (0) at (1, 0) {};
+        \node [style=\commandkey{style}] (2) at (0, 0) {$#1$}; 
+        \node [style=none] (3) at (-1, 0) {};
+    \end{pgfonlayer}
+    \begin{pgfonlayer}{edgelayer}
+        \draw (2) to (0.center);
+        \draw (3.center) to (2);
+    \end{pgfonlayer}
+\end{tikzpicture}\,}
+
+\newcommand{\idphase}[1]{\phase[style=Z dot]{#1}}
+\newcommand{\redidphase}[1]{\phase[style=X dot]{#1}}
+\newcommand{\greenphase}[1]{\phase{#1}}
+\newcommand{\redphase}[1]{\phase[style=X phase dot]{#1}}
+
+\newcommand{\redbasisspider}{\point[style=X dot]{}}
+\newcommand{\redpibasisspider}{\point[style=X phase dot]{\pi}}
+
+\newcommand{\greenbasisspider}{\point[style=Z dot]{}}
+\newcommand{\greenpibasisspider}{\point[style=Z phase dot]{\pi}}
+
+\newcommand{\redmeasspider}{\copointmap[style=X dot]{}}
+\newcommand{\redpimeasspider}{\copointmap[style=X phase dot]{\pi}}
+
+\newcommand{\greenmeasspider}{\copointmap[style=Z dot]{}}
+\newcommand{\greenpimeasspider}{\copointmap[style=Z phase dot]{\pi}}
+
+\newcommand{\idwire}{\,%
+\begin{tikzpicture}
+  \begin{pgfonlayer}{nodelayer}
+    \node [style=none] (0) at (-1.5, 0) {};
+    \node [style=none] (3) at (1.5, 0) {};
+  \end{pgfonlayer}
+  \begin{pgfonlayer}{edgelayer}
+    \draw (0.center) to (3.center);
+  \end{pgfonlayer}
+\end{tikzpicture}\,}
+
+
+% =======================
+% = PARALLELAGRAM BOXES =
+% =======================
+
+\makeatletter
+\newcommand{\boxshape}[3]{%
+\pgfdeclareshape{#1}{
+\inheritsavedanchors[from=rectangle] % this is nearly a rectangle
+\inheritanchorborder[from=rectangle]
+\inheritanchor[from=rectangle]{center}
+\inheritanchor[from=rectangle]{north}
+\inheritanchor[from=rectangle]{south}
+\inheritanchor[from=rectangle]{west}
+\inheritanchor[from=rectangle]{east}
+% ... and possibly more
+\backgroundpath{% this is new
+% store lower right in xa/ya and upper right in xb/yb
+\southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+\northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+\@tempdima=#2
+\@tempdimb=#3
+
+\pgfpathmoveto{\pgfpoint{\pgf@xa - 5pt + \@tempdima}{\pgf@ya}}
+\pgfpathlineto{\pgfpoint{\pgf@xa - 5pt - \@tempdima}{\pgf@yb}}
+\pgfpathlineto{\pgfpoint{\pgf@xb + 5pt + \@tempdimb}{\pgf@yb}}
+\pgfpathlineto{\pgfpoint{\pgf@xb + 5pt - \@tempdimb}{\pgf@ya}}
+\pgfpathlineto{\pgfpoint{\pgf@xa - 5pt + \@tempdima}{\pgf@ya}}
+\pgfpathclose
+}
+}}
+
+\boxshape{NEbox}{0pt}{5pt}
+\boxshape{SEbox}{0pt}{-5pt}
+\boxshape{NWbox}{5pt}{0pt}
+\boxshape{SWbox}{-5pt}{0pt}
+\boxshape{EBox}{-3pt}{3pt}
+\boxshape{WBox}{3pt}{-3pt}
+\makeatother
+
+\newcommand{\boxpointmap}[2]{\,%
+\begin{tikzpicture}
+  \begin{pgfonlayer}{nodelayer}
+    \node [style=ket] (0) at (-1, 0) {$#1$};
+    \node [style=box] (1) at (0.5, 0) {$#2$};
+    \node [style=none] (2) at (1.75, 0) {};
+  \end{pgfonlayer}
+  \begin{pgfonlayer}{edgelayer}
+    \draw (0) to (1);
+    \draw (1) to (2.center);
+  \end{pgfonlayer}
+\end{tikzpicture}%
+\,}
+
+
+
+\makeatletter
+
+\pgfdeclareshape{cornerpoint}{
+\inheritsavedanchors[from=rectangle] % this is nearly a rectangle
+\inheritanchorborder[from=rectangle]
+\inheritanchor[from=rectangle]{center}
+\inheritanchor[from=rectangle]{north}
+\inheritanchor[from=rectangle]{south}
+\inheritanchor[from=rectangle]{west}
+\inheritanchor[from=rectangle]{east}
+% ... and possibly more
+\backgroundpath{% this is new
+% store lower right in xa/ya and upper right in xb/yb
+\southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+\northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+\pgfmathsetmacro{\pgf@shorten@left}{\pgfkeysvalueof{/tikz/shorten left}}
+\pgfmathsetmacro{\pgf@shorten@right}{\pgfkeysvalueof{/tikz/shorten right}}
+
+\pgfpathmoveto{\pgfpoint{\pgf@xa - 5pt}{0.5 * (\pgf@ya + \pgf@yb)}}
+\pgfpathlineto{\pgfpoint{\pgf@xb - 1.5 * \pgf@shorten@left}{\pgf@ya - 8pt + \pgf@shorten@left}}
+\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya - 8pt + \pgf@shorten@left}}
+\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb + 8pt - \pgf@shorten@right}}
+\pgfpathlineto{\pgfpoint{\pgf@xb - 1.5 * \pgf@shorten@right}{\pgf@yb + 8pt - \pgf@shorten@right}}
+\pgfpathclose
+}
+}
+
+\pgfdeclareshape{cornercopoint}{
+\inheritsavedanchors[from=rectangle] % this is nearly a rectangle
+\inheritanchorborder[from=rectangle]
+\inheritanchor[from=rectangle]{center}
+\inheritanchor[from=rectangle]{north}
+\inheritanchor[from=rectangle]{south}
+\inheritanchor[from=rectangle]{west}
+\inheritanchor[from=rectangle]{east}
+% ... and possibly more
+\backgroundpath{% this is new
+% store lower right in xa/ya and upper right in xb/yb
+\southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+\northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+\pgfmathsetmacro{\pgf@shorten@left}{\pgfkeysvalueof{/tikz/shorten left}}
+\pgfmathsetmacro{\pgf@shorten@right}{\pgfkeysvalueof{/tikz/shorten right}}
+
+\pgfpathmoveto{\pgfpoint{\pgf@xb + 5pt}{0.5 * (\pgf@ya + \pgf@yb)}}
+\pgfpathlineto{\pgfpoint{\pgf@xa + 1.5 * \pgf@shorten@left}{\pgf@ya - 8pt + \pgf@shorten@left}}
+\pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya - 8pt + \pgf@shorten@left}}
+\pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@yb + 8pt - \pgf@shorten@right}}
+\pgfpathlineto{\pgfpoint{\pgf@xa + 1.5 * \pgf@shorten@right}{\pgf@yb + 8pt - \pgf@shorten@right}}
+\pgfpathclose
+}
+}
+
+\makeatother
+
+\pgfkeyssetvalue{/tikz/shorten left}{0pt}
+\pgfkeyssetvalue{/tikz/shorten right}{0pt}
+
+
+\newkeycommand{\kpoint}[style=kpoint,estyle=][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (-0.05,0) {$#1$};\draw [\commandkey{estyle}] (x)--(1.05,0);}\,}
+\newkeycommand{\kpointbraket}[style1=kpoint,style2=kpoint adjoint,estyle=][2]{\,%
+\begin{tikzpicture}
+  \begin{pgfonlayer}{nodelayer}
+    \node [style=\commandkey{style1}] (0) at (-0.735, 0) {$#1$};
+    \node [style=\commandkey{style2}] (1) at (0.735, 0) {$#2$};
+  \end{pgfonlayer}
+  \begin{pgfonlayer}{edgelayer}
+    \draw [\commandkey{estyle}] (0) to (1);
+  \end{pgfonlayer}
+\end{tikzpicture}\,}
+
+\newcommand{\kpointbraketconj}[2]{\,%
+\begin{tikzpicture}
+  \begin{pgfonlayer}{nodelayer}
+    \node [style=kpoint conjugate] (0) at (-0.735, 0) {$#1$};
+    \node [style=kpoint transpose] (1) at (0.735, 0) {$#2$};
+  \end{pgfonlayer}
+  \begin{pgfonlayer}{edgelayer}
+    \draw (0) to (1);
+  \end{pgfonlayer}
+\end{tikzpicture}\,}

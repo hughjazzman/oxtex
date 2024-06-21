@@ -1,0 +1,244 @@
+\begin{savequote}[8cm]
+\textlatin{Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...}
+
+There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...
+  \qauthor{--- Cicero's \textit{de Finibus Bonorum et Malorum}}
+\end{savequote}
+
+\chapter{\label{ch:1-intro}Introduction} 
+
+\minitoc
+
+\section{Motivation}
+
+Quantum computing, a field rooted in the principles of quantum mechanics, represents a revolutionary approach to computation. 
+Unlike classical computing, which relies on binary operations performed on bits, 
+quantum computing utilizes quantum bits, or qubits, capable of representing and processing information in ways that classical bits cannot. 
+This unique capability of qubits to exist in superpositions and entangle with each other allows quantum computers 
+to perform certain types of calculations exponentially faster than their classical counterparts.
+If a classical computer were limited by memory and runtime, 
+a quantum computer could potentially bypass these scaling issues - dubbed the "quantum advantage".
+
+The potential of quantum computing extends beyond mere theoretical interest. 
+If scalable quantum computers were to become a reality, 
+they could solve some of the most challenging problems in computer science much more efficiently than classical computers. 
+One notable example is Shor's algorithm for factoring large numbers, which could break widely-used cryptographic systems such as RSA. 
+Another significant algorithm is Grover's search algorithm, which provides quadratic speed-ups for unstructured search problems. 
+These advancements underscore the profound impact quantum computing could have on fields ranging from cryptography to complex optimization problems.
+
+As we strive to advance the field of quantum computing, 
+classical computations play an essential role in assisting and accelerating the development of quantum computers. 
+Classical simulation is a fundamental aspect of understanding and designing quantum hardware, 
+often serving as the only means to validate these quantum systems \cite{xu2023herculean}. 
+Additionally, quantum algorithms can be implemented on classical simulators for testing and verification purposes 
+while full-fledged quantum computers remain beyond reach (for now). 
+These simulators emulate the behavior of quantum computers, allowing researchers to simulate processes as if running on actual quantum devices.
+
+% \section{Contribution}
+
+This theses attempts to solve the problem in an almost entirely graphical approach.
+From the introduction of the qubits, to the representation of quantum circuits and linear maps,
+the underlying linear algebra that governs the operations of quantum computing is represented in a graphical manner.
+Using ZX-Calculus, a graphical calculus detailed in the next section,
+quantum circuits can be represented as diagrams, 
+allowing for different discoveries to be more easily made when analysing the structure of said diagrams.
+
+\section{Basic Notation}
+In classical computing, a bit is the fundamental unit of information, 
+and is denoted by a boolean value $b\in\{0,1\}$.
+In quantum computing, the fundamental unit of information is the qubit,
+which we denote as $\ket{b}$, where $b\in\{0,1\}$.
+Diagramatically, they are represented as follows:
+
+\begin{minipage}{.5\linewidth}
+  \[\point{0}\]
+\end{minipage}
+\begin{minipage}{.5\linewidth}
+  \[\point{1}\]
+\end{minipage}
+
+In fact, we can consider these the computational or Z-basis states.
+
+\begin{definition}[Z-basis]
+  The Z-basis or computational basis is defined as
+  \[\left\{\cbox{\point{0}}, \cbox{\point{1}}\right\}\]
+\end{definition}
+
+So far, the expressive power is still similar to classical computing.
+However, the power of quantum computing comes from the ability to exist in superpositions of these states.
+Concretely, the qubit can be represented in a linear combination of the basis states.
+\begin{definition}[Pure state]
+  A pure state $\ket{\psi}$ is a state
+  \[\cbox{\point{\psi}} = a \cbox{\point{0}} + b \cbox{\point{1}}\]
+  where $a,b\in\C$ and $|a|^2 + |b|^2 = 1$.
+\end{definition}
+
+Then, the '+' or X-basis states can be defined.
+\[\cbox{\graypointmap{0}} = \frac{1}{\sqrt{2}}\left(\cbox{\point{0}} + \cbox{\point{1}}\right)\]
+\[\cbox{\graypointmap{1}} = \frac{1}{\sqrt{2}}\left(\cbox{\point{0}} - \cbox{\point{1}}\right)\]
+Along with the Z-basis states, these states form the building blocks of understanding quantum computing and the use of ZX-calculus for diagrammatic reasoning.
+
+Intuitively, using the diagrammatic representation, we can consider combining diagrams in parallel.
+In the literature, this is the same as taking a tensor product.
+For example, we can have a 2-qubit state.
+\[\cbox{\twopointmap{10}} = \begin{matrix}
+  \point{1} \\
+  \point{0}
+\end{matrix}\]
+
+States can be transformed by quantum gates simply by composing them to obtain a new state.
+Given that composing the quantum gate $U$ to a state $\ket{\psi}$ gives a state $\ket{\psi'}$, we have
+\[\cbox{\point{\psi'}} = \cbox{\boxpointmap{\psi}{U}}\]
+
+
+The dual of states are the effects. Here, we have the Z-basis effects.
+
+\begin{minipage}{.5\linewidth}
+  \[\copointmap{0}\]
+\end{minipage}
+\begin{minipage}{.5\linewidth}
+  \[\copointmap{1}\]
+\end{minipage}
+
+For a state $\ket{\psi}$ and an effect $\bra{\phi}$, we can obtain a scalar inner product.
+This is essentially the \textit{bra-ket} notation in diagrammatic form, 
+which comes with a few other definitions.
+
+\begin{definition}[Inner product]
+  The \textit{inner product} $\braket{\phi}{\psi}$ of two states $\ket{\psi}$ and $\ket{\phi}$ is defined as
+  \[\pointbraket{\psi}{\phi}\]
+  They are \textit{orthogonal} if 
+  \[\cbox{\pointbraket{\psi}{\phi}} = 0\]
+  The \textit{squared-norm} of a state $\ket{\psi}$ is
+  \[\pointbraket{\psi}{\psi}\]
+  $\ket{\psi}$ is \textit{normalised} if 
+  \[\cbox{\pointbraket{\psi}{\psi}} = \cbox{\emptydiag} = 1\]
+  where the empty diagram represents the scalar 1.
+\end{definition}
+
+We now define the inner product of the Z-basis states.
+\begin{definition}
+  The inner product of the Z-basis states is
+  \[\cbox{\pointbraket{0}{0}} = \cbox{\pointbraket{1}{1}} = \cbox{\emptydiag}\]
+  \[\cbox{\pointbraket{1}{0}} = \cbox{\pointbraket{0}{1}} = 0\]
+  Succinctly, for $i,j\in\{0,1\}$,
+  \[\cbox{\pointbraket{i}{j}} = \delta_{ij}\]
+  where $\delta_{ij}$ is the Kronecker delta.
+\end{definition}
+In fact, the succinct definition can be used to determine if a basis is an \textit{orthonormal basis} (ONB).
+The X-basis is also an ONB.
+
+We are almost at the stage where we can obtain probabilities from the diagrams.
+The scalar inner product is not really a probability, that is,
+a number between 0 and 1, but instead, a number in $\C$.
+Note that putting multiple scalars in a single diagram is just the same as multiplying them together.
+\[\begin{matrix}
+  \pointbraket{\psi}{\phi} \\
+  \pointbraket{\psi'}{\phi'}
+\end{matrix} =
+\cbox{\pointbraket{\psi}{\phi}} \cdot \cbox{\pointbraket{\psi'}{\phi'}}
+\]
+
+We also know that a complex number and its conjugate, $z,\bar{z}\in\C$,
+\[|z|^2 = z\bar{z}\]
+Translating that to the diagrammatic representation, we can obtain the following.
+\[\left|\cbox{\kpointbraket{\psi}{\phi}}\right|^2 = 
+\begin{matrix}
+  \kpointbraket{\psi}{\phi}\\
+  \kpointbraketconj{\psi}{\phi}
+\end{matrix}\]
+Note that assymetry is introduced to denote the conjugation. 
+Remember that a complex number $z = a + bi \in \C$ has a conjugate $\bar{z} = a - bi \in \C$,
+so this corresponds to a vertical reflection in the diagram above.
+We can use the complex plane to show why this makes sense
+since the reflection is about the real axis.
+
+\[\includegraphics{complexplane_conj.tikz}\]
+
+Using the Born rule, if we make sure that $\ket{\psi}$ and $\ket{\phi}$ are normalised,
+we can obtain the following.
+
+\[0 \leq \begin{matrix}
+  \kpointbraket{\psi}{\phi}\\
+  \kpointbraketconj{\psi}{\phi}
+\end{matrix}
+\leq 1\]
+
+This can be interpreted as our desired probaility - the probability of measuring $\ket{\psi}$ in the state $\ket{\phi}$.
+
+We now have all we need to introduce the ZX-calculus notation.
+
+\section{ZX-Calculus}
+So far, we have introduced the representation of quantum states, effects, and inner products in a diagrammatic form.
+However, there still isn't much we can do without a way to manipulate them.
+In the previous section, we mentioned that we can apply quantum gates to states to obtain new states.
+Here, we will introduce the ZX-Calculus and show the highly intuitive representation of some quantum gates
+such as the Hadamard and CNOT gates, based on the building blocks from the previous section.
+This graphical calculus continues to use the notions of composition and tensor product from the earlier section.
+
+\subsection{Spiders}
+\begin{definition}[Spiders]
+  \[\tikzfig{spider_def_full}\]
+\end{definition}
+Here, we have green and red spiders, also known as Z and X spiders,
+made of the Z and X basis states respectively.
+The $\alpha$ inside a spider node is also called the \textit{phase} of the spider.
+For example, with $\alpha = 0, e^{i\alpha} = \cbox{\emptydiag}$.
+It is convenient to denote spiders with $\alpha = 0$ as having no angle written inside the spider.
+
+Immediately, we can see that the Z and X basis states can be formed from the definition of the spiders,
+up to the multiplicative constant $\sqrt{2}$.
+Note that $e^{i\pi} = -1$.
+\begin{equation}
+\begin{aligned}
+\cbox{\greenbasisspider} &= \cbox{\point{0}} + \cbox{\point{1}} = \sqrt{2} \cbox{\graypointmap{0}}\\
+\cbox{\greenpibasisspider} &= \cbox{\point{0}} - \cbox{\point{1}} = \sqrt{2} \cbox{\graypointmap{1}}\\
+\cbox{\redbasisspider} &= \cbox{\graypointmap{0}} + \cbox{\graypointmap{1}} = \sqrt{2} \cbox{\point{0}}\\
+\cbox{\redpibasisspider} &= \cbox{\graypointmap{0}} - \cbox{\graypointmap{1}} = \sqrt{2} \cbox{\point{1}}
+\end{aligned}
+\end{equation}
+
+It turns out that in reasoning with spiders, we can ignore the multiplicative constants,
+since much of the manipulation of the diagrams is based on the structure of the diagrams themselves.
+The scalars are easy to determine using the definitions we have seen so far.
+By using $\approx$ to denote equality up to a non-zero factor, we have
+\begin{equation}
+\begin{aligned}
+\cbox{\greenbasisspider} &\approx \cbox{\graypointmap{0}} \quad\quad
+\cbox{\greenpibasisspider} \approx \cbox{\graypointmap{1}}\\
+\cbox{\redbasisspider} &\approx \cbox{\point{0}} \quad\quad
+\cbox{\redpibasisspider} \approx \cbox{\point{1}}
+\end{aligned}
+\end{equation}
+
+We can also see the single-qubit gates in the ZX-Calculus.
+\[\cbox{\phase{\alpha}} 
+= \cbox{\pointcopointmap{0}{0}} + e^{i\alpha} \cbox{\pointcopointmap{1}{1}} = Z_{\alpha}\]
+\[\cbox{\redphase{\alpha}} 
+= \cbox{\graypointcopointmap{0}{0}} + e^{i\alpha} \cbox{\graypointcopointmap{1}{1}} = X_{\alpha}\]
+
+We can then define many of the common quantum gates in this way.
+\begin{equation}
+\begin{aligned}
+  I &= \idphase{} = \redidphase{} = \cbox{\idwire}\\
+  X &= \cbox{\redphase{\pi}} \\
+  Z &= \cbox{\phase{\pi}} \\
+  H &= \tikzfig{had_common} \\
+  S &= \cbox{\phase{\frac{\pi}{2}}}\\
+  T &= \cbox{\phase{\frac{\pi}{4}}} \\
+  CNOT &= \tikzfig{cnot}
+\end{aligned}
+\end{equation}
+
+There are 2 gates of special note here. 
+The Hadamard gate $H$, denoted by the small yellow box, or as a blue dashed line,
+is a single-qubit gate that interchanges $Z$ and $X$ bases, so it acts as a colour changer.
+
+\ctikzfig{colour-ch2}
+
+It is also a self-inverse.
+
+\ctikzfig{had-self-inv}
+
+The CNOT gate is a two-qubit gate that acts on the second qubit if the first qubit is in the state $\ket{1}$.
+We will see when introducing the cups and caps, what the vertical line in the CNOT gate represents.
