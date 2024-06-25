@@ -1,9 +1,9 @@
-\begin{savequote}[8cm]
-\textlatin{Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...}
+% \begin{savequote}[8cm]
+% \textlatin{Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...}
 
-There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...
-  \qauthor{--- Cicero's \textit{de Finibus Bonorum et Malorum}}
-\end{savequote}
+% There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...
+%   \qauthor{--- Cicero's \textit{de Finibus Bonorum et Malorum}}
+% \end{savequote}
 
 \chapter{\label{ch:1-intro}Introduction} 
 
@@ -24,8 +24,7 @@ they could solve some of the most challenging problems in computer science much 
 One notable example is Shor's algorithm for factoring large numbers, which could break widely-used cryptographic systems such as RSA. 
 Another significant algorithm is Grover's search algorithm, which provides quadratic speed-ups for unstructured search problems. 
 
-As we strive to advance the field of quantum computing, 
-classical computations play an essential role in assisting and accelerating the development of quantum computers. 
+Classical computations play an essential role in assisting and accelerating the development of quantum computers. 
 Classical simulation is a fundamental aspect of understanding and designing quantum hardware, 
 often serving as the only means to validate these quantum systems \cite{xu2023herculean}. 
 Additionally, quantum algorithms can be implemented on classical simulators for testing and verification purposes 
@@ -289,5 +288,16 @@ it is sufficient to reason about Clifford+T diagrams, as a result of the followi
 \end{theorem}
 
 The proof of the above theorem involves the \textit{Solovay-Kitaev theorem},
-combining with the fact that any single-qubit phase gate can be approximated by a sequence of $H$ and $T$ gates,
+combining with the fact that any single-qubit phase gate can be approximated by a sequence of Hadamard and $T$ gates,
 with details found in \cite{Nielsen_Chuang_2010}.
+
+\subsection{Graph Simplification and Reduction}
+
+Because of OCM, structure of ZX-diagrams up until now have very similar structure to graphs,
+where the spiders are the vertices and the wires are the edges.
+The only difference may be that the spiders are coloured, and that the Hadamard boxes are included.
+In this section, we solidify the connection between ZX-diagrams and graphs,
+and introduce an algorithm that will simplify ZX-diagrams, defining what it means for a graph to be simplified.
+Ultimately, simplifying ZX-diagrams should allow us to reduce the number of spiders in the diagram,
+which directly translates to a reduction in the number of gates in the quantum circuit.
+In turn, as we will see in the next chapter, this will lead to a speedup in the simulation of quantum circuits.
