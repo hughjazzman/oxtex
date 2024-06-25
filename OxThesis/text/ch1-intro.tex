@@ -19,12 +19,10 @@ to perform certain types of calculations exponentially faster than their classic
 If a classical computer were limited by memory and runtime, 
 a quantum computer could potentially bypass these scaling issues - dubbed the "quantum advantage".
 
-The potential of quantum computing extends beyond mere theoretical interest. 
 If scalable quantum computers were to become a reality, 
 they could solve some of the most challenging problems in computer science much more efficiently than classical computers. 
 One notable example is Shor's algorithm for factoring large numbers, which could break widely-used cryptographic systems such as RSA. 
 Another significant algorithm is Grover's search algorithm, which provides quadratic speed-ups for unstructured search problems. 
-These advancements underscore the profound impact quantum computing could have on fields ranging from cryptography to complex optimization problems.
 
 As we strive to advance the field of quantum computing, 
 classical computations play an essential role in assisting and accelerating the development of quantum computers. 
@@ -36,28 +34,23 @@ These simulators emulate the behavior of quantum computers, allowing researchers
 
 % \section{Contribution}
 
-This theses attempts to solve the problem in an almost entirely graphical approach.
+This theses aims to present the speedup of classical simulation of quantum circuits in an almost entirely graphical approach.
 From the introduction of the qubits, to the representation of quantum circuits and linear maps,
 the underlying linear algebra that governs the operations of quantum computing is represented in a graphical manner.
-Using ZX-Calculus, a graphical calculus detailed in the next section,
+Using ZX-Calculus, a graphical calculus detailed in \autoref{sec:zx-calculus},
 quantum circuits can be represented as diagrams, 
 allowing for different discoveries to be more easily made when analysing the structure of said diagrams.
 
 \section{Basic Notation}
+\label{sec:basic-notation}
 In classical computing, a bit is the fundamental unit of information, 
 and is denoted by a boolean value $b\in\{0,1\}$.
 In quantum computing, the fundamental unit of information is the qubit,
 which we denote as $\ket{b}$, where $b\in\{0,1\}$.
 Diagramatically, they are represented as follows:
+\[\point{0} \quad\quad\quad\quad \point{1}\]
 
-\begin{minipage}{.5\linewidth}
-  \[\point{0}\]
-\end{minipage}
-\begin{minipage}{.5\linewidth}
-  \[\point{1}\]
-\end{minipage}
-
-In fact, we can consider these the computational or Z-basis states.
+We consider these the computational or Z-basis states.
 
 \begin{definition}[Z-basis]
   The Z-basis or computational basis is defined as
@@ -79,32 +72,29 @@ Then, the '+' or X-basis states can be defined.
 Along with the Z-basis states, these states form the building blocks of understanding quantum computing and the use of ZX-calculus for diagrammatic reasoning.
 
 Intuitively, using the diagrammatic representation, we can consider combining diagrams in parallel.
-In the literature, this is the same as taking a tensor product.
+In the literature, this is the same as taking a \textit{tensor product}.
 For example, we can have a 2-qubit state.
-\[\cbox{\twopointmap{10}} = \begin{matrix}
-  \point{1} \\
-  \point{0}
-\end{matrix}\]
+\[\cbox{\twopoint{10}} = \tikzfig{01state}\]
 
-States can be transformed by quantum gates simply by composing them to obtain a new state.
-Given that composing the quantum gate $U$ to a state $\ket{\psi}$ gives a state $\ket{\psi'}$, we have
+States can be transformed by quantum gates simply by \textit{composing} them to obtain a new state.
+Given that composing the quantum gate $U$ to a state $\ket{\psi}$ gives a state $\ket{\psi'}$,
+we can just connect the wires.
 \[\cbox{\point{\psi'}} = \cbox{\boxpointmap{\psi}{U}}\]
+
+Intuitively, this means that the wire by itself should just be the identity gate, 
+since composing it with any state should not change that state.
+\[\cbox{\boxmap{I}} := \cbox{\idwire}\]
+\[\cbox{\boxpointmap{\psi}{I}} = \cbox{\longpoint{\psi}} = \cbox{\point{\psi}}\]
 
 
 The dual of states are the effects. Here, we have the Z-basis effects.
-
-\begin{minipage}{.5\linewidth}
-  \[\copointmap{0}\]
-\end{minipage}
-\begin{minipage}{.5\linewidth}
-  \[\copointmap{1}\]
-\end{minipage}
+\[\copointmap{0} \quad\quad\quad\quad \copointmap{1}\]
 
 For a state $\ket{\psi}$ and an effect $\bra{\phi}$, we can obtain a scalar inner product.
-This is essentially the \textit{bra-ket} notation in diagrammatic form, 
+This is essentially the \textit{bra-ket} notation in diagrammatic form by just connecting the wires, 
 which comes with a few other definitions.
 
-\begin{definition}[Inner product]
+\begin{definition}[Inner product \cite{coecke2017picturing}]
   The \textit{inner product} $\braket{\phi}{\psi}$ of two states $\ket{\psi}$ and $\ket{\phi}$ is defined as
   \[\pointbraket{\psi}{\phi}\]
   They are \textit{orthogonal} if 
@@ -113,16 +103,19 @@ which comes with a few other definitions.
   \[\pointbraket{\psi}{\psi}\]
   $\ket{\psi}$ is \textit{normalised} if 
   \[\cbox{\pointbraket{\psi}{\psi}} = \cbox{\emptydiag} = 1\]
-  where the empty diagram represents the scalar 1.
+  where the empty diagram $\emptydiag$ represents the scalar 1.
 \end{definition}
 
-We now define the inner product of the Z-basis states.
+We can then define the inner product of the Z-basis states.
 \begin{definition}
   The inner product of the Z-basis states is
   \[\cbox{\pointbraket{0}{0}} = \cbox{\pointbraket{1}{1}} = \cbox{\emptydiag}\]
   \[\cbox{\pointbraket{1}{0}} = \cbox{\pointbraket{0}{1}} = 0\]
   Succinctly, for $i,j\in\{0,1\}$,
-  \[\cbox{\pointbraket{i}{j}} = \delta_{ij}\]
+  \[\cbox{\pointbraket{i}{j}} = \delta_{ij} = \begin{cases}
+    \cbox{\emptydiag} & \text{if } i = j\\
+    0 & \text{if } i \neq j
+  \end{cases}\]
   where $\delta_{ij}$ is the Kronecker delta.
 \end{definition}
 In fact, the succinct definition can be used to determine if a basis is an \textit{orthonormal basis} (ONB).
@@ -130,8 +123,9 @@ The X-basis is also an ONB.
 
 We are almost at the stage where we can obtain probabilities from the diagrams.
 The scalar inner product is not really a probability, that is,
-a number between 0 and 1, but instead, a number in $\C$.
-Note that putting multiple scalars in a single diagram is just the same as multiplying them together.
+a number between 0 and 1, but instead, a number $z\in\C$.
+
+First, we note that putting multiple scalars in a single diagram is just the same as multiplying them together.
 \[\begin{matrix}
   \pointbraket{\psi}{\phi} \\
   \pointbraket{\psi'}{\phi'}
@@ -139,8 +133,7 @@ Note that putting multiple scalars in a single diagram is just the same as multi
 \cbox{\pointbraket{\psi}{\phi}} \cdot \cbox{\pointbraket{\psi'}{\phi'}}
 \]
 
-We also know that a complex number and its conjugate, $z,\bar{z}\in\C$,
-\[|z|^2 = z\bar{z}\]
+We also know that for a complex number and its conjugate, $z,\bar{z}\in\C, |z|^2 = z\bar{z}$
 Translating that to the diagrammatic representation, we can obtain the following.
 \[\left|\cbox{\kpointbraket{\psi}{\phi}}\right|^2 = 
 \begin{matrix}
@@ -150,12 +143,8 @@ Translating that to the diagrammatic representation, we can obtain the following
 Note that assymetry is introduced to denote the conjugation. 
 Remember that a complex number $z = a + bi \in \C$ has a conjugate $\bar{z} = a - bi \in \C$,
 so this corresponds to a vertical reflection in the diagram above.
-We can use the complex plane to show why this makes sense
-since the reflection is about the real axis.
 
-\[\includegraphics{complexplane_conj.tikz}\]
-
-Using the Born rule, if we make sure that $\ket{\psi}$ and $\ket{\phi}$ are normalised,
+Using the \textit{Born rule}, if we make sure that $\ket{\psi}$ and $\ket{\phi}$ are normalised,
 we can obtain the following.
 
 \[0 \leq \begin{matrix}
@@ -169,12 +158,14 @@ This can be interpreted as our desired probaility - the probability of measuring
 We now have all we need to introduce the ZX-calculus notation.
 
 \section{ZX-Calculus}
+\label{sec:zx-calculus}
 So far, we have introduced the representation of quantum states, effects, and inner products in a diagrammatic form.
 However, there still isn't much we can do without a way to manipulate them.
 In the previous section, we mentioned that we can apply quantum gates to states to obtain new states.
 Here, we will introduce the ZX-Calculus and show the highly intuitive representation of some quantum gates
 such as the Hadamard and CNOT gates, based on the building blocks from the previous section.
-This graphical calculus continues to use the notions of composition and tensor product from the earlier section.
+The ZX-Calculus is a graphical calculus for quantum computations, developed by Coecke and Duncan in 2008 \cite{Coecke_2011}.
+All operations are expressed as \textit{spiders}, connected by \textit{edges} (or \textit{wires}).
 
 \subsection{Spiders}
 \begin{definition}[Spiders]
@@ -182,6 +173,7 @@ This graphical calculus continues to use the notions of composition and tensor p
 \end{definition}
 Here, we have green and red spiders, also known as Z and X spiders,
 made of the Z and X basis states respectively.
+Wires coming in from the left are \textit{inputs}, and wires going out to the right are \textit{outputs}.
 The $\alpha$ inside a spider node is also called the \textit{phase} of the spider.
 For example, with $\alpha = 0, e^{i\alpha} = \cbox{\emptydiag}$.
 It is convenient to denote spiders with $\alpha = 0$ as having no angle written inside the spider.
@@ -226,19 +218,76 @@ We can then define many of the common quantum gates in this way.
   H &= \tikzfig{had_common} \\
   S &= \cbox{\phase{\frac{\pi}{2}}}\\
   T &= \cbox{\phase{\frac{\pi}{4}}} \\
-  CNOT &= \tikzfig{cnot}
+  CNOT &= \sqrt{2} \cdot \tikzfig{cnot}
 \end{aligned}
 \end{equation}
 
+
 There are 2 gates of special note here. 
 The Hadamard gate $H$, denoted by the small yellow box, or as a blue dashed line,
-is a single-qubit gate that interchanges $Z$ and $X$ bases, so it acts as a colour changer.
+is a single-qubit gate that interchanges $Z$ and $X$ bases.
+We will see later in the ZX-rules that this is vital for the colour-change rule,
+as well as why it is useful to denote it as the blue dashed line.
 
-\ctikzfig{colour-ch2}
+The CNOT gate is a two-qubit gate that acts on the target qubit if the control qubit 
+is in the state $\ket{1} \approx \redpibasisspider$.
+The vertical line is used simply because it does not matter which direction the line is going,
+where the following equality of the second and third forms can be verified.
+\[\tikzfig{cnot} = \tikzfig{cnot-left} = \tikzfig{cnot-right}\]
 
-It is also a self-inverse.
+Last but not least, we also introduce the SWAP gate, which as the name suggests, swaps two qubits.
+\[SWAP = \tikzfig{swap} := \sum_{i,j\in \{0,1\}} \cbox{\twotwoketbra{i}{j}{j}{i}} \]
 
-\ctikzfig{had-self-inv}
+We can now introduce the ZX-rules in the next section.
 
-The CNOT gate is a two-qubit gate that acts on the second qubit if the first qubit is in the state $\ket{1}$.
-We will see when introducing the cups and caps, what the vertical line in the CNOT gate represents.
+\subsection{ZX-Rules}
+The ZX-Calculus is based on a set of rules that allow us to manipulate the diagrams.
+For $\alpha,\beta\in[0,2\pi)$ and $a\in\{0,1\}$, the rules are as follows.
+
+\begin{figure}[h!]
+\ctikzfig{ZX-rules}
+\caption{$ZX$-rules presented in \cite{Kissinger_2019}}\label{table:rewrite}
+\end{figure}
+
+The names of the rules are spider fusion \SpiderRule, Hadamard rule \HadamardRule,
+$\pi$-commutation \PiRule, copy rule \CopyRule, bialgebra \SCRule,
+identity rule \IdRule, and Hadamard cancel rule \HHRule.
+By duality, the rules also hold if the colours are swapped.
+
+The power of ZX-diagrams comes from the fact that two diagrams are equivalent
+as long as the connectivity of the diagram is the same -
+that is, as long as order of inputs and outputs of the whole diagram is preserved.
+This does not depend on the position of the spiders or the direction of wires between them.
+This neat feature of ZX-diagrams is called "Only Connectivity Matters" (OCM).
+
+We can then obtain cups and cups using 2-legged spiders together with \IdRule.
+
+\[\tikzfig{cap} \eqrule{\IdRule} \tikzfig{cap_spider} \quad\quad\quad 
+\tikzfig{cup} \eqrule{\IdRule} \tikzfig{cup_spider}\]
+
+Caps and cups obey the \textit{yanking equations}.
+\[ \tikzfig{line_yank} \qquad\qquad \tikzfig{line_yank2} \]
+
+Before we move on to reasoning about the diagrams in a graph-theoretic manner,
+we first introduce the concept of a \textit{Clifford+T diagram}.
+
+\begin{definition}[Clifford diagram]
+  A \textit{Clifford diagram} is a ZX-diagram where the phases are restricted to integer multiples of $\frac{\pi}{2}$.
+\end{definition}
+
+\begin{definition}[Clifford+T diagram]
+  A \textit{Clifford+T diagram} is a ZX-diagram where the phases are restricted to integer multiples of $\frac{\pi}{4}$.
+\end{definition}
+
+It is clear from the definitions that a Clifford diagram is a subset of a Clifford+T diagram.
+The reason we introduce these concepts is that in trying to obtain our main goal of the thesis,
+it is sufficient to reason about Clifford+T diagrams, as a result of the following theorem.
+
+\begin{theorem}[Approximate Universality \cite{Nielsen_Chuang_2010}]
+  Clifford+T diagrams are \textit{approximately universal} for quantum computing - 
+  they can approximate any quantum circuit.
+\end{theorem}
+
+The proof of the above theorem involves the \textit{Solovay-Kitaev theorem},
+combining with the fact that any single-qubit phase gate can be approximated by a sequence of $H$ and $T$ gates,
+with details found in \cite{Nielsen_Chuang_2010}.

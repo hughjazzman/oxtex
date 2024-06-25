@@ -7,6 +7,7 @@
 \graphicspath{{.}{./figures/}}
 
 \input{quantum.tikzstyles}
+\input{dots.tikzdefs}
 
 \theoremstyle{definition}
 \newtheorem{theorem}{Theorem}[section]
@@ -41,6 +42,7 @@
 {\popQED\end{definition/}}
 
 \newcommand{\C}{\ensuremath{\mathbb{C}}}
+\newcommand{\eqrule}[1]{\ensuremath{\stackrel{#1}{=}}}
 
 % BRAS AND KETS
 \newcommand{\bra}[1]{\ensuremath{\left\langle #1 \right|}}
@@ -54,16 +56,55 @@
 \newcommand{\emptydiag}{\,\tikz{\node[style=empty diagram] (x) {};}\,}
 \newcommand{\scalar}[1]{\,\tikz{\node[style=scalar] (x) {$#1$};}\,}
 
+\newkeycommand{\boxmap}[style=box][1]{\,\tikz{\node[style=\commandkey{style}] (x) {$#1$};\draw(-1.25,0)--(x)--(1.25,0);}\,}
+
 \newkeycommand{\pointmap}[style=ket][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (-0.3,0) {$#1$};\node [style=none] (3) at (0.9, 0) {};\node [style=none] (3) at (-0.9, 0) {};\draw (x)--(0.7,0);}\,}
 \newkeycommand{\point}[style=ket,estyle=][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (-0.3,0) {$#1$};\draw [\commandkey{estyle}] (x)--(0.7,0);}\,}
+\newkeycommand{\longpoint}[style=ket,estyle=][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (-0.3,0) {$#1$};\draw [\commandkey{estyle}] (x)--(1.2,0);}\,}
 
 \newkeycommand{\copointmap}[style=bra][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (0.3,0) {$#1$};\draw (x)--(-0.7,0);}\,}
 
 \newcommand{\graypointmap}[1]{\point[style=gray ket]{#1}}
 \newcommand{\graycopointmap}[1]{\copointmap[style=gray bra]{#1}}
 
-\newkeycommand{\twopointmap}[style=ket,estyle=][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (-0.3,0) {$#1$};\draw [\commandkey{estyle}] (x)+(0.25,0.2)--(0.7,0.2);\draw [\commandkey{estyle}] (x)+(0.25,-0.2)--(0.7,-0.2);}\,}
+\newkeycommand{\twopoint}[style=ket,estyle=][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (-0.3,0) {$#1$};\draw [\commandkey{estyle}] (x)+(0.25,0.2)--(0.7,0.2);\draw [\commandkey{estyle}] (x)+(0.25,-0.2)--(0.7,-0.2);}\,}
 
+\newkeycommand{\twopointketbra}[style1=bra,style2=ket,style3=ket][3]{\,%
+\begin{tikzpicture}
+  \begin{pgfonlayer}{nodelayer}
+    \node [style=none] (0) at (0, -1.75) {};
+    \node [style=none] (1) at (-0.75, 1.75) {};
+    \node [style=\commandkey{style1}] (2) at (0, -0.75) {$#1$};
+    \node [style=\commandkey{style2}] (3) at (-0.75, 0.75) {$#2$};
+    \node [style=\commandkey{style3}] (4) at (0.75, 0.75) {$#3$};
+    \node [style=none] (5) at (0.75, 1.75) {};
+  \end{pgfonlayer}
+  \begin{pgfonlayer}{edgelayer}
+    \draw (0.center) to (2);
+    \draw (1.center) to (3);
+    \draw (4) to (5.center);
+  \end{pgfonlayer}
+\end{tikzpicture}\,}
+
+\newkeycommand{\twotwoketbra}[style1=bra,style2=bra,style3=ket,style4=ket][4]{\,%
+\begin{tikzpicture}
+\begin{pgfonlayer}{nodelayer}
+    \node [style=none] (0) at (-1.75, -0.5) {};
+    \node [style=none] (1) at (-1.75, 0.5) {};
+    \node [style=\commandkey{style1}] (2) at (-0.75, -0.5) {$#1$};
+    \node [style=\commandkey{style2}] (3) at (-0.75, 0.5) {$#2$};
+    \node [style=\commandkey{style3}] (4) at (0.75, -0.5) {$#3$};
+    \node [style=\commandkey{style4}] (5) at (0.75, 0.5) {$#4$};
+    \node [style=none] (6) at (1.75, -0.5) {};
+    \node [style=none] (7) at (1.75, 0.5) {};
+\end{pgfonlayer}
+\begin{pgfonlayer}{edgelayer}
+    \draw (0.center) to (2);
+    \draw (1.center) to (3);
+    \draw (4) to (6.center);
+    \draw (5) to (7.center);
+\end{pgfonlayer}
+\end{tikzpicture}\,}
 
 \newcommand{\pointcopointmap}[2]{\,\tikz{
   \node[style=bra] (x) at (-0.5,0) {$#2$};\draw (x)--(-1.5,0);
