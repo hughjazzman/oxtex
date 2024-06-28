@@ -1,18 +1,36 @@
-\chapter{\label{ch:2-litreview}Background}
+\chapter{\label{ch:2-litreview}Classical Simulation}
 
 \minitoc
 
 \section{Introduction}
+As mentioned in the previous chapter, classical simulation of quantum circuits provides an essential tool 
+for verification and validation, despite its inherent limitations. 
+This chapter delves into the methods and advancements in classical simulation, 
+particularly focusing on stabilizer decomposition and the role of magic states in extending the capabilities of these simulations.
+Classical simulation methods that store a complete description of an $n$-qubit quantum state 
+as a complex vector of size $2^n$ are effective only for a small number of qubits, typically around 30. 
+For example, Shor's factoring algorithm has been simulated with 31 qubits and approximately half a million gates (Paragraph 1). 
+However, for certain classes of quantum circuits, such as those composed of gates from the Clifford group, 
+classical simulation can be significantly more efficient. 
+This is known as the \textit{Gottesman-Knill theorem}.
 
-The ZX-Calculus is a graphical calculus for quantum computations, developed by Coecke and Duncan in 2008 \cite{Coecke_2011}.
-All operations are expressed as \textit{spiders}, connected by \textit{edges} (or \text{wires}).
+\begin{theorem}[Gottesman-Knill Theorem]
+    \label{thm:gottesman-knill}
+    A Clifford computation can be efficiently classically simulated.
+\end{theorem}
 
-This document introduction won't serve as a complete primer on \LaTeX.  There are plenty of those online, and googling your questions will often get you answers, especially from \url{http://tex.stackexchange.com}.
+Building on the foundational concepts discussed in the previous chapter, 
+where we explored the graphical representation of quantum circuits using ZX-Calculus, 
+we now turn to the specific techniques for simulating these circuits classically. 
+ZX-Calculus not only aids in visualizing quantum operations 
+but also simplifies the process of identifying and manipulating stabilizer states, 
+which are central to many classical simulation methods (Paragraph 4).
 
-Instead, let's talk a little about a few of the features and packages lumped into this template situation.  The \verb|savequote| environment at the beginning of chapters can add some wittiness to your thesis.  If you don't like the quotes, just remove that block.
-
-For when it comes time to do corrections, there are two useful commands here.  First, the \verb|mccorrect| command allows you to highlight a short correction \mccorrect{like this one}.  When the thesis is typeset normally, the correction will just appear as part of the text.  However, when you declare \verb|\correctionstrue| in the main \verb|Oxford_Thesis.tex| file, that correction will be highlighted in blue.  That might be useful for submitting a post-viva, corrected copy to your examiners so they can quickly verify you've completed the task.
-
-\begin{mccorrection}
-For larger chunks, like this paragraph or indeed entire figures, you can use the \verb|mccorrection| environment.  This environment highlights paragraph-sized and larger blocks with the same blue colour.
-\end{mccorrection}
+Stabilizer circuits are particularly notable for their applications in quantum error correction. 
+These circuits are initialized in stabilizer states, evolve under stabilizer operations, 
+and are measured in the Pauli basis. 
+Classical simulation of these circuits is efficient due to their restriction to the Clifford group operations (Paragraph 3). 
+However, to achieve universal quantum computation, we must incorporate non-Clifford elements, such as magic states. 
+The introduction of magic states, which extend the computational capabilities of stabilizer circuits, 
+brings an exponential cost to the simulation. 
+Nonetheless, when circuits are predominantly composed of Clifford gates, classical simulation remains feasible (Paragraph 3).

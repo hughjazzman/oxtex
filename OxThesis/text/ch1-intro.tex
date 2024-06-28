@@ -33,7 +33,7 @@ These simulators emulate the behavior of quantum computers, allowing researchers
 
 % \section{Contribution}
 
-This theses aims to present the speedup of classical simulation of quantum circuits in an almost entirely graphical approach.
+This thesis aims to present the speedup of classical simulation of quantum circuits in an almost entirely graphical approach.
 From the introduction of the qubits, to the representation of quantum circuits and linear maps,
 the underlying linear algebra that governs the operations of quantum computing is represented in a graphical manner.
 Using ZX-Calculus, a graphical calculus detailed in \autoref{sec:zx-calculus},
@@ -202,6 +202,10 @@ By using $\approx$ to denote equality up to a non-zero factor, we have
 \end{aligned}
 \end{equation}
 
+Scalars can also be represented using just spiders.
+
+\ctikzfig{scalars}
+
 We can also see the single-qubit gates in the ZX-Calculus.
 \[\cbox{\phase{\alpha}} 
 = \cbox{\pointcopointmap{0}{0}} + e^{i\alpha} \cbox{\pointcopointmap{1}{1}} = Z_{\alpha}\]
@@ -225,7 +229,7 @@ We can then define many of the common quantum gates in this way.
 There are 2 gates of special note here. 
 The Hadamard gate $H$, denoted by the small yellow box, or as a blue dashed line,
 is a single-qubit gate that interchanges $Z$ and $X$ bases.
-We will see later in the ZX-rules that this is vital for the colour-change rule,
+We will see later in the ZX-rules that this is vital for the colour change \CCRule rule,
 as well as why it is useful to denote it as the blue dashed line.
 
 The CNOT gate is a two-qubit gate that acts on the target qubit if the control qubit 
@@ -240,6 +244,7 @@ Last but not least, we also introduce the SWAP gate, which as the name suggests,
 We can now introduce the ZX-rules in the next section.
 
 \subsection{ZX-Rules}
+\label{sec:zx-rules}
 The ZX-Calculus is based on a set of rules that allow us to manipulate the diagrams.
 For $\alpha,\beta\in[0,2\pi)$ and $a\in\{0,1\}$, the rules are as follows.
 
@@ -248,9 +253,10 @@ For $\alpha,\beta\in[0,2\pi)$ and $a\in\{0,1\}$, the rules are as follows.
 \caption{$ZX$-rules presented in \cite{Kissinger_2019}}\label{table:rewrite}
 \end{figure}
 
-The names of the rules are spider fusion \SpiderRule, Hadamard rule \HadamardRule,
-$\pi$-commutation \PiRule, copy rule \CopyRule, bialgebra \SCRule,
-identity rule \IdRule, and Hadamard cancel rule \HHRule.
+The names of the rules are spider $\SpiderRule$usion, colour change \CCRule rule,
+$\PiRule$-commutation, $\CopyRule$opy rule, $\SCRule$ialgebra,
+$\IdRule$dentity rule, and $\HHRule$adamard cancel rule.
+For \CopyRule, $n$ refers to the number of outputs.
 By duality, the rules also hold if the colours are swapped.
 
 The power of ZX-diagrams comes from the fact that two diagrams are equivalent
@@ -259,7 +265,7 @@ that is, as long as order of inputs and outputs of the whole diagram is preserve
 This does not depend on the position of the spiders or the direction of wires between them.
 This neat feature of ZX-diagrams is called "Only Connectivity Matters" (OCM).
 
-We can then obtain cups and cups using 2-legged spiders together with \IdRule.
+We can then obtain caps and cups using 2-legged spiders together with \IdRule.
 
 \[\tikzfig{cap} \eqrule{\IdRule} \tikzfig{cap_spider} \quad\quad\quad 
 \tikzfig{cup} \eqrule{\IdRule} \tikzfig{cup_spider}\]
@@ -291,9 +297,9 @@ The proof of the above theorem involves the \textit{Solovay-Kitaev theorem},
 combining with the fact that any single-qubit phase gate can be approximated by a sequence of Hadamard and $T$ gates,
 with details found in \cite{Nielsen_Chuang_2010}.
 
-\subsection{Graph Simplification and Reduction}
+\section{Graph Reduction}
 
-Because of OCM, structure of ZX-diagrams up until now have very similar structure to graphs,
+Because of OCM, ZX-diagrams up until now have very similar structure to graphs,
 where the spiders are the vertices and the wires are the edges.
 The only difference may be that the spiders are coloured, and that the Hadamard boxes are included.
 In this section, we solidify the connection between ZX-diagrams and graphs,
@@ -301,3 +307,83 @@ and introduce an algorithm that will simplify ZX-diagrams, defining what it mean
 Ultimately, simplifying ZX-diagrams should allow us to reduce the number of spiders in the diagram,
 which directly translates to a reduction in the number of gates in the quantum circuit.
 In turn, as we will see in the next chapter, this will lead to a speedup in the simulation of quantum circuits.
+
+First, we define what it means for ZX-diagram to be \textit{graph-like}.
+
+\begin{definition}[Graph-like \cite{Kissinger2024}]
+  A ZX-diagram is \textit{graph-like} when
+\begin{itemize}
+  \item Every spider is a Z-spider.
+  \item Spiders are only connected via Hadamard edges.
+  \item There is at most only one edge between each pair of spiders.
+  \item There are no self-loops.
+  \item Every input and output wire is connected to a Z-spider.
+\end{itemize}
+\end{definition}
+
+The following proposition can then be proven, using rewrite rules introduced previously in \nameref{sec:zx-rules}.
+
+\begin{proposition}[\cite{Kissinger2024}]
+  Every ZX-diagram can be converted to a graph-like ZX-diagram in polynomial time.
+\end{proposition}
+
+The proof \cite{Kissinger2024} makes use of the fact that Hadamard edges in parallel cancel,
+and that we can always remove a Hadamard self-loop.
+
+\ctikzfig{had_lemma}
+
+We can simplify the graph-like ZX-diagram further.
+Now, the following two rewrite rules, derivable from the original ZX-rules, are introduced.
+
+\begin{figure}[h!]
+\ctikzfig{deriv_rules}
+\caption{
+  Derived $ZX$-rules \cite{Duncan2020graphtheoretic}, 
+  where $\alpha,\beta,\gamma\in [0,2\pi)$ and $j,k\in\{0,1\}$.
+}\label{table:deriv}
+\end{figure}    
+
+
+The rules are \textit{local complementation} \LCRule and \textit{pivoting} \PivotRule respectively.
+Here, $E = (n-1)m + (l-1)m + (n-1)(l-1)$.
+
+Repeatedly simplifying and reducing diagrams in this manner will end up giving us patterns in the diagrams.
+The following definitions help us identify these patterns.
+First, we define interior and boundary spiders, and then phase gadgets.
+
+\begin{definition}[\cite{Kissinger2020}]
+  A \textit{boundary spider} is a spider connected to an input or output.
+  All other spiders are \textit{internal spiders}.
+\end{definition}
+
+\begin{definition}[Phase gadget \cite{Kissinger2020}]
+  A \textit{phase gadget} is an arity-1 spider with angle $\alpha$, 
+  connected via a Hadamard edge to a spider with no angle.
+
+  \ctikzfig{phasegadget}
+\end{definition}
+
+These help us define the reduced gadget form.
+
+\begin{definition}[Reduced gadget form \cite{Kissinger2020}]
+  A graph-like ZX-diagram is in \textit{reduced gadget form} when
+\begin{itemize}
+  \item Every internal spider is a non-Clifford spider or part of a non-Clifford phase-gadget.
+  \item Every phase-gadget has more than one target.
+  \item No two phase-gadgets have the same set of targets.
+\end{itemize}
+\end{definition}
+
+\begin{example}
+  The following diagram from \cite{Kissinger_2022} is in reduced gadget form.
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]{reduced_gadget_ex.png}
+\caption{A ZX-diagram in reduced gadget form \cite{Kissinger_2022}}
+\end{figure}  
+\end{example}
+
+It turns out that there is an algorithm that is bounded in $O(n^3)$ where $n$ is the number of spiders,
+to convert any graph-like ZX-diagram to reduced gadget form \cite{Kissinger_2022}.
+Thus, much of the work in this thesis will focus on the reduced gadget form, 
+as it tends to bring us closer to the goal of reducing overall $T$-count.
+However, there are exceptions to this, as we will see in the next chapter.
