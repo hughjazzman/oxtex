@@ -1,0 +1,35 @@
+\begin{tikzpicture}
+    % Set up the plot
+    \begin{axis}[
+        axis lines=middle,
+        xlabel={Re($z$)},
+        ylabel={Im($z$)},
+        xmin=-5, xmax=5,
+        ymin=-5, ymax=5,
+        width=7cm, height=7cm,
+        enlargelimits,
+        grid=both,
+        grid style={line width=.1pt, draw=gray!10},
+        major grid style={line width=.2pt,draw=gray!50},
+        minor tick num=1,
+        major tick length={0.2cm},
+        minor tick length={0.1cm},
+        xtick = \empty, ytick = \empty,
+        ytick style={draw=none},  % Remove y-axis ticks
+        ylabel style={draw=none},  % Remove y-axis label
+        axis y line=none,  % Remove y-axis line
+        domain=-5:5
+    ]
+        % Plot a function (example: y=x^2)
+        % \addplot[blue, thick, samples=100] {x^2};
+    \end{axis}
+    
+    % Overlay a TikZ graphic
+    \node at (4,4) { 
+        \kpointbraket{\psi}{\phi}
+    };    
+    \node at (4,1.5) { 
+        \kpointbraketconj{\psi}{\phi}
+    };
+    
+\end{tikzpicture}

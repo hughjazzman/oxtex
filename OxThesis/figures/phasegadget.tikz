@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (0) at (1, 1) {};
+		\node [style=none] (1) at (1, -1) {};
+		\node [style=Z dot] (2) at (0, 0) {};
+		\node [style=Z phase dot] (3) at (-1.75, 0) {$\alpha$};
+		\node [style=none] (4) at (1, 0) {$\vdots$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=hadamard edge] (3) to (2);
+		\draw (2) to (0.center);
+		\draw (2) to (1.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=Z phase dot] (0) at (-4, 0) {$\alpha$};
+		\node [style=none] (1) at (-3, 0) {$=$};
+		\node [style=none] (2) at (-1.5, 0) {$1+e^{i\alpha}$};
+		\node [style=Z phase dot] (3) at (3.25, 0) {$a\pi$};
+		\node [style=none] (4) at (4.25, 0) {$=$};
+		\node [style=none] (5) at (5.75, 0) {$\sqrt{2}e^{ia\alpha}$};
+		\node [style=X phase dot] (6) at (2, 0) {$\alpha$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (6) to (3);
+	\end{pgfonlayer}
+\end{tikzpicture}

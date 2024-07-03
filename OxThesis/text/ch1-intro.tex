@@ -66,24 +66,36 @@ Concretely, the qubit can be represented in a linear combination of the basis st
 \end{definition}
 
 Then, the '+' or X-basis states can be defined.
-\[\cbox{\graypointmap{0}} = \frac{1}{\sqrt{2}}\left(\cbox{\point{0}} + \cbox{\point{1}}\right)\]
-\[\cbox{\graypointmap{1}} = \frac{1}{\sqrt{2}}\left(\cbox{\point{0}} - \cbox{\point{1}}\right)\]
+\begin{equation}
+\begin{aligned}
+\cbox{\graypointmap{0}} = \frac{1}{\sqrt{2}}\left(\cbox{\point{0}} + \cbox{\point{1}}\right)\\
+\cbox{\graypointmap{1}} = \frac{1}{\sqrt{2}}\left(\cbox{\point{0}} - \cbox{\point{1}}\right)
+\end{aligned}
+\end{equation}
 Along with the Z-basis states, these states form the building blocks of understanding quantum computing and the use of ZX-calculus for diagrammatic reasoning.
 
 Intuitively, using the diagrammatic representation, we can consider combining diagrams in parallel.
 In the literature, this is the same as taking a \textit{tensor product}.
 For example, we can have a 2-qubit state.
-\[\cbox{\twopoint{10}} = \tikzfig{01state}\]
+\begin{equation}
+\cbox{\twopoint{10}} = \tikzfig{01state}
+\end{equation}
 
 States can be transformed by quantum gates simply by \textit{composing} them to obtain a new state.
 Given that composing the quantum gate $U$ to a state $\ket{\psi}$ gives a state $\ket{\psi'}$,
 we can just connect the wires.
-\[\cbox{\point{\psi'}} = \cbox{\boxpointmap{\psi}{U}}\]
+\begin{equation}
+  \cbox{\point{\psi'}} = \cbox{\boxpointmap{\psi}{U}}
+\end{equation}
 
 Intuitively, this means that the wire by itself should just be the identity gate, 
 since composing it with any state should not change that state.
-\[\cbox{\boxmap{I}} := \cbox{\idwire}\]
-\[\cbox{\boxpointmap{\psi}{I}} = \cbox{\longpoint{\psi}} = \cbox{\point{\psi}}\]
+\begin{equation}
+\begin{aligned}
+  \cbox{\boxmap{I}} &:= \cbox{\idwire}\\
+  \cbox{\boxpointmap{\psi}{I}} &= \cbox{\longpoint{\psi}} = \cbox{\point{\psi}}
+\end{aligned}
+\end{equation}
 
 
 The dual of states are the effects. Here, we have the Z-basis effects.
@@ -125,20 +137,23 @@ The scalar inner product is not really a probability, that is,
 a number between 0 and 1, but instead, a number $z\in\C$.
 
 First, we note that putting multiple scalars in a single diagram is just the same as multiplying them together.
-\[\begin{matrix}
+\begin{equation}
+\begin{matrix}
   \pointbraket{\psi}{\phi} \\
   \pointbraket{\psi'}{\phi'}
 \end{matrix} =
 \cbox{\pointbraket{\psi}{\phi}} \cdot \cbox{\pointbraket{\psi'}{\phi'}}
-\]
+\end{equation}
 
 We also know that for a complex number and its conjugate, $z,\bar{z}\in\C, |z|^2 = z\bar{z}$
 Translating that to the diagrammatic representation, we can obtain the following.
-\[\left|\cbox{\kpointbraket{\psi}{\phi}}\right|^2 = 
+\begin{equation}
+\left|\cbox{\kpointbraket{\psi}{\phi}}\right|^2 = 
 \begin{matrix}
   \kpointbraket{\psi}{\phi}\\
   \kpointbraketconj{\psi}{\phi}
-\end{matrix}\]
+\end{matrix}
+\end{equation}
 Note that assymetry is introduced to denote the conjugation. 
 Remember that a complex number $z = a + bi \in \C$ has a conjugate $\bar{z} = a - bi \in \C$,
 so this corresponds to a vertical reflection in the diagram above.
@@ -146,11 +161,14 @@ so this corresponds to a vertical reflection in the diagram above.
 Using the \textit{Born rule}, if we make sure that $\ket{\psi}$ and $\ket{\phi}$ are normalised,
 we can obtain the following.
 
-\[0 \leq \begin{matrix}
+\begin{equation}
+\label{eq:born-rule}
+0 \leq \begin{matrix}
   \kpointbraket{\psi}{\phi}\\
   \kpointbraketconj{\psi}{\phi}
 \end{matrix}
-\leq 1\]
+\leq 1
+\end{equation}
 
 This can be interpreted as our desired probaility - the probability of measuring $\ket{\psi}$ in the state $\ket{\phi}$.
 
@@ -182,6 +200,7 @@ up to the multiplicative constant $\sqrt{2}$.
 Note that $e^{i\pi} = -1$.
 \begin{equation}
 \begin{aligned}
+\label{eq:spider-basis}
 \cbox{\greenbasisspider} &= \cbox{\point{0}} + \cbox{\point{1}} = \sqrt{2} \cbox{\graypointmap{0}}\\
 \cbox{\greenpibasisspider} &= \cbox{\point{0}} - \cbox{\point{1}} = \sqrt{2} \cbox{\graypointmap{1}}\\
 \cbox{\redbasisspider} &= \cbox{\graypointmap{0}} + \cbox{\graypointmap{1}} = \sqrt{2} \cbox{\point{0}}\\
@@ -204,13 +223,19 @@ By using $\approx$ to denote equality up to a non-zero factor, we have
 
 Scalars can also be represented using just spiders.
 
-\ctikzfig{scalars}
+\begin{equation}
+\tikzfig{scalars}
+\end{equation}
 
 We can also see the single-qubit gates in the ZX-Calculus.
-\[\cbox{\phase{\alpha}} 
-= \cbox{\pointcopointmap{0}{0}} + e^{i\alpha} \cbox{\pointcopointmap{1}{1}} = Z_{\alpha}\]
-\[\cbox{\redphase{\alpha}} 
-= \cbox{\graypointcopointmap{0}{0}} + e^{i\alpha} \cbox{\graypointcopointmap{1}{1}} = X_{\alpha}\]
+\begin{equation}
+\begin{aligned}
+\cbox{\phase{\alpha}} 
+&= \cbox{\pointcopointmap{0}{0}} + e^{i\alpha} \cbox{\pointcopointmap{1}{1}} = Z_{\alpha}\\
+\cbox{\redphase{\alpha}} 
+&= \cbox{\graypointcopointmap{0}{0}} + e^{i\alpha} \cbox{\graypointcopointmap{1}{1}} = X_{\alpha}
+\end{aligned}
+\end{equation}
 
 We can then define many of the common quantum gates in this way.
 \begin{equation}
@@ -236,10 +261,14 @@ The CNOT gate is a two-qubit gate that acts on the target qubit if the control q
 is in the state $\ket{1} \approx \redpibasisspider$.
 The vertical line is used simply because it does not matter which direction the line is going,
 where the following equality of the second and third forms can be verified.
-\[\tikzfig{cnot} = \tikzfig{cnot-left} = \tikzfig{cnot-right}\]
+\begin{equation}
+\tikzfig{cnot} = \tikzfig{cnot-left} = \tikzfig{cnot-right}
+\end{equation}
 
 Last but not least, we also introduce the SWAP gate, which as the name suggests, swaps two qubits.
-\[SWAP = \tikzfig{swap} := \sum_{i,j\in \{0,1\}} \cbox{\twotwoketbra{i}{j}{j}{i}} \]
+\begin{equation}
+SWAP = \tikzfig{swap} := \sum_{i,j\in \{0,1\}} \cbox{\twotwoketbra{i}{j}{j}{i}}
+\end{equation}
 
 We can now introduce the ZX-rules in the next section.
 
@@ -267,11 +296,15 @@ This neat feature of ZX-diagrams is called "Only Connectivity Matters" (OCM).
 
 We can then obtain caps and cups using 2-legged spiders together with \IdRule.
 
-\[\tikzfig{cap} \eqrule{\IdRule} \tikzfig{cap_spider} \quad\quad\quad 
-\tikzfig{cup} \eqrule{\IdRule} \tikzfig{cup_spider}\]
+\begin{equation}
+\tikzfig{cap} \eqrule{\IdRule} \tikzfig{cap_spider} \quad\quad\quad 
+\tikzfig{cup} \eqrule{\IdRule} \tikzfig{cup_spider}
+\end{equation}
 
 Caps and cups obey the \textit{yanking equations}.
-\[ \tikzfig{line_yank} \qquad\qquad \tikzfig{line_yank2} \]
+\begin{equation}
+\tikzfig{line_yank} \qquad\qquad \tikzfig{line_yank2} 
+\end{equation}
 
 Before we move on to reasoning about the diagrams in a graph-theoretic manner,
 we first introduce the concept of a \textit{Clifford+T diagram}.
@@ -330,7 +363,9 @@ The following proposition can then be proven, using rewrite rules introduced pre
 The proof \cite{Kissinger2024} makes use of the fact that Hadamard edges in parallel cancel,
 and that we can always remove a Hadamard self-loop.
 
-\ctikzfig{had_lemma}
+\begin{equation}
+\tikzfig{had_lemma}
+\end{equation}
 
 We can simplify the graph-like ZX-diagram further.
 Now, the following two rewrite rules, derivable from the original ZX-rules, are introduced.

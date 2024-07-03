@@ -6,12 +6,13 @@
 As mentioned in the previous chapter, classical simulation of quantum circuits provides an essential tool 
 for verification and validation, despite its inherent limitations. 
 This chapter delves into the methods and advancements in classical simulation, 
-particularly focusing on stabilizer decomposition and the role of magic states in extending the capabilities of these simulations.
+particularly focusing on stabiliser decomposition and the role of magic states in extending the capabilities of these simulations.
 Classical simulation methods that store a complete description of an $n$-qubit quantum state 
 as a complex vector of size $2^n$ are effective only for a small number of qubits, typically around 30. 
-For example, Shor's factoring algorithm has been simulated with 31 qubits and approximately half a million gates (Paragraph 1). 
-However, for certain classes of quantum circuits, such as those composed of gates from the Clifford group, 
-classical simulation can be significantly more efficient. 
+For example, Shor's factoring algorithm has been simulated with 31 qubits 
+and approximately half a million gates \cite{wecker2014liquisoftwaredesignarchitecture}. 
+However, for certain classes of quantum circuits, such as those that can be represented in a Clifford diagram, 
+classical simulation can be significantly more efficient \cite{gottesman1998}. 
 This is known as the \textit{Gottesman-Knill theorem}.
 
 \begin{theorem}[Gottesman-Knill Theorem]
@@ -19,18 +20,127 @@ This is known as the \textit{Gottesman-Knill theorem}.
     A Clifford computation can be efficiently classically simulated.
 \end{theorem}
 
-Building on the foundational concepts discussed in the previous chapter, 
-where we explored the graphical representation of quantum circuits using ZX-Calculus, 
-we now turn to the specific techniques for simulating these circuits classically. 
+In other words, \textit{Clifford diagrams} are efficiently classically simulated.
 ZX-Calculus not only aids in visualizing quantum operations 
-but also simplifies the process of identifying and manipulating stabilizer states, 
-which are central to many classical simulation methods (Paragraph 4).
+but also simplifies the process of identifying and manipulating \textit{stabiliser states}.
 
-Stabilizer circuits are particularly notable for their applications in quantum error correction. 
-These circuits are initialized in stabilizer states, evolve under stabilizer operations, 
-and are measured in the Pauli basis. 
-Classical simulation of these circuits is efficient due to their restriction to the Clifford group operations (Paragraph 3). 
-However, to achieve universal quantum computation, we must incorporate non-Clifford elements, such as magic states. 
-The introduction of magic states, which extend the computational capabilities of stabilizer circuits, 
-brings an exponential cost to the simulation. 
-Nonetheless, when circuits are predominantly composed of Clifford gates, classical simulation remains feasible (Paragraph 3).
+\begin{definition}[Stabiliser state \cite{Bravyi_2016bss,gottesman1998}]
+    \label{def:stabiliser-state}
+    An $n$-qubit state \ket{\psi} is a \textit{stabiliser state} if it has the form 
+    \ctikzfig{stab_state}
+    where $V$ is a Clifford diagram.
+\end{definition}
+
+Stabiliser circuits are particularly notable for their applications in quantum error correction \cite{gottesman1998}. 
+However, when considering Clifford+T circuits, we need to introduce \textit{magic states}.
+As we see in this chapter, these then allow us to decompose the circuit into a sum of stabiliser states,
+which are all efficiently classically simulatable, with the cost of having an exponential number of them.
+
+WLOG, when simulating quantum circuits, 
+we can assume that the input state to our $n$-qubit circuits is of the form
+
+\begin{equation}
+\label{eq:input-state}
+\cbox{\redbasisspider}^{\otimes n} :=
+\left.\begin{matrix}
+    \redbasisspider \\
+    \redbasisspider \\
+    \vdots \\
+    \redbasisspider
+\end{matrix} \right\} n
+\end{equation}
+
+\section{Strong Simulation}
+Given that we have a $n$-qubit circuit with the input state from \ref{eq:input-state}, 
+we would then want to obtain the probability of measuring a certain output state.
+For instance, we can plug in the outputs as spiders as such.
+
+\ctikzfig{amplitude}
+
+Then using the \hyperref[eq:born-rule]{Born rule}, we can obtain the probability of measuring the output state \cite{Kissinger2024}.
+
+\begin{equation}
+P(x_1,x_2,...,x_n) = \frac{1}{\sqrt{2^{4n}}} \tikzfig{marginal}
+\end{equation}
+
+$V^{\dagger}$ is used to denote the adjoint of $V$, which simply means the inputs and outputs are swapped,
+and the spider phases are negated.
+The scalar factors of $1/\sqrt{2}$ comes from those seen from Eq. \ref{eq:spider-basis}.
+If $V$ is a Clifford diagram, then using the \nameref{thm:gottesman-knill}, 
+the scalars can be computed efficiently.
+This is known as \textit{strong simulation}.
+
+A natural question that arises is whether the same can be done if $V$ is a Clifford+T diagram instead.
+The following sections will delve into the methods used to simulate such circuits.
+
+\section{Stabiliser Decomposition}
+
+\begin{definition}[Magic state \cite{Bravyi_2016bss}]
+    \label{def:magic-state}
+    The magic state is 
+    \[\cbox{\magicspider} 
+    = \frac{1}{\sqrt{2}} \left( 
+        \cbox{\redbasisspider} + e^{i\frac{\pi}{4}} \cbox{\redpibasisspider} 
+    \right)\]
+\end{definition}
+
+The naïve approach to make use of this magic state decomposition is to then apply it 
+to every single $T$-like spider in the Clifford+T diagram, 
+where we define a $T$-like spider as a spider with a phase of $(2k+1)\frac{\pi}{4}$ for some $k\in\mathbb{Z}$.
+By un$\SpiderRule$using the magic state from these spiders, 
+we can apply the \nameref{def:magic-state} decomposition to obtain a sum of stabiliser states.
+
+\begin{equation}
+\tikzfig{magic_unfuse}
+\end{equation}
+
+This sum can be called the \textit{stabiliser decomposition} of the circuit.
+
+\begin{definition}[Stabiliser Decomposition \cite{Bravyi_2016bss}]
+    \label{def:stabiliser-decomposition}
+    The \textit{stabiliser decomposition} of a state \ket{\psi} is a sum of stabiliser states
+    \[\cbox{\npoint{\psi}} = \sum_{i=1}^n \lambda_i \cbox{\npoint{\psi_i}}\]
+    where $\lambda_i \in \C$ and $\ket{\psi_i}$ are stabiliser states.
+\end{definition}
+
+Using the \nameref{def:magic-state} decomposition, we can see that the value of $n=O(2^t)$
+if we apply it to the $t$ $T$-like spiders in the circuit. 
+We can call $t$ the \textit{T-count} of the circuit.
+
+However, there is an even better decomposition 
+
+\begin{equation}
+\begin{matrix}
+\magicspider \\
+\magicspider
+\end{matrix}
+=\tikzfig{magic2}
+\end{equation}
+
+This allows us to decompose the circuit into a sum of stabiliser states with $n=O(2^{\frac{t}{2}})$.
+Different methods of decomposing the circuit can lead to different values of $n$.
+Since $n$ is believed to be exponential in $t$ (or else we have $P=NP$) \cite{Bravyi_2019},
+we can take it that $n=O(2^{\alpha t})$ for some $0<\alpha<1$.
+We can then compare the efficiency of different methods by using this metric.
+
+\begin{definition}[(In)efficiency \cite{Bravyi_2016bss,Bravyi_2016,Kissinger_2022,Kissinger2022cat}]
+    \label{def:efficiency}
+    The \textit{(in)efficiency} of a stabiliser decomposition that reduces the $T$-count by $r$ 
+    using $p$ stabiliser states is
+    \[\alpha = \frac{\log_2(p)}{r}\]
+    where a lower value of $\alpha$ indicates a more efficient decomposition.
+\end{definition}
+
+For example, the Bravyi-Smith-Smolin (BSS) algorithm \cite{Bravyi_2016bss} makes use of 
+the following decomposition which has $\alpha \approx 0.468$.
+
+\begin{equation}
+    \tikzfig{bss_decomp}
+\end{equation}
+
+Using this metric, we can even compare the efficiency of different algorithms used to decompose the circuit.
+It also allows us to obtain the efficiency of different decompositions which do not use magic states at all.
+As we will see in the next few chapters, this ties in well when we consider 
+the higher efficiency of \textit{cat state} decomposition.
+
+\section{}

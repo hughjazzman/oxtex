@@ -1,0 +1,23 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (22) at (0, -1.25) {};
+		\node [style=none] (23) at (0, 1.25) {};
+		\node [style=none] (24) at (1, 1) {};
+		\node [style=none] (25) at (1, 0.5) {};
+		\node [style=none] (26) at (1, -1) {};
+		\node [style=none] (27) at (0.5, 0) {$\vdots$};
+		\node [style=none] (28) at (0, 1) {};
+		\node [style=none] (29) at (0, 0.5) {};
+		\node [style=none] (30) at (0, -1) {};
+		\node [style=none] (31) at (-1.5, 0) {};
+		\node [style=none] (32) at (-0.5, 0) {$\psi$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (23.center) to (22.center);
+		\draw (28.center) to (24.center);
+		\draw (29.center) to (25.center);
+		\draw (30.center) to (26.center);
+		\draw (31.center) to (23.center);
+		\draw (31.center) to (22.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

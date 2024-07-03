@@ -1,0 +1,18 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (0) at (0, 2) {};
+		\node [style=none] (1) at (-3.25, 0) {};
+		\node [style=none] (2) at (0, -2) {};
+		\node [style=ket] (3) at (-1, 0.75) {1};
+		\node [style=ket] (4) at (-1, -0.75) {0};
+		\node [style=none] (5) at (1, 0.75) {};
+		\node [style=none] (6) at (1, -0.75) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (3) to (5.center);
+		\draw (4) to (6.center);
+		\draw [style=box edge] (0.center) to (1.center);
+		\draw [style=box edge] (1.center) to (2.center);
+		\draw [style=box edge] (2.center) to (0.center);
+	\end{pgfonlayer}
+\end{tikzpicture}
