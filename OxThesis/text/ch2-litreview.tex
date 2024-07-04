@@ -51,7 +51,7 @@ we can assume that the input state to our $n$-qubit circuits is of the form
 \end{equation}
 
 \section{Strong Simulation}
-Given that we have a $n$-qubit circuit with the input state from \ref{eq:input-state}, 
+Given that we have a $n$-qubit circuit with the input state from (\ref{eq:input-state}), 
 we would then want to obtain the probability of measuring a certain output state.
 For instance, we can plug in the outputs as spiders as such.
 
@@ -66,9 +66,9 @@ P(x_1,x_2,...,x_n) = \frac{1}{\sqrt{2^{4n}}} \tikzfig{marginal}
 $V^{\dagger}$ is used to denote the adjoint of $V$, which simply means the inputs and outputs are swapped,
 and the spider phases are negated.
 The scalar factors of $1/\sqrt{2}$ comes from those seen from Eq. \ref{eq:spider-basis}.
-If $V$ is a Clifford diagram, then using the \nameref{thm:gottesman-knill}, 
+If $V$ is a Clifford diagram, then following from the \nameref{thm:gottesman-knill}, 
 the scalars can be computed efficiently.
-This is known as \textit{strong simulation}.
+Obtaining the probabilities this way is known as \textit{strong simulation}.
 
 A natural question that arises is whether the same can be done if $V$ is a Clifford+T diagram instead.
 The following sections will delve into the methods used to simulate such circuits.
@@ -87,7 +87,7 @@ The following sections will delve into the methods used to simulate such circuit
 The naïve approach to make use of this magic state decomposition is to then apply it 
 to every single $T$-like spider in the Clifford+T diagram, 
 where we define a $T$-like spider as a spider with a phase of $(2k+1)\frac{\pi}{4}$ for some $k\in\mathbb{Z}$.
-By un$\SpiderRule$using the magic state from these spiders, 
+By un$\SpiderRule$using the magic state from these spiders as below, 
 we can apply the \nameref{def:magic-state} decomposition to obtain a sum of stabiliser states.
 
 \begin{equation}
@@ -110,6 +110,7 @@ We can call $t$ the \textit{T-count} of the circuit.
 However, there is an even better decomposition 
 
 \begin{equation}
+\label{eq:magic2}
 \begin{matrix}
 \magicspider \\
 \magicspider
@@ -131,10 +132,11 @@ We can then compare the efficiency of different methods by using this metric.
     where a lower value of $\alpha$ indicates a more efficient decomposition.
 \end{definition}
 
-For example, the Bravyi-Smith-Smolin (BSS) algorithm \cite{Bravyi_2016bss} makes use of 
+For example, the Bravyi-Smith-Smolin (BSS) decomposition \cite{Bravyi_2016bss} makes use of 
 the following decomposition which has $\alpha \approx 0.468$.
 
 \begin{equation}
+    \label{eq:bss_decomp}
     \tikzfig{bss_decomp}
 \end{equation}
 
@@ -143,4 +145,86 @@ It also allows us to obtain the efficiency of different decompositions which do 
 As we will see in the next few chapters, this ties in well when we consider 
 the higher efficiency of \textit{cat state} decomposition.
 
-\section{}
+\section{Cat States}
+
+\begin{definition}[Cat state \cite{Qassim_2021}]
+    A cat state is defined as
+    % TODO: Add cat state
+\end{definition}
+
+Cat states are used because of their decompositions have low value of $\alpha$,
+as well as the following proposition, which bounds the $\alpha$ of the corresponding magic state decomposition.
+
+\begin{proposition}
+    Suppose $\alpha_1,\alpha_2$ are the (in)efficiency metrics of the decompositions of 
+    \[\left.\cbox{\npoint{cat_n}}\right\} n \quad\quad, \quad\quad 
+    \left. \begin{matrix}
+        \magicspider \\
+        \magicspider \\
+        \vdots \\
+        \magicspider
+    \end{matrix} \right\} n\]
+    respectively. Then
+    \[\alpha_1 \leq r \implies \alpha_2 \leq r + \frac{1}{n}\]
+\end{proposition}
+
+\begin{proof}
+    The proof is adapted from \cite{Qassim_2021}.
+    Suppose $\alpha_1 \leq r$.
+    First, we show the following equality.
+\begin{equation}
+    \label{eq:lemma_TT}
+    \tikzfig{lemma_TT}
+\end{equation}
+Then we can show the following.
+\begin{equation}
+    \tikzfig{prop_bounda}
+\end{equation}
+There are 2 copies of $\ket{cat_n}$ which would each give at most $2^{n\alpha_1}$ stabiliser states,
+for a total of at most $2^{n\alpha_1 + 1}$ stabiliser states.
+Thus, we have
+\[\alpha_2 \leq \frac{n\alpha_1 + 1}{n} \leq r + \frac{1}{n}\]
+
+\end{proof}
+
+There are various cat states that have been found, the best of which are for $n=4,6$.
+For example, the cat state for $n=6$ is
+
+%TODO: Add cat 6
+
+It has an efficiency of $\alpha \approx 0.264$.
+Even better, for $n=4$, the cat state is
+
+% TODO: Add cat 4
+
+which has an efficiency of $\alpha = 0.25$.
+
+Table \ref{tab:cat_decomp} shows the efficiency of the cat state decomposition 
+for different values of $n$ \cite{Bravyi_2016}.
+
+\begin{table}[h!]
+\centering
+\scriptsize
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+$n$ & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 \\ \hline
+terms & 2 & 2 & 3 & 3 & 6 & 6 & 9 & 9 & 27 & 27 & 27 & 27 \\ \hline
+$\sim \alpha$ & 0.333 & 0.25 & 0.317 & 0.264 & 0.369 & 0.323 & 0.352 & 0.317 & 0.432 & 0.366 & 0.366 & 0.34 \\ \hline
+\end{tabular}
+\caption{$\ket{cat_n}$ decomposition}
+\label{tab:cat_decomp}
+\end{table}
+
+
+A key observation is that not every cat state decomposition can be applied to every ZX-diagram.
+Rather, algorithms discussed in the next section are designed to make use of different decompositions at different times.
+This is different from magic state decomposition, where as long as the spider is $T$-like,
+the magic state decomposition can be applied.
+Fortunately, the discovery of the (non-stabiliser) decomposition of 5-qubit magic states
+using the decomposition of $\ket{cat_6}$ gives us a guaranteed way to decompose a circuit with 
+a $T$-count $\geq 5$ \cite{Kissinger2022cat}.
+
+% TODO: Add magic 5
+
+We then have a resulting $\alpha = \frac{\log_2(3)}{4} \approx 0.396$, 
+which is already better than the \hyperref[eq:bss_decomp]{BSS} decomposition.

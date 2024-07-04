@@ -240,6 +240,7 @@ We can also see the single-qubit gates in the ZX-Calculus.
 We can then define many of the common quantum gates in this way.
 \begin{equation}
 \begin{aligned}
+\label{eq:common-gates}
   I &= \idphase{} = \redidphase{} = \cbox{\idwire}\\
   X &= \cbox{\redphase{\pi}} \\
   Z &= \cbox{\phase{\pi}} \\
@@ -354,6 +355,8 @@ First, we define what it means for ZX-diagram to be \textit{graph-like}.
 \end{itemize}
 \end{definition}
 
+Just from this definition, Hadamard edges are in fact the only edges in the graph-like ZX-diagram,
+leading to the convenience of having them as the blue dashed lines introduced earlier in (\ref{eq:common-gates}).
 The following proposition can then be proven, using rewrite rules introduced previously in \nameref{sec:zx-rules}.
 
 \begin{proposition}[\cite{Kissinger2024}]
