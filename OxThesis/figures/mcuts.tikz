@@ -1,0 +1,37 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=box] (0) at (-2, 1.5) {$S_1$};
+		\node [style=box] (1) at (-2, -1.5) {$S_n$};
+		\node [style=none] (2) at (-2.25, 0.25) {$\vdots$};
+		\node [style=Z phase dot] (3) at (-4, 0.5) {$\alpha_1$};
+		\node [style=Z phase dot] (4) at (-4, -0.75) {$\alpha_m$};
+		\node [style=none] (5) at (-0.25, 0) {$\approx$};
+		\node [style=box] (6) at (10, 2.75) {$S_1$};
+		\node [style=box] (7) at (9.75, -2.75) {$S_n$};
+		\node [style=none] (8) at (9, 0.25) {$\vdots$};
+		\node [style=X phase dot] (9) at (7.75, 2.75) {$a_1 \pi$};
+		\node [style=X phase dot] (10) at (6.75, -0.75) {$a_m \pi$};
+		\node [style=none] (11) at (1.75, 0) {$\mathlarger{\mathlarger{\sum}}$};
+		\node [style=none] (12) at (4.25, 0) {$e^{i\sum_{i=1}^m \alpha_i a_i}$};
+		\node [style=X phase dot] (13) at (6.75, 0.75) {$a_1 \pi$};
+		\node [style=X phase dot] (14) at (7.75, -2.75) {$a_m \pi$};
+		\node [style=X phase dot] (15) at (8.75, -1) {$a_1 \pi$};
+		\node [style=X phase dot] (16) at (8.5, 1) {$a_m \pi$};
+		\node [style=none] (17) at (7, 0.25) {$\vdots$};
+		\node [style=none] (18) at (1.75, -1) {$\scriptstyle{a_1,...,a_m}$};
+		\node [style=none] (19) at (8.5, 2) {$\vdots$};
+		\node [style=none] (20) at (8.5, -2) {$\vdots$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=hadamard edge] (3) to (0);
+		\draw [style=hadamard edge] (3) to (1);
+		\draw [style=hadamard edge] (4) to (1);
+		\draw [style=hadamard edge] (4) to (0);
+		\draw [style=hadamard edge] (3) to (4);
+		\draw [style=hadamard edge] (9) to (6);
+		\draw [style=hadamard edge] (6) to (16);
+		\draw [style=hadamard edge] (15) to (7);
+		\draw [style=hadamard edge] (14) to (7);
+		\draw [style=hadamard edge] (13) to (10);
+	\end{pgfonlayer}
+\end{tikzpicture}

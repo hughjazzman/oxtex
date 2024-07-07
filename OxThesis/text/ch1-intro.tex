@@ -52,7 +52,7 @@ Diagramatically, they are represented as follows:
 We consider these the computational or Z-basis states.
 
 \begin{definition}[Z-basis]
-  The Z-basis or computational basis is defined as
+  The \textit{Z-basis} or computational basis is defined as
   \[\left\{\cbox{\point{0}}, \cbox{\point{1}}\right\}\]
 \end{definition}
 
@@ -60,7 +60,7 @@ So far, the expressive power is still similar to classical computing.
 However, the power of quantum computing comes from the ability to exist in superpositions of these states.
 Concretely, the qubit can be represented in a linear combination of the basis states.
 \begin{definition}[Pure state]
-  A pure state $\ket{\psi}$ is a state
+  A \textit{pure state} $\ket{\psi}$ is a state
   \[\cbox{\point{\psi}} = a \cbox{\point{0}} + b \cbox{\point{1}}\]
   where $a,b\in\C$ and $|a|^2 + |b|^2 = 1$.
 \end{definition}
@@ -365,8 +365,10 @@ The following proposition can then be proven, using rewrite rules introduced pre
 
 The proof \cite{Kissinger2024} makes use of the fact that Hadamard edges in parallel cancel,
 and that we can always remove a Hadamard self-loop.
+Parallel edges cancelling is an application of the \textit{Hopf rule}, derivable from the ZX-rules.
 
 \begin{equation}
+\label{eq:hopf}
 \tikzfig{had_lemma}
 \end{equation}
 
@@ -404,6 +406,7 @@ First, we define interior and boundary spiders, and then phase gadgets.
 These help us define the reduced gadget form.
 
 \begin{definition}[Reduced gadget form \cite{Kissinger2020}]
+  \label{def:reduced-gadget-form}
   A graph-like ZX-diagram is in \textit{reduced gadget form} when
 \begin{itemize}
   \item Every internal spider is a non-Clifford spider or part of a non-Clifford phase-gadget.

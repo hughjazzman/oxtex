@@ -4,6 +4,7 @@
 \usepackage{keycommand}
 \usepackage{pgfplots}
 \usepackage{hyperref}
+\usepackage{relsize}
 
 \graphicspath{{.}{./figures/}}
 
@@ -52,10 +53,14 @@
 \newcommand{\braket}[2]{\ensuremath{\langle#1|#2\rangle}}
 \newcommand{\ketbra}[2]{\ensuremath{\ket{#1}\!\bra{#2}}}
 
+\newcommand{\catstate}[1]{\ket{\text{cat}_{#1}}}
+
 
 \newcommand\cbox[1]{\vcenter{\hbox{#1}}}
 \newcommand{\emptydiag}{\,\tikz{\node[style=empty diagram] (x) {};}\,}
 \newcommand{\scalar}[1]{\,\tikz{\node[style=scalar] (x) {$#1$};}\,}
+
+\newcommand{\boxdiag}[1]{\,\tikz{\node[style=box] (x) {$#1$};}\,}
 
 \newkeycommand{\boxmap}[style=box][1]{\,\tikz{\node[style=\commandkey{style}] (x) {$#1$};\draw(-1.25,0)--(x)--(1.25,0);}\,}
 
@@ -337,4 +342,10 @@
   \begin{pgfonlayer}{edgelayer}
     \draw (0) to (1);
   \end{pgfonlayer}
+\end{tikzpicture}\,}
+
+\newcommand{\freediag}[1]{\,%
+\begin{tikzpicture}
+  \draw plot[smooth cycle] coordinates {(0.8, 0) (0.5, 0.6) (-0.2, 0.2) (-0.5, 0) (0, -0.7)};
+  \node at (0,0) {$#1$};
 \end{tikzpicture}\,}

@@ -1,0 +1,48 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (0) at (-1.25, 1) {};
+		\node [style=none] (1) at (-1.25, -1) {};
+		\node [style=Z phase dot] (4) at (0, 0) {$\alpha$};
+		\node [style=none] (6) at (1.25, 1) {};
+		\node [style=none] (7) at (1.25, -1) {};
+		\node [style=none] (8) at (1.25, 0.25) {$\vdots$};
+		\node [style=none] (9) at (-1.25, 0.25) {$\vdots$};
+		\node [style=none] (10) at (3, 0) {$\approx$};
+		\node [style=none] (11) at (4.75, 1) {};
+		\node [style=none] (12) at (4.75, -1) {};
+		\node [style=X dot] (13) at (5.75, 0.25) {};
+		\node [style=none] (14) at (7.25, 1) {};
+		\node [style=none] (15) at (7.25, -1) {};
+		\node [style=none] (16) at (7.25, 0.25) {$\vdots$};
+		\node [style=none] (17) at (4.75, 0.25) {$\vdots$};
+		\node [style=X dot] (18) at (6.25, 0.25) {};
+		\node [style=X dot] (19) at (6.25, -0.25) {};
+		\node [style=X dot] (20) at (5.75, -0.25) {};
+		\node [style=none] (21) at (8.5, 0) {$+$};
+		\node [style=none] (22) at (11.5, 1) {};
+		\node [style=none] (23) at (11.5, -1) {};
+		\node [style=X phase dot] (24) at (12.25, 0.5) {$\pi$};
+		\node [style=none] (25) at (14, 1) {};
+		\node [style=none] (26) at (14, -1) {};
+		\node [style=none] (27) at (14, 0.25) {$\vdots$};
+		\node [style=none] (28) at (11.5, 0.25) {$\vdots$};
+		\node [style=X phase dot] (29) at (13.25, 0.5) {$\pi$};
+		\node [style=X phase dot] (30) at (13.25, -0.5) {$\pi$};
+		\node [style=X phase dot] (31) at (12.25, -0.5) {$\pi$};
+		\node [style=none] (32) at (10, 0) {$e^{i\alpha}$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [bend left] (0.center) to (4);
+		\draw [bend left] (4) to (6.center);
+		\draw [bend right] (4) to (7.center);
+		\draw [bend left] (4) to (1.center);
+		\draw [bend left] (11.center) to (13);
+		\draw [bend left] (20) to (12.center);
+		\draw [bend right] (19) to (15.center);
+		\draw [bend left] (18) to (14.center);
+		\draw [bend left] (22.center) to (24);
+		\draw [bend left] (31) to (23.center);
+		\draw [bend right] (30) to (26.center);
+		\draw [bend left] (29) to (25.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

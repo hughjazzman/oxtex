@@ -1,0 +1,50 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=Z dot] (0) at (-5.5, 0) {};
+		\node [style=Z phase dot] (1) at (-8, 0) {$(2j+1)\frac{\pi}{4}$};
+		\node [style=Z phase dot] (2) at (-4, 1) {$(2k+1)\frac{\pi}{4}$};
+		\node [style=Z phase dot] (4) at (-4, -1) {$(2l+1)\frac{\pi}{4}$};
+		\node [style=none] (5) at (-4.25, 0.25) {$\vdots$};
+		\node [style=none] (6) at (-1.75, 1.75) {};
+		\node [style=none] (7) at (-1.75, 0.5) {};
+		\node [style=none] (8) at (-1.75, -0.5) {};
+		\node [style=none] (9) at (-1.75, -1.75) {};
+		\node [style=Z dot] (12) at (1.75, -0.5) {};
+		\node [style=Z phase dot] (13) at (3.25, 2) {$\frac{\pi}{4}$};
+		\node [style=Z phase dot] (14) at (4.75, 0.5) {$k\frac{\pi}{2}$};
+		\node [style=Z phase dot] (15) at (4.75, -1.5) {$l\frac{\pi}{2}$};
+		\node [style=none] (16) at (3, -0.25) {$\vdots$};
+		\node [style=none] (17) at (6.25, 1.25) {};
+		\node [style=none] (18) at (6.25, 0) {};
+		\node [style=none] (19) at (6.25, -1) {};
+		\node [style=none] (20) at (6.25, -2.25) {};
+		\node [style=Z dot] (23) at (4.75, 3) {$j\frac{\pi}{2}$};
+		\node [style=Z phase dot] (24) at (3.25, 0.5) {$\frac{\pi}{4}$};
+		\node [style=Z phase dot] (25) at (3.25, -1.5) {$\frac{\pi}{4}$};
+		\node [style=none] (26) at (-2, 1.25) {$\vdots$};
+		\node [style=none] (27) at (-2, -1) {$\vdots$};
+		\node [style=none] (28) at (6, 0.75) {$\vdots$};
+		\node [style=none] (29) at (6, -1.5) {$\vdots$};
+		\node [style=none] (30) at (0, 0) {$=$};
+		\node [style=none] (31) at (0, 0.75) {$\SpiderRule$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=hadamard edge] (1) to (0);
+		\draw [style=hadamard edge] (0) to (2);
+		\draw [style=hadamard edge] (0) to (4);
+		\draw (2) to (6.center);
+		\draw (2) to (7.center);
+		\draw (4) to (8.center);
+		\draw (4) to (9.center);
+		\draw [style=hadamard edge] (13) to (12);
+		\draw (14) to (17.center);
+		\draw (14) to (18.center);
+		\draw (15) to (19.center);
+		\draw (15) to (20.center);
+		\draw [in=210, out=30] (13) to (23);
+		\draw [style=hadamard edge] (12) to (24);
+		\draw [style=hadamard edge] (12) to (25);
+		\draw (24) to (14);
+		\draw (25) to (15);
+	\end{pgfonlayer}
+\end{tikzpicture}

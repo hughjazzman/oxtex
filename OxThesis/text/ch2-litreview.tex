@@ -77,7 +77,7 @@ The following sections will delve into the methods used to simulate such circuit
 
 \begin{definition}[Magic state \cite{Bravyi_2016bss}]
     \label{def:magic-state}
-    The magic state is 
+    The \textit{magic state} is 
     \[\cbox{\magicspider} 
     = \frac{1}{\sqrt{2}} \left( 
         \cbox{\redbasisspider} + e^{i\frac{\pi}{4}} \cbox{\redpibasisspider} 
@@ -148,11 +148,13 @@ the higher efficiency of \textit{cat state} decomposition.
 \section{Cat States}
 
 \begin{definition}[Cat state \cite{Qassim_2021}]
-    A cat state is defined as
-    % TODO: Add cat state
+    A \textit{cat state} is defined as
+    \begin{equation}
+        \cbox{\npoint{cat_n}} := \frac{1}{\sqrt{2}} \tikzfig{cat-state}
+    \end{equation}
 \end{definition}
 
-Cat states are used because of their decompositions have low value of $\alpha$,
+Cat states are used because their decompositions have low value of $\alpha$,
 as well as the following proposition, which bounds the $\alpha$ of the corresponding magic state decomposition.
 
 \begin{proposition}
@@ -180,26 +182,30 @@ Then we can show the following.
 \begin{equation}
     \tikzfig{prop_bounda}
 \end{equation}
-There are 2 copies of $\ket{cat_n}$ which would each give at most $2^{n\alpha_1}$ stabiliser states,
+There are 2 copies of $\catstate{n}$ which would each give at most $2^{n\alpha_1}$ stabiliser states,
 for a total of at most $2^{n\alpha_1 + 1}$ stabiliser states.
 Thus, we have
 \[\alpha_2 \leq \frac{n\alpha_1 + 1}{n} \leq r + \frac{1}{n}\]
 
 \end{proof}
 
-There are various cat states that have been found, the best of which are for $n=4,6$.
-For example, the cat state for $n=6$ is
+There are various cat state decompositions that have been found.
+For example, the decomposition for $\catstate{6}$ is
 
-%TODO: Add cat 6
+\begin{equation}
+    \tikzfig{cat-6-decomp}
+\end{equation}
 
 It has an efficiency of $\alpha \approx 0.264$.
-Even better, for $n=4$, the cat state is
+Even better, for $\catstate{4}$, we have the decomposition
 
-% TODO: Add cat 4
+\begin{equation}
+    \tikzfig{cat-4-decomp}
+\end{equation}
 
 which has an efficiency of $\alpha = 0.25$.
 
-Table \ref{tab:cat_decomp} shows the efficiency of the cat state decomposition 
+Table \ref{tab:cat_decomp} shows the best known efficiencies of the $\catstate{n}$ decomposition 
 for different values of $n$ \cite{Bravyi_2016}.
 
 \begin{table}[h!]
@@ -209,22 +215,136 @@ for different values of $n$ \cite{Bravyi_2016}.
 \hline
 $n$ & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 \\ \hline
 terms & 2 & 2 & 3 & 3 & 6 & 6 & 9 & 9 & 27 & 27 & 27 & 27 \\ \hline
-$\sim \alpha$ & 0.333 & 0.25 & 0.317 & 0.264 & 0.369 & 0.323 & 0.352 & 0.317 & 0.432 & 0.366 & 0.366 & 0.34 \\ \hline
+$\sim \alpha$ & 0.333 & 0.25 & 0.317 & 0.264 & 0.369 & 0.323 & 0.352 & 0.317 & 0.432 & 0.396 & 0.366 & 0.340 \\ \hline
 \end{tabular}
-\caption{$\ket{cat_n}$ decomposition}
+\caption{$\catstate{n}$ decomposition}
 \label{tab:cat_decomp}
 \end{table}
 
+Recall that if we are dealing with the \nameref{def:reduced-gadget-form},
+any internal spider that is Clifford will be part of a non-Clifford phase gadget, by definition.
+Further, no two Clifford spiders will be neighbours \cite{Kissinger2022cat}.
+Then, we can apply the cat state decompositions to the cat states centered at the 0-spiders 
+that are part of these phase gadgets in the reduced gadget form, if they have $\geq 3$ neighbours.
+This can be seen below, where $j,k,l\in\mathbb{Z}$.
 
-A key observation is that not every cat state decomposition can be applied to every ZX-diagram.
-Rather, algorithms discussed in the next section are designed to make use of different decompositions at different times.
-This is different from magic state decomposition, where as long as the spider is $T$-like,
-the magic state decomposition can be applied.
-Fortunately, the discovery of the (non-stabiliser) decomposition of 5-qubit magic states
-using the decomposition of $\ket{cat_6}$ gives us a guaranteed way to decompose a circuit with 
+\begin{equation}
+    \tikzfig{reduced_to_cat}
+\end{equation}
+
+However, if the cat states are not present, we would need to fallback to a magic state decomposition.
+Here, the discovery of the (non-stabiliser) decomposition of 5-qubit magic states
+using the decomposition of $\catstate{6}$ gives us a guaranteed way to decompose a circuit with 
 a $T$-count $\geq 5$ \cite{Kissinger2022cat}.
 
-% TODO: Add magic 5
+\begin{equation}
+    \tikzfig{magic-state-5-decomp}
+\end{equation}
 
 We then have a resulting $\alpha = \frac{\log_2(3)}{4} \approx 0.396$, 
 which is already better than the \hyperref[eq:bss_decomp]{BSS} decomposition.
+In the next chapter, we will continue using the algorithm from \cite{Kissinger2022cat}
+and improve upon the use of these cat and magic state decompositions.
+
+\section{Graph Cuts}
+
+In a complementary approach to reducing the effective $\alpha$ of the stabiliser decomposition, 
+graph cuts offer a different perspective \cite{Codsi2022}.
+Suppose we have 2 ZX-diagrams $S_1, S_2$ of $T$-counts $t_1,t_2$ that both 
+have a stabiliser decomposition (in)efficiency of $\alpha$ respectively.
+If we combine the diagrams into a single diagram $S$,
+we could expect the stabiliser decomposition (in)efficiency of $S$ to be $\alpha$,
+coming from having $2^{\alpha(t_1+t_2)}$ stabiliser states.
+However, since we can treat $S_1,S_2$ independently and multiply their stabiliser decompositions,
+the actual number of stabiliser states is instead $2^{\alpha t_1} + 2^{\alpha t_2} \leq 2^{\alpha t + 1}$,
+where $t=\max(t_1,t_2)$.
+This gives a resulting $\alpha' \leq \alpha \frac{t + 1}{t_1+t_2}$.
+In the ideal case, we have that $t_1=t_2$, so $\alpha' \leq \frac{\alpha}{2} + \frac{1}{t_1+t_2}$, 
+a vast improvement especially for a high $T$-count.
+It is with this motivation that graph cuts are another promising approach.
+
+First, by definition, we can see that 
+\begin{equation}
+    \label{eq:spider_cut}
+    \tikzfig{spider_decomp_abs}
+\end{equation}
+
+Then if we have a diagram with subdiagrams $S_1,...,S_n$, we can see that the following holds.
+
+\begin{equation}
+    \label{eq:mcuts}
+    \tikzfig{mcuts}
+\end{equation}
+
+At the cost of $m$ cuts, and thus $2^m$ terms, 
+the diagram is split into $\leq m^2 + n$ subdiagrams that can be treated independently.
+If $\alpha_i$ are all $T$-like, then the $\leq m^2$ scalars formed from $a_i \pi$-spiders 
+connected to each other have $T$-counts of 0, and there are only $\leq n$ subdiagrams with $T$-counts $>0$.
+If each subdiagram $S_i$ has the $T$-count of $t_i$,
+we have a sum of $2^m$ terms, each value which can be obtained with just $\leq m^2 + \sum_{i=1}^n 2^{\alpha t_i}$ stabilizer terms.
+This gives a total of $\leq 2^m(m^2 + \sum_{i=1}^n 2^{\alpha t_i})$ stabilizer terms.
+We can obtain the efficiency.
+\begin{equation}
+\begin{aligned}
+    \alpha' &\leq \frac{\log_2 (2^m(m^2 + n\cdot 2^{\alpha t}))}{\sum_{i=1}^n t_i}\\
+    &= \frac{m + \log_2(m^2 + n\cdot 2^{\alpha t})}{\sum_{i=1}^n t_i}\\
+    &\leq \frac{m + 2\log_2(m) + \sum_{i=1}^n \alpha t_i}{\sum_{i=1}^n t_i}
+\end{aligned}
+\end{equation}
+
+In the ideal case where $t_i=t$ for all $i$, we have 
+$\alpha' \leq \frac{\alpha}{n} + \frac{m + \log_2(m^2 n)}{nt}$.
+
+Another way graph cuts also reduce the effective $\alpha$ need not necessarily 
+be by obtaining disconnected subdiagrams.
+On pseudo-structured circuits produced from CNOTs, phase gates, and Toffolis,
+graph cuts were used to take advantage of the structure to optimise for the use of
+spider $\SpiderRule$usion in cascading fashion, 
+where a single cut can lead to a large reduction in the $T$-count \cite{sutcliffe2024proccut}. 
+There, the effective efficiency obtained was $0.1 \lesssim \alpha \lesssim 0.2$.
+
+The same was also found for extremely structured circuits involving cat states,
+where a single decomposition reduced the $T$-count by 286, for an $\alpha \approx 0.0035$ \cite{Codsi2022}.
+
+\section{Subgraph Complement}
+
+A further addition to the strength of graph cuts is the subgraph complement approach.
+For a graph-like ZX-diagram $(V, E)$, with $K$ being the set of edges for a complete graph on $V$,
+then its complement is simply $(V, K \backslash E)$.
+If we analyse \LCRule closely, and consider \hyperref[eq:hopf]{Hopf rule} making parallel edges cancel,
+there seems to be a way to obtain a subgraph complement with some manipulation of ZX-rules.
+In fact, we have the following result.
+
+\begin{proposition}[\cite{Codsi2022}]
+    Suppose we have a subdiagram $S$ of a graph-like ZX-diagram.
+    \[\cbox{\boxdiag{S}} \approx \cbox{\boxdiag{\bar{S}}} + \cbox{\boxdiag{\bar{S}}}\]
+    where $\bar{S}$ is the complement of $S$.
+\end{proposition}
+
+\begin{proof}
+    The proof is from \cite{Codsi2022}.
+\begin{equation}
+    \tikzfig{subgraph_complement}
+\end{equation}
+\end{proof}
+
+The power of this proposition can be demonstrated with the following example.
+Suppose we have the following graph-like ZX-diagram, where $S_i$ are subdiagrams.
+
+Following from \autoref{eq:mcuts}, we can apply 5 cuts to split the diagram into 5 disconnected subdiagrams,
+giving us $2^5$ terms.
+
+% If each subdiagram has efficiency $\alpha$, the corresponding efficiency in the ideal case is
+% $\alpha' \leq \frac{\alpha}{5} + \frac{5 + 3\log_2(5)}{5t}$.
+
+However, we can apply the subgraph complement proposition.
+
+\begin{equation}
+    \tikzfig{complement_ex_eq}
+\end{equation}
+
+Now, we only need 2 cuts to split the diagram into the same 5 disconnected subdiagrams,
+giving us $2^2$ terms.
+% The corresponding efficiency in the ideal case is
+% $\alpha' \leq \frac{\alpha}{5} + \frac{2 + 3\log_2(2)}{5t}$.
+% This constitutes a reduction of $\alpha$ by $\frac{3\log_2(5)}{5t}$.

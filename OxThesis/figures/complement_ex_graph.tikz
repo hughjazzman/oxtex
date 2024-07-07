@@ -1,0 +1,28 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=Z phase dot] (0) at (-3, 2) {$\alpha_1$};
+		\node [style=Z phase dot] (1) at (-4.5, 0.75) {$\alpha_5$};
+		\node [style=Z phase dot] (2) at (-1.5, 0.75) {$\alpha_2$};
+		\node [style=Z phase dot] (3) at (-4, -1) {$\alpha_4$};
+		\node [style=Z phase dot] (4) at (-2, -1) {$\alpha_3$};
+		\node [style=box] (5) at (-3, 3) {$S_1$};
+		\node [style=box] (6) at (-0.5, 1) {$S_2$};
+		\node [style=box] (7) at (-1.25, -1.75) {$S_3$};
+		\node [style=box] (8) at (-4.75, -1.75) {$S_4$};
+		\node [style=box] (9) at (-5.5, 1) {$S_5$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=hadamard edge] (6) to (2);
+		\draw [style=hadamard edge] (0) to (5);
+		\draw [style=hadamard edge] (9) to (1);
+		\draw [style=hadamard edge] (3) to (8);
+		\draw [style=hadamard edge] (4) to (7);
+		\draw [style=hadamard edge] (0) to (4);
+		\draw [style=hadamard edge] (0) to (2);
+		\draw [style=hadamard edge] (2) to (4);
+		\draw [style=hadamard edge] (2) to (1);
+		\draw [style=hadamard edge] (1) to (0);
+		\draw [style=hadamard edge] (1) to (3);
+		\draw [style=hadamard edge] (3) to (4);
+	\end{pgfonlayer}
+\end{tikzpicture}
