@@ -10,11 +10,11 @@
 		\node [style=box] (7) at (-5.25, -4) {$S_3$};
 		\node [style=box] (8) at (-11, -4) {$S_4$};
 		\node [style=box] (9) at (-12.25, 1.25) {$S_5$};
-		\node [style=Z phase dot] (10) at (8, 2.25) {$\alpha'_1$};
-		\node [style=Z phase dot] (11) at (5.5, 0.75) {$\alpha'_5$};
-		\node [style=Z phase dot] (12) at (10.5, 0.75) {$\alpha'_2$};
+		\node [style=Z phase dot] (10) at (8, 2.25) {$\alpha_1^+$};
+		\node [style=Z phase dot] (11) at (5.5, 0.75) {$\alpha_5^+$};
+		\node [style=Z phase dot] (12) at (10.5, 0.75) {$\alpha_2^+$};
 		\node [style=Z phase dot] (13) at (6.75, -2.25) {$\alpha_4$};
-		\node [style=Z phase dot] (14) at (9.5, -2.25) {$\alpha'_3$};
+		\node [style=Z phase dot] (14) at (9.5, -2.25) {$\alpha_3^+$};
 		\node [style=box] (15) at (8, 4.5) {$S_1$};
 		\node [style=box] (16) at (12.75, 1.5) {$S_2$};
 		\node [style=box] (17) at (11.25, -4) {$S_3$};
@@ -23,11 +23,11 @@
 		\node [style=Z phase dot] (20) at (9.25, 1.5) {$\frac{\pi}{2}$};
 		\node [style=none] (21) at (0, 0) {$\approx$};
 		\node [style=none] (22) at (0, 1) {\LCRule};
-		\node [style=Z phase dot] (23) at (8, -9.5) {$\alpha'_1$};
-		\node [style=Z phase dot] (24) at (5.5, -11.75) {$\alpha''_5$};
-		\node [style=Z phase dot] (25) at (11, -11.75) {$\alpha'_2$};
-		\node [style=Z phase dot] (26) at (6.75, -15) {$\alpha'_4$};
-		\node [style=Z phase dot] (27) at (10, -15) {$\alpha''_3$};
+		\node [style=Z phase dot] (23) at (8, -9.5) {$\alpha_1^+$};
+		\node [style=Z phase dot] (24) at (5.5, -11.75) {$\alpha_5+\pi$};
+		\node [style=Z phase dot] (25) at (11, -11.75) {$\alpha_2^+$};
+		\node [style=Z phase dot] (26) at (6.75, -15) {$\alpha_4^+$};
+		\node [style=Z phase dot] (27) at (10, -15) {$\alpha_3+\pi$};
 		\node [style=box] (28) at (8, -7) {$S_1$};
 		\node [style=box] (29) at (13.5, -10.75) {$S_2$};
 		\node [style=box] (30) at (12, -17) {$S_3$};
@@ -36,7 +36,7 @@
 		\node [style=Z phase dot] (33) at (9, -11) {$\frac{\pi}{2}$};
 		\node [style=none] (34) at (0, -13) {$\approx$};
 		\node [style=none] (35) at (0, -12) {\LCRule};
-		\node [style=Z phase dot] (36) at (7.75, -14.25) {$\frac{\pi}{2}$};
+		\node [style=Z phase dot] (36) at (7.25, -13.5) {$\frac{\pi}{2}$};
 	\end{pgfonlayer}
 	\begin{pgfonlayer}{edgelayer}
 		\draw [style=hadamard edge] (6) to (2);

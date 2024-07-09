@@ -5,8 +5,9 @@
 \section{Introduction}
 As mentioned in the previous chapter, classical simulation of quantum circuits provides an essential tool 
 for verification and validation, despite its inherent limitations. 
-This chapter delves into the methods and advancements in classical simulation, 
-particularly focusing on stabiliser decomposition and the role of magic states in extending the capabilities of these simulations.
+This chapter delves into the methods and advancements in classical simulation 
+via stabiliser decomposition, discussing the role of magic states, cat states, and graph cuts, 
+in extending the capabilities of these simulations.
 Classical simulation methods that store a complete description of an $n$-qubit quantum state 
 as a complex vector of size $2^n$ are effective only for a small number of qubits, typically around 30. 
 For example, Shor's factoring algorithm has been simulated with 31 qubits 
@@ -20,9 +21,10 @@ This is known as the \textit{Gottesman-Knill theorem}.
     A Clifford computation can be efficiently classically simulated.
 \end{theorem}
 
-In other words, \textit{Clifford diagrams} are efficiently classically simulated.
-ZX-Calculus not only aids in visualizing quantum operations 
-but also simplifies the process of identifying and manipulating \textit{stabiliser states}.
+In other words, a computation involving only \textit{Clifford diagrams} 
+can be efficiently classically simulated.
+This is extremely useful when considering that ZX-Calculus 
+simplifies the process of identifying and manipulating \textit{stabiliser states}.
 
 \begin{definition}[Stabiliser state \cite{Bravyi_2016bss,gottesman1998}]
     \label{def:stabiliser-state}
@@ -31,13 +33,18 @@ but also simplifies the process of identifying and manipulating \textit{stabilis
     where $V$ is a Clifford diagram.
 \end{definition}
 
+It is clear that if a computation only involves stabiliser states,
+then it can be efficiently classically simulated.
 Stabiliser circuits are particularly notable for their applications in quantum error correction \cite{gottesman1998}. 
-However, when considering Clifford+T circuits, we need to introduce \textit{magic states}.
-As we see in this chapter, these then allow us to decompose the circuit into a sum of stabiliser states,
-which are all efficiently classically simulatable, with the cost of having an exponential number of them.
+In the next few sections, we will see more clearly how these stabiliser states are used in classical simulation.
+Particularly, we also need to consider Clifford+T diagrams,
+and how we can still (inefficiently) simulate them using stabiliser states.
 
-WLOG, when simulating quantum circuits, 
-we can assume that the input state to our $n$-qubit circuits is of the form
+
+\section{Strong Simulation}
+
+When simulating quantum circuits, 
+we assume that the input state to our $n$-qubit circuits is of the form
 
 \begin{equation}
 \label{eq:input-state}
@@ -50,25 +57,45 @@ we can assume that the input state to our $n$-qubit circuits is of the form
 \end{matrix} \right\} n
 \end{equation}
 
-\section{Strong Simulation}
 Given that we have a $n$-qubit circuit with the input state from (\ref{eq:input-state}), 
 we would then want to obtain the probability of measuring a certain output state.
 For instance, we can plug in the outputs as spiders as such.
 
 \ctikzfig{amplitude}
 
-Then using the \hyperref[eq:born-rule]{Born rule}, we can obtain the probability of measuring the output state \cite{Kissinger2024}.
+Then using the \hyperref[eq:born-rule]{Born rule}, 
+we can obtain the probability of measuring the output state \cite{Kissinger2024}.
 
 \begin{equation}
-P(x_1,x_2,...,x_n) = \frac{1}{\sqrt{2^{4n}}} \tikzfig{marginal}
+\label{eq:prob-all}
+\Pr(x_1,x_2,...,x_n) = \frac{1}{\sqrt{2^{4n}}} \tikzfig{prob_all}
 \end{equation}
 
 $V^{\dagger}$ is used to denote the adjoint of $V$, which simply means the inputs and outputs are swapped,
 and the spider phases are negated.
-The scalar factors of $1/\sqrt{2}$ comes from those seen from Eq. \ref{eq:spider-basis}.
+The scalar factors of $1/\sqrt{2}$ comes from those seen in (\ref{eq:spider-basis}).
 If $V$ is a Clifford diagram, then following from the \nameref{thm:gottesman-knill}, 
 the scalars can be computed efficiently.
 Obtaining the probabilities this way is known as \textit{strong simulation}.
+
+Marginal probabilities can also be obtained similarly.
+Recall that using the law of total probability, we have for $k < n$,
+
+\begin{equation}
+    \label{eq:total-prob}
+    \Pr(x_1,x_2,...,x_k) = \sum_{x_{k+1},x_{k+2},...,x_n} \Pr(x_1,x_2,...,x_k,x_{k+1},...,x_n)
+\end{equation}
+
+Then, applying the (\ref{eq:total-prob}) to (\ref{eq:prob-all}), and using the $\IdRule$dentity rule, where
+
+\begin{equation}
+    \sum_{x} \cbox{\copoint{x} \point{x}} \eqrule{\IdRule} \cbox{\idwire}
+\end{equation}
+we can obtain the marginal probabilities.
+
+\begin{equation}
+    \Pr(x_1,x_2,...,x_k) = \frac{1}{2^{n+k}} \tikzfig{prob_marginal}
+\end{equation}
 
 A natural question that arises is whether the same can be done if $V$ is a Clifford+T diagram instead.
 The following sections will delve into the methods used to simulate such circuits.
@@ -103,7 +130,7 @@ This sum can be called the \textit{stabiliser decomposition} of the circuit.
     where $\lambda_i \in \C$ and $\ket{\psi_i}$ are stabiliser states.
 \end{definition}
 
-Using the \nameref{def:magic-state} decomposition, we can see that the value of $n=O(2^t)$
+Using the \nameref{def:magic-state} decomposition, we can see that the value of $n=2^t$
 if we apply it to the $t$ $T$-like spiders in the circuit. 
 We can call $t$ the \textit{T-count} of the circuit.
 
@@ -118,7 +145,7 @@ However, there is an even better decomposition
 =\tikzfig{magic2}
 \end{equation}
 
-This allows us to decompose the circuit into a sum of stabiliser states with $n=O(2^{\frac{t}{2}})$.
+This allows us to decompose the circuit into a sum of stabiliser states with $n=2^{\frac{t}{2}}$.
 Different methods of decomposing the circuit can lead to different values of $n$.
 Since $n$ is believed to be exponential in $t$ (or else we have $P=NP$) \cite{Bravyi_2019},
 we can take it that $n=O(2^{\alpha t})$ for some $0<\alpha<1$.
@@ -126,8 +153,8 @@ We can then compare the efficiency of different methods by using this metric.
 
 \begin{definition}[(In)efficiency \cite{Bravyi_2016bss,Bravyi_2016,Kissinger_2022,Kissinger2022cat}]
     \label{def:efficiency}
-    The \textit{(in)efficiency} of a stabiliser decomposition that reduces the $T$-count by $r$ 
-    using $p$ stabiliser states is
+    The \textit{(in)efficiency} of a decomposition that reduces the $T$-count by $r$ 
+    using $p$ states is
     \[\alpha = \frac{\log_2(p)}{r}\]
     where a lower value of $\alpha$ indicates a more efficient decomposition.
 \end{definition}
@@ -145,6 +172,22 @@ It also allows us to obtain the efficiency of different decompositions which do 
 As we will see in the next few chapters, this ties in well when we consider 
 the higher efficiency of \textit{cat state} decomposition.
 
+A closely related metric we can use is the \textit{stabiliser rank}.
+
+\begin{definition}
+    Let $D$ be the set of all stabiliser decompositions of a state \ket{\psi}.
+    The \textit{stabiliser rank} $\chi(\ket{\psi})$ of a state \ket{\psi} is 
+    \[\chi(\ket{\psi}) := 
+    \min \{ n \mid \exists d\in D \text{ s.t. } \ket{\psi} = d\}\]
+\end{definition}
+
+We can see that the relation between the stabiliser rank and its efficiency is
+\begin{equation}
+    \chi(\ket{\psi}) = 2^{\alpha_{\chi} t}
+\end{equation}
+
+The goal for any stabiliser decomposition is to obtain an efficiency as close to $\alpha_{\chi}$ as possible.
+
 \section{Cat States}
 
 \begin{definition}[Cat state \cite{Qassim_2021}]
@@ -158,7 +201,7 @@ Cat states are used because their decompositions have low value of $\alpha$,
 as well as the following proposition, which bounds the $\alpha$ of the corresponding magic state decomposition.
 
 \begin{proposition}
-    Suppose $\alpha_1,\alpha_2$ are the (in)efficiency metrics of the decompositions of 
+    Suppose $\alpha_1,\alpha_2$ are the efficiency metrics of the decompositions of 
     \[\left.\cbox{\npoint{cat_n}}\right\} n \quad\quad, \quad\quad 
     \left. \begin{matrix}
         \magicspider \\
@@ -205,7 +248,7 @@ Even better, for $\catstate{4}$, we have the decomposition
 
 which has an efficiency of $\alpha = 0.25$.
 
-Table \ref{tab:cat_decomp} shows the best known efficiencies of the $\catstate{n}$ decomposition 
+\autoref{tab:cat_decomp} shows the best known efficiencies of the $\catstate{n}$ decomposition 
 for different values of $n$ \cite{Bravyi_2016}.
 
 \begin{table}[h!]
@@ -250,16 +293,21 @@ and improve upon the use of these cat and magic state decompositions.
 
 In a complementary approach to reducing the effective $\alpha$ of the stabiliser decomposition, 
 graph cuts offer a different perspective \cite{Codsi2022}.
-Suppose we have 2 ZX-diagrams $S_1, S_2$ of $T$-counts $t_1,t_2$ that both 
-have a stabiliser decomposition (in)efficiency of $\alpha$ respectively.
+Suppose we have 2 Clifford+T diagrams $S_1, S_2$ of $T$-counts $t_1,t_2$ that both 
+have a stabiliser decomposition efficiency of $\alpha$.
+
+\begin{equation}
+    \tikzfig{graph_cut_ex}
+\end{equation}
+
 If we combine the diagrams into a single diagram $S$,
-we could expect the stabiliser decomposition (in)efficiency of $S$ to be $\alpha$,
+we could expect the stabiliser decomposition efficiency of $S$ to be $\alpha$,
 coming from having $2^{\alpha(t_1+t_2)}$ stabiliser states.
 However, since we can treat $S_1,S_2$ independently and multiply their stabiliser decompositions,
 the actual number of stabiliser states is instead $2^{\alpha t_1} + 2^{\alpha t_2} \leq 2^{\alpha t + 1}$,
 where $t=\max(t_1,t_2)$.
 This gives a resulting $\alpha' \leq \alpha \frac{t + 1}{t_1+t_2}$.
-In the ideal case, we have that $t_1=t_2$, so $\alpha' \leq \frac{\alpha}{2} + \frac{1}{t_1+t_2}$, 
+In the ideal case, we have that $t_1=t_2$, so $\alpha' \leq \frac{\alpha}{2} + \frac{1}{2t}$, 
 a vast improvement especially for a high $T$-count.
 It is with this motivation that graph cuts are another promising approach.
 
@@ -292,8 +340,16 @@ We can obtain the efficiency.
 \end{aligned}
 \end{equation}
 
-In the ideal case where $t_i=t$ for all $i$, we have 
-$\alpha' \leq \frac{\alpha}{n} + \frac{m + \log_2(m^2 n)}{nt}$.
+In the ideal case where $t_i=t$ for all $i$, we can produce a crude upper bound
+\begin{equation}
+\begin{aligned}
+    \alpha' &\leq \frac{\alpha}{n} + \frac{m + \log_2(m^2 n)}{nt}\\
+    &< \frac{\alpha}{n} + \frac{3m + n}{nt}\\
+    &= \frac{\alpha}{n} + \frac{3m}{nt} + \frac{1}{t}
+\end{aligned}
+\end{equation}
+Keeping the ratio $m/n$ small is key to reducing the effective $\alpha$.
+Clearly, less cuts are better, with preferably the end result being many disconnected subdiagrams.
 
 Another way graph cuts also reduce the effective $\alpha$ need not necessarily 
 be by obtaining disconnected subdiagrams.
@@ -304,25 +360,32 @@ where a single cut can lead to a large reduction in the $T$-count \cite{sutcliff
 There, the effective efficiency obtained was $0.1 \lesssim \alpha \lesssim 0.2$.
 
 The same was also found for extremely structured circuits involving cat states,
-where a single decomposition reduced the $T$-count by 286, for an $\alpha \approx 0.0035$ \cite{Codsi2022}.
+where a single decomposition reduced the $T$-count by 286, for an $\alpha \approx 0.0035$ \cite{Codsi2022},
+though these was an ideal case which is unlikely to occur in practice.
 
 \section{Subgraph Complement}
 
 A further addition to the strength of graph cuts is the subgraph complement approach.
 For a graph-like ZX-diagram $(V, E)$, with $K$ being the set of edges for a complete graph on $V$,
-then its complement is simply $(V, K \backslash E)$.
+its \textit{complement} is simply $(V, K \backslash E)$.
+We define a \textit{subdiagram} to simply be a subgraph of the graph-like ZX-diagram.
 If we analyse \LCRule closely, and consider \hyperref[eq:hopf]{Hopf rule} making parallel edges cancel,
 there seems to be a way to obtain a subgraph complement with some manipulation of ZX-rules.
 In fact, we have the following result.
 
 \begin{proposition}[\cite{Codsi2022}]
-    Suppose we have a subdiagram $S$ of a graph-like ZX-diagram.
-    \[\cbox{\boxdiag{S}} \approx \cbox{\boxdiag{\bar{S}}} + \cbox{\boxdiag{\bar{S}}}\]
-    where $\bar{S}$ is the complement of $S$.
+    \label{prop:subgraph_complement}
+    Suppose we have a subdiagram $S$ of a graph-like ZX-diagram. Then
+\begin{equation}
+    \label{eq:subgraph_complement}
+    \cbox{\boxdiag{S}} \approx \cbox{\boxdiag{\bar{S}^+}} + i\cbox{\boxdiag{\bar{S}^-}}
+\end{equation}
+    where $\bar{S}^+,\bar{S}^-$ are the complements of $S$ where the spider phases differ from $S$
+    by $\pm\frac{\pi}{2}$ respectively.
 \end{proposition}
 
 \begin{proof}
-    The proof is from \cite{Codsi2022}.
+    The proof is adapted from \cite{Codsi2022}.
 \begin{equation}
     \tikzfig{subgraph_complement}
 \end{equation}
@@ -331,20 +394,11 @@ In fact, we have the following result.
 The power of this proposition can be demonstrated with the following example.
 Suppose we have the following graph-like ZX-diagram, where $S_i$ are subdiagrams.
 
-Following from \autoref{eq:mcuts}, we can apply 5 cuts to split the diagram into 5 disconnected subdiagrams,
-giving us $2^5$ terms.
-
-% If each subdiagram has efficiency $\alpha$, the corresponding efficiency in the ideal case is
-% $\alpha' \leq \frac{\alpha}{5} + \frac{5 + 3\log_2(5)}{5t}$.
-
-However, we can apply the subgraph complement proposition.
-
 \begin{equation}
     \tikzfig{complement_ex_eq}
 \end{equation}
 
-Now, we only need 2 cuts to split the diagram into the same 5 disconnected subdiagrams,
-giving us $2^2$ terms.
-% The corresponding efficiency in the ideal case is
-% $\alpha' \leq \frac{\alpha}{5} + \frac{2 + 3\log_2(2)}{5t}$.
-% This constitutes a reduction of $\alpha$ by $\frac{3\log_2(5)}{5t}$.
+Following from (\ref{eq:mcuts}), we can apply 5 cuts to split the diagram into 5 disconnected subdiagrams,
+giving us $2^5$ terms.
+However, we can apply Prop. \ref{prop:subgraph_complement} twice to give us $2^2$ terms instead.
+

@@ -5,6 +5,7 @@
 \usepackage{pgfplots}
 \usepackage{hyperref}
 \usepackage{relsize}
+\usepackage{quiver}
 
 \graphicspath{{.}{./figures/}}
 
@@ -65,10 +66,11 @@
 \newkeycommand{\boxmap}[style=box][1]{\,\tikz{\node[style=\commandkey{style}] (x) {$#1$};\draw(-1.25,0)--(x)--(1.25,0);}\,}
 
 \newkeycommand{\pointmap}[style=ket][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (-0.3,0) {$#1$};\node [style=none] (3) at (0.9, 0) {};\node [style=none] (3) at (-0.9, 0) {};\draw (x)--(0.7,0);}\,}
-\newkeycommand{\point}[style=ket,estyle=][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (-0.3,0) {$#1$};\draw [\commandkey{estyle}] (x)--(0.7,0);}\,}
+\newkeycommand{\point}[style=ket,estyle=none][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (-0.3,0) {$#1$};\draw [\commandkey{estyle}] (x)--(0.7,0);}\,}
 \newkeycommand{\longpoint}[style=ket,estyle=][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (-0.3,0) {$#1$};\draw [\commandkey{estyle}] (x)--(1.2,0);}\,}
 
 \newkeycommand{\copointmap}[style=bra][1]{\,\tikz{\node[style=\commandkey{style}] (x) at (0.3,0) {$#1$};\draw (x)--(-0.7,0);}\,}
+\newcommand{\copoint}[1]{\copointmap{#1}}
 
 \newcommand{\graypointmap}[1]{\point[style=gray ket]{#1}}
 \newcommand{\graycopointmap}[1]{\copointmap[style=gray bra]{#1}}
@@ -190,6 +192,8 @@
 \newcommand{\greenpimeasspider}{\copointmap[style=Z phase dot]{\pi}}
 
 \newcommand{\magicspider}{\point[style=Z phase dot]{\frac{\pi}{4}}}
+
+
 
 
 
@@ -349,3 +353,22 @@
   \draw plot[smooth cycle] coordinates {(0.8, 0) (0.5, 0.6) (-0.2, 0.2) (-0.5, 0) (0, -0.7)};
   \node at (0,0) {$#1$};
 \end{tikzpicture}\,}
+
+
+% SAVE BOXES
+
+
+\newsavebox\magicspidercd
+\begin{lrbox}{\magicspidercd}
+  \magicspider
+\end{lrbox}
+
+\newsavebox\npointpsicd
+\begin{lrbox}{\npointpsicd}
+  \npoint{\psi}
+\end{lrbox}
+
+\newsavebox\catstatecd
+\begin{lrbox}{\catstatecd}
+  \catstate{4}
+\end{lrbox}
