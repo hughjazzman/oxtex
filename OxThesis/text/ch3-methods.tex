@@ -12,33 +12,99 @@ in the most efficient way so far.
 
 In modeling our task, we can think of the stabiliser decomposition as a search problem, 
 where we are searching for the most efficient stabiliser decomposition.
-Starting from the initial state as the root, we have as a tree,
-where each node is a partial decomposition of its parent state,
-with the leaves as the stabiliser decompositions.
-We can visualize an example as such, starting from the initial state $\ket{\psi}$,
-with the edges representing the decomposition used.
-The leaves $d_i$ are the possible stabiliser decompositions.
+We can visualize an example as in \autoref{fig:amplitude}, where $V$ is a Clifford+T diagram at the root.
+The directed edges represent the decomposition used from the parent to the child node, 
+and the leaves $d_i$ are the possible stabiliser decompositions.
+
+\clearpage
 
 \begin{figure}[h!]
-% https://q.uiver.app/#q=WzAsMTMsWzIsMCwiXFxrZXR7XFxwc2l9Il0sWzEsMSwic18xIl0sWzMsMSwic19pIl0sWzAsMiwiXFx2ZG90cyJdLFsxLDIsIlxcZGRvdHMiXSxbNCwyLCJcXHZkb3RzIl0sWzMsMiwiXFxkZG90cyJdLFswLDMsImRfMSJdLFsxLDMsImRfMiJdLFszLDMsImRfe2stMX0iXSxbNCwzLCJkX2siXSxbMiwxLCJcXGRvdHMiXSxbMiwyLCJcXGRvdHMiXSxbMCwxLCJcXGtldHtUfSIsMl0sWzAsMiwiXFxrZXR7VH1ee1xcb3RpbWVzIDV9Il0sWzEsMywiXFxrZXR7Y2F0XzR9IiwyXSxbMiw1LCJCU1MiXSxbNCw3LCJcXGtldHtUfSIsMl0sWzQsOF0sWzYsOV0sWzYsMTAsIlxca2V0e1R9XntcXG90aW1lcyAyfSJdXQ==
-\[\begin{tikzcd}
-	&& {\usebox\npointpsicd} \\
-	& {s_1} & \dots & {s_i} \\
-	\vdots & \ddots & \dots & \ddots & \vdots \\
-	{d_1} & {d_2} && {d_{k-1}} & {d_k}
-	\arrow["{\usebox\magicspidercd}"{marking}, from=1-3, to=2-2]
-	\arrow["{\usebox\magicspidercd^{\otimes 5}}"{marking}, from=1-3, to=2-4]
-	\arrow["{\usebox\catstatecd}"{marking}, from=2-2, to=3-1]
-	\arrow["BSS", from=2-4, to=3-5]
-	\arrow["{\usebox\magicspidercd}"{marking}, from=3-2, to=4-1]
-	\arrow[from=3-2, to=4-2]
-	\arrow[from=3-4, to=4-4]
-	\arrow["{\usebox\magicspidercd^{\otimes 2}}"{marking}, from=3-4, to=4-5]
-\end{tikzcd}\]
+\tikzfig{search-tree}
 \caption{Example search tree for a stabiliser decomposition}
 \end{figure}
 
+To traverse the search tree, we might take the following steps \cite{Kissinger2022cat,Kissinger_2022}.
 
-The most obvious way to obtain an efficient decomposition is to, at each step, use a decomposition 
+\begin{algorithm}
+\label{alg:stabiliser-decomposition}
+\begin{enumerate}    
+    \item Perform necessary spider $\SpiderRule$usions to 
+    \hyperref[prop:zx-to-graph]{reduce to graph-like form}.
+    \item Apply a chosen decomposition ("choose an edge").
+    \item Simplify the resulting Clifford+T diagram using \hyperref[alg:zx-simplify]{ZX-simplify}.
+    Some Clifford spiders may be removed, and some $T$-like spiders may be combined.
+    \item Repeat steps 1-3 until the $T$-count is 0.
+\end{enumerate}
+\end{algorithm}
+
+The complexity from using this algorithm was found to be $O(N^3 + 2^{\alpha t})$, 
+where $N$ is the number of gates in the original circuit.
+Clearly, any circuit with a $T$-count that is not insignificant will mean that 
+the complexity is dominated by $O(2^{\alpha t})$.
+
+In this thesis, we will focus on the second step of the algorithm, 
+where we choose the decomposition to apply at each node.
+There are a variety of ways to choose a decomposition, detailed in the next few sections.
+
+\section{Greedy Algorithm}
+
+The most obvious way to obtain an efficient decomposition is to, at each step, use the decomposition 
 that has the smallest associated value of $\alpha$ as possible.
 This is essentially a greedy algorithm, and is the method used in \cite{Kissinger2022cat,Kissinger_2022}.
+Intuitively, this should give us a decomposition with an $\alpha$ upper bounded by 
+the worst decomposition available.
+More formally, we have the following lemma.
+
+\begin{lemma}
+    Let $d$ be a stabiliser decomposition, 
+    and let $\alpha_1,...,\alpha_n$ and $t_1,...,t_n$ be the $\alpha$ values and $T$-count reductions
+    of each of the $n$ decompositions to obtain $d$ from the initial Clifford+T diagram.
+    Then the efficiency $\alpha$ value of the decomposition $d$ is given by
+\begin{equation}
+    \alpha \leq \frac{\sum_{i=1}^n \alpha_i t_i}{\sum_{i=1}^n t_i}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+    Each decomposition gives $\leq 2^{\alpha_i t_i}$ terms, for a total of
+    \[\leq \prod_{i=1}^{n} 2^{\alpha_i t_i} = 2^{\sum_{i=1}^n \alpha_i t_i}\]
+    terms. Since the final $T$-count is 0, the initial $T$-count is $\sum_{i=1}^n t_i$.
+    By definition, we have 
+    \[\alpha \leq \frac{\sum_{i=1}^n \alpha_i t_i}{\sum_{i=1}^n t_i}\]
+\end{proof}
+
+This tells us that the final $\alpha$ value is essentially a weighted average of the $\alpha_i$ values,
+weighted by their $T$-count reductions.
+The actual $\alpha$ value in practice is likely to be much lower than this upper bound,
+because of step 3 in the \autoref{alg:stabiliser-decomposition}, 
+where we simplify the diagram using \nameref{alg:zx-simplify}.
+In \cite{Kissinger_2022}, although the BSS decomposition has the $\alpha \approx 0.468$,
+the actual $\alpha$ value obtained in experiments was lower, at $\approx 0.4$ \cite{sutcliffe2024proccut}.
+
+\section{Graph Structure Heuristic}
+\label{sec:graph-cut}
+
+Another way to choose a decomposition is to use the graph structure of the Clifford+T diagram.
+A disadvantage of the greedy algorithm is that it does not take into account the structure of the diagram.
+When we only consider the $\alpha$ value of the decomposition, 
+we fail to take into account the \nameref{alg:zx-simplify} step of Algorithm \ref{alg:stabiliser-decomposition}.
+Since this step can combine $T$-like spiders,
+it means that decompositions with seemingly higher $\alpha$ values may actually be more efficient.
+
+In \cite{sutcliffe2024proccut}, the heuristic used considers the structure of CNOT gates
+placed in between $T$ gates.
+The following observation was made.
+
+\begin{equation}
+    \tikzfig{picom_01}
+\end{equation}
+
+Using the graph cut (\ref{eq:spider_cut}), 
+which without simplification has $\alpha = 1$ if the spider being cut is a $T$-like spider,
+we can instead obtain a decomposition with $\alpha \approx 0.333$, with simplication,
+for the reduction of 3 $T$-like spiders at the cost of 2 terms.
+In fact, this structure can be stacked in the following way.
+
+\begin{equation}
+    \tikzfig{picom_grouped}
+\end{equation}

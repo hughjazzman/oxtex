@@ -360,10 +360,11 @@ leading to the convenience of having them as the blue dashed lines introduced ea
 The following proposition can then be proven, using rewrite rules introduced previously in \nameref{sec:zx-rules}.
 
 \begin{proposition}[\cite{Kissinger2024}]
+  \label{prop:zx-to-graph}
   Every ZX-diagram can be converted to a graph-like ZX-diagram in polynomial time.
 \end{proposition}
 
-The proof \cite{Kissinger2024} makes use of the fact that Hadamard edges in parallel cancel,
+The proof \cite{Kissinger2024,Duncan2020graphtheoretic} makes use of the fact that Hadamard edges in parallel cancel,
 and that we can always remove a Hadamard self-loop.
 Parallel edges cancelling is an application of the \textit{Hopf rule}, derivable from the ZX-rules.
 
@@ -403,6 +404,14 @@ First, we define interior and boundary spiders, and then phase gadgets.
   \ctikzfig{phasegadget}
 \end{definition}
 
+The usefulness of phase gadgets is that they can be used to simplify the diagram further.
+Here, two more derived rules involve phase gadgets.
+
+\begin{equation}
+  \label{eq:phase-gadget}
+  \tikzfig{id-simp-1}\qquad\qquad \tikzfig{gadget-simp}
+\end{equation}
+
 These help us define the reduced gadget form.
 
 \begin{definition}[Reduced gadget form \cite{Kissinger2020}]
@@ -415,6 +424,27 @@ These help us define the reduced gadget form.
 \end{itemize}
 \end{definition}
 
+It turns out that there is an algorithm detailed below
+that is bounded in $O(n^3)$ where $n$ is the number of spiders,
+to convert any graph-like ZX-diagram to reduced gadget form \cite{Kissinger_2022}.
+Thus, much of the work in this thesis will focus on the reduced gadget form, 
+as it tends to bring us closer to the goal of reducing overall $T$-count.
+However, there are exceptions to this, as we will see in the next chapter.
+
+
+\begin{algorithm}[ZX-simplify \cite{Kissinger_2022}]
+\label{alg:zx-simplify}
+Starting with a graph-like ZX-diagram, do the following:
+\begin{enumerate}
+  \item Apply \LCRule until all proper Clifford spiders are removed.
+  \item Apply \PivotRule (and variations) until all interior $k\pi$-spiders are removed 
+  or transformed into phase-gadgets.
+  \item Remove all Clifford phase-gadgets using \LCRule and \PivotRule.
+  \item Apply \IDSimp and \GFSimp wherever possible. If any matches are found, go back to step 1.
+  Otherwise, the diagram is in reduced gadget form.
+\end{enumerate}
+\end{algorithm}
+
 \begin{example}
   The following diagram from \cite{Kissinger_2022} is in reduced gadget form.
 \begin{figure}[h!]
@@ -422,9 +452,3 @@ These help us define the reduced gadget form.
 \caption{A ZX-diagram in reduced gadget form \cite{Kissinger_2022}}
 \end{figure}  
 \end{example}
-
-It turns out that there is an algorithm that is bounded in $O(n^3)$ where $n$ is the number of spiders,
-to convert any graph-like ZX-diagram to reduced gadget form \cite{Kissinger_2022}.
-Thus, much of the work in this thesis will focus on the reduced gadget form, 
-as it tends to bring us closer to the goal of reducing overall $T$-count.
-However, there are exceptions to this, as we will see in the next chapter.

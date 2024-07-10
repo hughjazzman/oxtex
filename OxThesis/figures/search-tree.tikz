@@ -1,0 +1,15 @@
+% https://q.uiver.app/#q=WzAsMTMsWzIsMCwiXFxrZXR7XFxwc2l9Il0sWzEsMSwic18xIl0sWzMsMSwic19pIl0sWzAsMiwiXFx2ZG90cyJdLFsxLDIsIlxcZGRvdHMiXSxbNCwyLCJcXHZkb3RzIl0sWzMsMiwiXFxkZG90cyJdLFswLDMsImRfMSJdLFsxLDMsImRfMiJdLFszLDMsImRfe2stMX0iXSxbNCwzLCJkX2siXSxbMiwxLCJcXGRvdHMiXSxbMiwyLCJcXGRvdHMiXSxbMCwxLCJcXGtldHtUfSIsMl0sWzAsMiwiXFxrZXR7VH1ee1xcb3RpbWVzIDV9Il0sWzEsMywiXFxrZXR7Y2F0XzR9IiwyXSxbMiw1LCJCU1MiXSxbNCw3LCJcXGtldHtUfSIsMl0sWzQsOF0sWzYsOV0sWzYsMTAsIlxca2V0e1R9XntcXG90aW1lcyAyfSJdXQ==
+\[\begin{tikzcd}
+	&& {\usebox\amplitudecd} \\
+	& {s_1} & \dots & {s_i} \\
+	\vdots & \ddots & \dots & \ddots & \vdots \\
+	{d_1} & {d_2} && {d_{k-1}} & {d_k}
+	\arrow["{\usebox\magicspidercd}"{marking}, from=1-3, to=2-2]
+	\arrow["{\usebox\magicspidercd^{\otimes 5}}"{marking}, from=1-3, to=2-4]
+	\arrow["{\usebox\catstatecd}"{marking}, from=2-2, to=3-1]
+	\arrow["BSS", from=2-4, to=3-5]
+	\arrow["{\usebox\magicspidercd}"{marking}, from=3-2, to=4-1]
+	\arrow[from=3-2, to=4-2]
+	\arrow[from=3-4, to=4-4]
+	\arrow["{\usebox\magicspidercd^{\otimes 2}}"{marking}, from=3-4, to=4-5]
+\end{tikzcd}\]

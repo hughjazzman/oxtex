@@ -1,0 +1,24 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=Z phase dot] (0) at (-6, 0) {$\alpha$};
+		\node [style=Z phase dot] (1) at (-3, 0) {$\beta$};
+		\node [style=Z dot] (2) at (-4.5, 0) {};
+		\node [style=none] (3) at (-1.5, 1) {};
+		\node [style=none] (4) at (-1.5, -1) {};
+		\node [style=none, rotate=90] (8) at (-2, 0) {...};
+		\node [style=none] (18) at (0, 0) {=};
+		\node [style=Z phase dot] (19) at (3, 0) {$\ \alpha+\beta\ $};
+		\node [style=none] (21) at (4.75, 1) {};
+		\node [style=none] (22) at (4.75, -1) {};
+		\node [style=none, rotate=90] (26) at (4.5, 0) {...};
+		\node [style=none] (27) at (0, 1) {\IDSimp};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (1) to (3.center);
+		\draw (1) to (4.center);
+		\draw [style=hadamard edge] (0) to (2);
+		\draw [style=hadamard edge] (2) to (1);
+		\draw (19) to (21.center);
+		\draw (19) to (22.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

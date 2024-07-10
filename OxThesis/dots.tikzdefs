@@ -35,6 +35,10 @@
 \newcommand{\PiCopyRule}{\ensuremath{(\hyperref[table:rewrite]{\bm{\pi c}})}\xspace}
 \newcommand{\LCRule}{\ensuremath{(\hyperref[table:deriv]{\bm{LC}})}\xspace}
 \newcommand{\PivotRule}{\ensuremath{(\hyperref[table:deriv]{\bm{P}})}\xspace}
+\newcommand{\IDSimp}{\ensuremath{(\hyperref[eq:phase-gadget]{\bm{ID}})}\xspace}
+\newcommand{\GadgetSimp}{\ensuremath{(\hyperref[eq:phase-gadget]{\bm{GF}})}\xspace}
+\newcommand{\GFRule}{\GadgetSimp}
+\newcommand{\GFSimp}{\GadgetSimp}
 
 %% small versions
 \newcommand{\antipoderule}{\footnotesize\AntipodeRule}

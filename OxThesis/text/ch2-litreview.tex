@@ -59,9 +59,14 @@ we assume that the input state to our $n$-qubit circuits is of the form
 
 Given that we have a $n$-qubit circuit with the input state from (\ref{eq:input-state}), 
 we would then want to obtain the probability of measuring a certain output state.
-For instance, we can plug in the outputs as spiders as such.
+For instance, we can plug in the outputs $\bra{\vec{x}}$ for $\vec{x}=x_1,x_2,...,x_n$ 
+as spiders as in \autoref{fig:amplitude}.
 
-\ctikzfig{amplitude}
+\begin{figure}[h!]
+    \[\tikzfig{amplitude} \in \C\]
+    \caption{Scalar involving Clifford+T diagram $V$}
+    \label{fig:amplitude}
+\end{figure}
 
 Then using the \hyperref[eq:born-rule]{Born rule}, 
 we can obtain the probability of measuring the output state \cite{Kissinger2024}.
@@ -358,6 +363,7 @@ graph cuts were used to take advantage of the structure to optimise for the use 
 spider $\SpiderRule$usion in cascading fashion, 
 where a single cut can lead to a large reduction in the $T$-count \cite{sutcliffe2024proccut}. 
 There, the effective efficiency obtained was $0.1 \lesssim \alpha \lesssim 0.2$.
+More details on this will be discussed in \autoref{sec:graph-cut}.
 
 The same was also found for extremely structured circuits involving cat states,
 where a single decomposition reduced the $T$-count by 286, for an $\alpha \approx 0.0035$ \cite{Codsi2022},

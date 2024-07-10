@@ -1,0 +1,52 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=Z dot] (51) at (-4.25, -0.75) {};
+		\node [style=Z phase dot] (52) at (-5.25, -0.75) {$\alpha$};
+		\node [style=none] (53) at (-3, 1.75) {};
+		\node [style=none] (55) at (-1.5, 1.75) {};
+		\node [style=Z dot] (57) at (-2.25, 1) {};
+		\node [style=none] (59) at (-3, -2) {};
+		\node [style=none] (60) at (-1.5, -2) {};
+		\node [style=Z dot] (61) at (-2.25, -1.25) {};
+		\node [style=Z dot] (62) at (-4.25, 0.75) {};
+		\node [style=Z phase dot] (63) at (-5.25, 0.75) {$\beta$};
+		\node [style=Z phase dot] (64) at (-2.25, 1) {$\alpha_1$};
+		\node [style=Z phase dot] (66) at (-2.25, -1.25) {$\alpha_n$};
+		\node [style=none, rotate=90] (131) at (-2.25, 0) {...};
+		\node [style=Z dot] (132) at (4.25, 0) {};
+		\node [style=Z phase dot] (133) at (2.5, 0) {$\ \alpha+\beta\ $};
+		\node [style=none] (134) at (6, 1.75) {};
+		\node [style=none] (135) at (4.5, 1.75) {};
+		\node [style=Z phase dot] (136) at (5.25, 1) {$\alpha_1$};
+		\node [style=none] (137) at (4.5, -1.75) {};
+		\node [style=none] (138) at (6, -1.75) {};
+		\node [style=Z dot] (139) at (5.25, -1) {};
+		\node [style=Z phase dot] (143) at (5.25, -1) {$\alpha_n$};
+		\node [style=none, rotate=90] (144) at (5.25, 0) {...};
+		\node [style=none] (145) at (0, 0) {=};
+		\node [style=none] (146) at (-2.25, -2) {...};
+		\node [style=none] (147) at (-2.25, 1.75) {...};
+		\node [style=none] (148) at (5.25, 1.75) {...};
+		\node [style=none] (149) at (5.25, -1.75) {...};
+		\node [style=none] (150) at (0, 1) {\GadgetSimp};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=hadamard edge] (51) to (52);
+		\draw (53.center) to (57);
+		\draw (57) to (55.center);
+		\draw [style=hadamard edge] (51) to (57);
+		\draw (59.center) to (61);
+		\draw (61) to (60.center);
+		\draw [style=hadamard edge] (61) to (51);
+		\draw [style=hadamard edge] (62) to (63);
+		\draw [style=hadamard edge] (62) to (64);
+		\draw [style=hadamard edge] (66) to (62);
+		\draw [style=hadamard edge] (132) to (133);
+		\draw (134.center) to (136);
+		\draw (136) to (135.center);
+		\draw [style=hadamard edge] (132) to (136);
+		\draw (137.center) to (139);
+		\draw (139) to (138.center);
+		\draw [style=hadamard edge] (139) to (132);
+	\end{pgfonlayer}
+\end{tikzpicture}
