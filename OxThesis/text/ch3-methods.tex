@@ -146,7 +146,7 @@ In fact, the associated $\alpha_e$ value of the sequence of decompositions is gi
 
 \begin{equation}
     \label{eq:cut-heuristic}
-    \alpha_e(c) = \frac{t(c)}{|c|} = \frac{1}{h^*(v)} \leq \frac{1}{h(v)} = \alpha_h(c)
+    \alpha_e(c) = \frac{t(c)}{|c|} = \frac{1}{h_e(v)} \leq \frac{1}{h(v)} = \alpha_h(c)
 \end{equation}
 where $\alpha_h(c)$ is the associated $\alpha$ value of the cut heuristic,
 and since the $n=\log_2(2^n)$ cuts contribute to $2^n$ terms.
@@ -213,25 +213,25 @@ In \cite{Codsi2022}, the effective $\alpha_e$ value was used,
 after determining the number of \catstate{3} each $T$-like spider was part of.
 Since they were only considering a single cut, the heuristic was essentially
 \begin{equation}
+    \label{eq:cut-heuristic-cat3}
     h(v) = 1 + 2 \cdot (\text{\# \catstate{3} $v$ is part of})
 \end{equation}
 since each neighbouring \catstate{3} can contribute to the removal 2 $T$-like spiders.
 
-\begin{lemma}
-    The heuristic $h(v)$ is a valid cut heuristic.
+\begin{proposition}
+    The heuristic $h(v)$ (\ref{eq:cut-heuristic-cat3}) is a valid cut heuristic.
     \[\exists c=(v,...)\in C, 0 < h(v) \leq \frac{t(c)}{|c|} = h_e(v)\]
-\end{lemma}
+\end{proposition}
 
 \begin{proof}
     If $v$ is part of a phase gadget, this is trivial, as $h(v)=3$.
     Suppose $v$ has neighbours $w_1,...,w_k$ that are 0-spiders that are part of \catstate{3} states.
     Note that $w_1,...,w_k$ are all part of phase gadgets, by Definition \ref{def:reduced-gadget-form}.
     Each $w_i$ then has 2 legs, one of which is connected to $v$.
-    Since no two phase gadgets have the same exact legs, we must have that for all $w_i, w_j, i\neq j$,
-    their other legs do not connect to the same vertex $u$.
-    By cutting only $v$, each connected a single leg of phase gadgets,
-    we can remove at least $2k+1$ $T$-like spiders corresponding to $k$ \catstate{3} states,
-    and vertex $v$.
+    Since no two phase gadgets have the same exact legs, we must have for all $w_i, w_j, i\neq j$,
+    that their other legs do not connect to the same vertex $u$.
+    By cutting only $v$, we can remove at least $2k+1$ $T$-like spiders 
+    corresponding to $k$ \catstate{3} states, and vertex $v$.
     Then we must have
     \begin{equation}
         h_e(v) \geq 2k+1 = h(v)
@@ -246,33 +246,34 @@ as they focused on obtaining the single-step $\alpha_e$ value.
 The heuristic considering \catstate{n} states could then be defined as follows.
 
 \begin{equation}
+    \label{eq:cut-heuristic-catn}
     h(v) = \sum_{i=1}^k \frac{2}{n(w_i) - 2}
 \end{equation}
 where $w_i$ are neighbours of $v$ that are 0-spiders that are part of $\catstate{n(w_i)}$ states,
 for $n: V \to \mathbb{N}$.
-The heuristic considers sequences of cuts for every $\catstate{n(w_i)}$ that $v$ is part of,
-and is actually a conservative estimate.
+The heuristic considers sequences of cuts for every $\catstate{n(w_i)}$ that $v$ is part of.
 Because of the potential of overlap in cut sequences, 
 only 2 $T$-like spiders connected to the legs of the phase gadget
 of each $\catstate{n(w_i)}$ are considered, although potentially this could be $\geq 2$.
 We show that this heuristic is a valid cut heuristic with a condition.
 
 \begin{proposition}
-    Suppose $v$ has 0-spider neighbours $w_1,...,w_k$ that are part of $\catstate{n(w_i)}$ states.
+    Suppose $v$ has 0-spider neighbours $w_1,...,w_k$ that are part of all $\catstate{n(w_i)}$ states.
+    Let $T(w_i)$ be the set of $T$-like spiders that is part of each $\catstate{n(w_i)}$ state.
     Let $r=\frac{\max \{n(w_i)\}_i - 2}{\min \{n(w_i)\}_i - 2}$.
-    Then
+    Then for the heuristic $h(v)$ (\ref{eq:cut-heuristic-catn}), we have
 \begin{equation}
     \left|\bigcup_{i=1}^k T(w_i)\right| \geq 2k^2 r
     \implies \exists c=(v,...)\in C, 0 < h(v) \leq \frac{t(c)}{|c|} = h_e(v)
 \end{equation}
-    In other words, if the number of distinct $T$-like spiders part of the $\catstate{n(w_i)}$ states
+    In other words, if the number of distinct $T$-like spiders part of all the $\catstate{n(w_i)}$ states
     is at least $2k^2 r$, then the heuristic $h(v)$ is a valid cut heuristic.
 \end{proposition}
 
 \begin{proof}    
     Note that $w_1,...,w_k$ are all part of phase gadgets, by Definition \ref{def:reduced-gadget-form}.
     By cutting at most $\sum_{i=1}^k (n(w_i) - 2)$ $T$-like spiders as legs of the phase gadgets,
-    we can remove at least $\left|\bigcup_{i=1}^k T(w_i)\right|$ $T$-like spiders 
+    we can remove at least $\left|\bigcup_{i=1}^k T(w_i)\right|$ $T$-like spiders.
     Then we must have 
 \begin{equation}
     h_e(v) \geq \frac{\left|\bigcup_{i=1}^k T(w_i)\right|}{\sum_{i=1}^k n(w_i)} 
