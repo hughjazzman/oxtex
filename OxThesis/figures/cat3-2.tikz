@@ -1,0 +1,53 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=Z phase dot] (0) at (-12.5, 3) {$k\pi$};
+		\node [style=Z phase dot] (1) at (-11, 4.5) {$\frac{\pi}{4}$};
+		\node [style=Z phase dot] (2) at (-11, 1.5) {$\frac{\pi}{4}$};
+		\node [style=Z phase dot] (3) at (-11, 3) {$\frac{\pi}{4}$};
+		\node [style=none] (4) at (-9.25, 4.5) {};
+		\node [style=none] (5) at (-9.25, 3) {};
+		\node [style=none] (6) at (-9.25, 1.5) {};
+		\node [style=Z phase dot] (7) at (-5.25, 3) {$k\pi$};
+		\node [style=Z phase dot] (8) at (-3.75, 4.5) {$\frac{\pi}{4}$};
+		\node [style=Z phase dot] (9) at (-3.75, 1.5) {$\frac{\pi}{4}$};
+		\node [style=none] (11) at (-2, 4.5) {};
+		\node [style=none] (13) at (-2, 1.5) {};
+		\node [style=none] (14) at (-7.25, 3) {$\rightarrow$};
+		\node [style=Z phase dot] (15) at (4.25, 1.5) {$k\pi$};
+		\node [style=Z phase dot] (16) at (3, 4.5) {$\frac{\pi}{4}$};
+		\node [style=Z phase dot] (17) at (3, 1.5) {$\frac{\pi}{4}$};
+		\node [style=none] (18) at (5.5, 4.5) {};
+		\node [style=none] (19) at (5.5, 1.5) {};
+		\node [style=none] (20) at (0, 3) {$=$};
+		\node [style=none] (26) at (7, 3) {$=$};
+		\node [style=none] (27) at (-7.25, 3.75) {(\ref{eq:spider_cut})};
+		\node [style=none] (28) at (0, 3.75) {\PiRule};
+		\node [style=none] (29) at (7, 3.75) {\SpiderRule};
+		\node [style=Z phase dot] (30) at (11.5, 1.5) {$k\pi$};
+		\node [style=none] (33) at (12.75, 4.5) {};
+		\node [style=none] (34) at (12.75, 1.5) {};
+		\node [style=none] (35) at (10.25, 4.5) {};
+		\node [style=none] (36) at (10.25, 4.5) {};
+		\node [style=Z phase dot] (37) at (10.25, 1.5) {$\frac{\pi}{2}$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (4.center) to (1);
+		\draw (3) to (5.center);
+		\draw (6.center) to (2);
+		\draw (11.center) to (8);
+		\draw (13.center) to (9);
+		\draw (18.center) to (16);
+		\draw [style=hadamard edge, bend left] (0) to (1);
+		\draw [style=hadamard edge, bend right] (0) to (2);
+		\draw [style=hadamard edge, bend right] (8) to (7);
+		\draw [style=hadamard edge, bend right] (7) to (9);
+		\draw [style=hadamard edge] (0) to (3);
+		\draw [bend right=90, looseness=2.00] (16) to (17);
+		\draw [style=hadamard edge] (15) to (19.center);
+		\draw [style=hadamard edge] (17) to (15);
+		\draw [style=hadamard edge] (30) to (34.center);
+		\draw (36.center) to (33.center);
+		\draw [style=hadamard edge] (37) to (30);
+		\draw [bend right=90, looseness=1.75] (36.center) to (37);
+	\end{pgfonlayer}
+\end{tikzpicture}

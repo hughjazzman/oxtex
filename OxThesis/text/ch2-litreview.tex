@@ -135,6 +135,16 @@ This sum can be called the \textit{stabiliser decomposition} of the circuit.
     where $\lambda_i \in \C$ and $\ket{\psi_i}$ are stabiliser states.
 \end{definition}
 
+More generally, a decomposition need not consist only of stabiliser states.
+
+\begin{definition}[Decomposition]
+    \label{def:decomposition}
+    The \textit{decomposition} of a state \ket{\psi} is a sum of states
+    \[\cbox{\npoint{\psi}} = \sum_{i=1}^n \lambda_i \cbox{\npoint{\psi_i}}\]
+    where $\lambda_i \in \C$ and $\ket{\psi_i}$ are states.
+    For any decomposition $d$, define its length to be $|d|=n$.
+\end{definition}
+
 Using the \nameref{def:magic-state} decomposition, we can see that the value of $n=2^t$
 if we apply it to the $t$ $T$-like spiders in the circuit. 
 We can call $t$ the \textit{T-count} of the circuit.
@@ -158,10 +168,14 @@ We can then compare the efficiency of different methods by using this metric.
 
 \begin{definition}[(In)efficiency \cite{Bravyi_2016bss,Bravyi_2016,Kissinger_2022,Kissinger2022cat}]
     \label{def:efficiency}
-    The \textit{(in)efficiency} of a decomposition that reduces the $T$-count by $r$ 
+    The \textit{(in)efficiency} of a decomposition $D$ that reduces the $T$-count by $r$ 
     using $p$ states is
-    \[\alpha = \frac{\log_2(p)}{r}\]
-    where a lower value of $\alpha$ indicates a more efficient decomposition.
+\begin{equation}
+    \alpha(D) := \frac{\log_2(p)}{r}
+\end{equation}
+    where a lower value of $\alpha$
+    \footnote{We omit $D$ when the context is clear} 
+    indicates a more efficient decomposition.
 \end{definition}
 
 For example, the Bravyi-Smith-Smolin (BSS) decomposition \cite{Bravyi_2016bss} makes use of 
@@ -183,7 +197,7 @@ A closely related metric we can use is the \textit{stabiliser rank}.
     Let $D$ be the set of all stabiliser decompositions of a state \ket{\psi}.
     The \textit{stabiliser rank} $\chi(\ket{\psi})$ of a state \ket{\psi} is 
     \[\chi(\ket{\psi}) := 
-    \min \{ n \mid \exists d\in D \text{ s.t. } \ket{\psi} = d\}\]
+    \min \{ n \mid \exists (d_1, d_2,...,d_n)\in D \text{ s.t. } \ket{\psi} = \sum_{i=1}^n d_i\}\]
 \end{definition}
 
 We can see that the relation between the stabiliser rank and its efficiency is
@@ -321,6 +335,9 @@ First, by definition, we can see that
     \label{eq:spider_cut}
     \tikzfig{spider_decomp_abs}
 \end{equation}
+Note that while this decomposition (\ref{eq:spider_cut}) is not necessarily on a state,
+because of OCM, and the use of cups and caps, we can easily consider this to fit 
+the definition of a \nameref{def:decomposition}. 
 
 Then if we have a diagram with subdiagrams $S_1,...,S_n$, we can see that the following holds.
 

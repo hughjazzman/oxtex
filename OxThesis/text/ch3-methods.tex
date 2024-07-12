@@ -23,10 +23,10 @@ and the leaves $d_i$ are the possible stabiliser decompositions.
 \caption{Example search tree for a stabiliser decomposition}
 \end{figure}
 
-To traverse the search tree, we might take the following steps \cite{Kissinger2022cat,Kissinger_2022}.
 
 \begin{algorithm}
 \label{alg:stabiliser-decomposition}
+To traverse the search tree, we might take the following steps \cite{Kissinger2022cat,Kissinger_2022}.
 \begin{enumerate}    
     \item Perform necessary spider $\SpiderRule$usions to 
     \hyperref[prop:zx-to-graph]{reduce to graph-like form}.
@@ -38,7 +38,7 @@ To traverse the search tree, we might take the following steps \cite{Kissinger20
 \end{algorithm}
 
 The complexity from using this algorithm was found to be $O(N^3 + 2^{\alpha t})$, 
-where $N$ is the number of gates in the original circuit.
+where $N$ is the number of gates in the original circuit \cite{Kissinger_2022}.
 Clearly, any circuit with a $T$-count that is not insignificant will mean that 
 the complexity is dominated by $O(2^{\alpha t})$.
 
@@ -61,6 +61,7 @@ More formally, we have the following lemma.
     of each of the $n$ decompositions to obtain $d$ from the initial Clifford+T diagram.
     Then the efficiency $\alpha$ value of the decomposition $d$ is given by
 \begin{equation}
+    \label{eq:alpha-bound}
     \alpha \leq \frac{\sum_{i=1}^n \alpha_i t_i}{\sum_{i=1}^n t_i}
 \end{equation}
 \end{lemma}
@@ -75,21 +76,34 @@ More formally, we have the following lemma.
 
 This tells us that the final $\alpha$ value is essentially a weighted average of the $\alpha_i$ values,
 weighted by their $T$-count reductions.
+It is easy to see that if all decompositions have $\alpha_i \leq \alpha_{max}$,
+then (\ref{eq:alpha-bound}) implies the overall $\alpha \leq \alpha_{max}$.
 The actual $\alpha$ value in practice is likely to be much lower than this upper bound,
-because of step 3 in the \autoref{alg:stabiliser-decomposition}, 
+because of step 3 in Algorithm \ref{alg:stabiliser-decomposition}, 
 where we simplify the diagram using \nameref{alg:zx-simplify}.
 In \cite{Kissinger_2022}, although the BSS decomposition has the $\alpha \approx 0.468$,
 the actual $\alpha$ value obtained in experiments was lower, at $\approx 0.4$ \cite{sutcliffe2024proccut}.
 
+A step further than using the $\alpha$ value of a decomposition,
+is to consider the $\alpha$ value when including the simplification step.
+In \cite{Codsi2022}, this is defined as the \textit{effective} $\alpha_e$ value.
+If the associated number of $T$-like spiders removed is $r,r_e$, where $r \leq r_e$ 
+before and after simplification respectively, then we have
+
+\begin{equation}
+    \alpha_e = \frac{r}{r_e} \alpha
+\end{equation}
+
+This relation can make a significant difference especially for low values of $r$.
+In the next section, we also consider the structure of the diagram to increase $r_e$.
+
 \section{Graph Structure Heuristic}
 \label{sec:graph-cut}
 
-Another way to choose a decomposition is to use the graph structure of the Clifford+T diagram.
 A disadvantage of the greedy algorithm is that it does not take into account the structure of the diagram.
 When we only consider the $\alpha$ value of the decomposition, 
-we fail to take into account the \nameref{alg:zx-simplify} step of Algorithm \ref{alg:stabiliser-decomposition}.
-Since this step can combine $T$-like spiders,
-it means that decompositions with seemingly higher $\alpha$ values may actually be more efficient.
+we fail to take into account that $T$-like spiders can be fused in between decompositions
+where decompositions with seemingly higher $\alpha$ values may actually be more efficient.
 
 In \cite{sutcliffe2024proccut}, the heuristic used considers the structure of CNOT gates
 placed in between $T$ gates.
@@ -108,3 +122,170 @@ In fact, this structure can be stacked in the following way.
 \begin{equation}
     \tikzfig{picom_grouped}
 \end{equation}
+
+Using these observations, a heuristic was developed.
+Briefly, the main idea of the heuristic is to count the number of $T$-like spiders that can be removed,
+divided by how many cuts are needed to remove them.
+
+\begin{definition}
+    Let $V$ be a Clifford+T diagram, and let $v$ be a vertex in $V$.
+    Let $C$ be the set of sequence of graph cuts.
+    For each $c\in C$ where there are $|c|=n$ cuts in the sequence,
+    let $t(c)$ be the number of $T$-like spiders removed by the sequence of cuts 
+    using (\ref{eq:spider_cut}), including simplifications between each cut.
+    Then a \textit{cut heuristic} for the sequence $c$ is defined as
+    any heuristic $h: V \to \mathbb{R}^+$ such that
+    \begin{equation}
+        \exists c=(v,...,v_n)\in C, 0 < h(v) \leq \frac{t(c)}{|c|} = h_e(v)
+    \end{equation} 
+    where $h_e(v)$ is the effective heuristic value.
+\end{definition}
+
+We have that a higher cut heuristic value implies a more efficient decomposition.
+In fact, the associated $\alpha_e$ value of the sequence of decompositions is given by 
+
+\begin{equation}
+    \label{eq:cut-heuristic}
+    \alpha_e(c) = \frac{t(c)}{|c|} = \frac{1}{h^*(v)} \leq \frac{1}{h(v)} = \alpha_h(c)
+\end{equation}
+where $\alpha_h(c)$ is the associated $\alpha$ value of the cut heuristic,
+and since the $n=\log_2(2^n)$ cuts contribute to $2^n$ terms.
+
+The effective cut heuristic is closely related to our $\alpha_{\chi}$ value,
+but does not take into account the other decompositions we have available.
+For some Clifford+T diagram $V$,
+let $C$ be the set of sequences of decompositions resulting in a stabiliser decompositions 
+that only use graph cuts, and $D$ be the set of stabiliser decompositions. 
+Let $f: C \to D$ be the function that maps a sequence of cuts to the decomposition obtained.
+Let $c^*=(v^*,...)\in C$ be the most efficient decomposition using graph cuts such that
+\begin{equation}
+    |f(c^*)|=\min \{\left|f(c)\right| \mid c\in C\}
+\end{equation}
+Here, $\forall c=(v,...)\in C, h_e(v^*) \leq h_e(v)$.
+If $c^*$ results in a decomposition where $|f(c^*)|=\chi(V)$,
+then $\alpha_{\chi} = \alpha_e(c^*)$
+\footnote{Here, and in (\ref{eq:cut-heuristic}), we overload notation 
+by equating $\alpha(f(c^*)) = \alpha(c^*)$}.
+In general, however, $\alpha_{\chi} \leq \alpha_e(c^*)$.
+
+In \cite{sutcliffe2024proccut}, the cut heuristic used concentrated on sequences of cuts that
+were looking to eliminate CNOT gates sandwiched between $T$-like spiders gates.
+As a result, $71\%$ of the time, they were able to obtain $c^*$ on small circuits.
+Ultimately, efficiency values of $0.1 \lesssim \alpha \lesssim 0.2$ were obtained in practice,
+considering semi-structured diagrams.
+
+Using the cut heuristic means that there is knowledge on the sequences of cuts to be made.
+With better consideration of sequences, we can continue to use the greedy approach
+on $\alpha$ values, with the hope of obtaining a more efficient decomposition.
+In the tiered approach of \cite{sutcliffe2024proccut}, 
+increasing lengths of sequences were considered,
+where each sequence of cuts $c_i=(v,...)$ of length $i$ led to computation of the cut heuristic $h(v)$,
+for sequences $c_{i+1}$ of length $i+1$.
+$c_{i+1}$ is obtained from $c_i$ by considering the final vertex of $c_i$, and computing from there.
+Eventually, the algorithm terminates when there is some $l$ 
+where there are no sequences $c_{l+1}$ of length $l+1$.
+The result is the computation of $\alpha$ values for sequences of cuts of length $i\leq l$,
+and the choice to cut $v$ from $c_{best}=(v,...,v_l)$ where 
+\begin{equation}
+    c_{best} := \argmax_{c} \{h(v) \mid c=(v,...) \wedge |c| = l\} 
+    = \argmin_{c} \{\alpha_h(v) \mid c=(v,...) \wedge |c| = l\} 
+\end{equation}
+
+\subsection{Reduced Graph Heuristic}
+
+Unsurprisingly, the cut heuristic is also useful outside of CNOT sandwiches.
+Particularly, the reduced gadget form contains structures that can be cut in a similar way.
+
+In \cite{Codsi2022}, the following observation was made when applying the cut to a \catstate{3}.
+
+\begin{equation}
+    \tikzfig{cat3-2}
+\end{equation}
+
+The associated efficiency is $\alpha = 1/3$ here, from removing 3 $T$-like spiders at the cost of 1 cut.
+This means that any $T$-like spider that is part of multiple \catstate{3} can contribute to removing
+multiple $T$-like spiders at once.
+A visualisation can be seen in Example \ref{ex:reduced-gadget}.
+It can be noted that a \catstate{3} and a two-legged phase gadget are interchangeable concepts
+in the reduced gadget form.
+
+In \cite{Codsi2022}, the effective $\alpha_e$ value was used, 
+after determining the number of \catstate{3} each $T$-like spider was part of.
+Since they were only considering a single cut, the heuristic was essentially
+\begin{equation}
+    h(v) = 1 + 2 \cdot (\text{\# \catstate{3} $v$ is part of})
+\end{equation}
+since each neighbouring \catstate{3} can contribute to the removal 2 $T$-like spiders.
+
+\begin{lemma}
+    The heuristic $h(v)$ is a valid cut heuristic.
+    \[\exists c=(v,...)\in C, 0 < h(v) \leq \frac{t(c)}{|c|} = h_e(v)\]
+\end{lemma}
+
+\begin{proof}
+    If $v$ is part of a phase gadget, this is trivial, as $h(v)=3$.
+    Suppose $v$ has neighbours $w_1,...,w_k$ that are 0-spiders that are part of \catstate{3} states.
+    Note that $w_1,...,w_k$ are all part of phase gadgets, by Definition \ref{def:reduced-gadget-form}.
+    Each $w_i$ then has 2 legs, one of which is connected to $v$.
+    Since no two phase gadgets have the same exact legs, we must have that for all $w_i, w_j, i\neq j$,
+    their other legs do not connect to the same vertex $u$.
+    By cutting only $v$, each connected a single leg of phase gadgets,
+    we can remove at least $2k+1$ $T$-like spiders corresponding to $k$ \catstate{3} states,
+    and vertex $v$.
+    Then we must have
+    \begin{equation}
+        h_e(v) \geq 2k+1 = h(v)
+    \end{equation}
+\end{proof}
+
+More generally, it was also considered that cutting $T$-like spiders part of \catstate{n} states
+would convert them to \catstate{n-1} states.
+However, this was not considered in the heuristic of \cite{Codsi2022},
+as they focused on obtaining the single-step $\alpha_e$ value.
+
+The heuristic considering \catstate{n} states could then be defined as follows.
+
+\begin{equation}
+    h(v) = \sum_{i=1}^k \frac{2}{n(w_i) - 2}
+\end{equation}
+where $w_i$ are neighbours of $v$ that are 0-spiders that are part of $\catstate{n(w_i)}$ states,
+for $n: V \to \mathbb{N}$.
+The heuristic considers sequences of cuts for every $\catstate{n(w_i)}$ that $v$ is part of,
+and is actually a conservative estimate.
+Because of the potential of overlap in cut sequences, 
+only 2 $T$-like spiders connected to the legs of the phase gadget
+of each $\catstate{n(w_i)}$ are considered, although potentially this could be $\geq 2$.
+We show that this heuristic is a valid cut heuristic with a condition.
+
+\begin{proposition}
+    Suppose $v$ has 0-spider neighbours $w_1,...,w_k$ that are part of $\catstate{n(w_i)}$ states.
+    Let $r=\frac{\max \{n(w_i)\}_i - 2}{\min \{n(w_i)\}_i - 2}$.
+    Then
+\begin{equation}
+    \left|\bigcup_{i=1}^k T(w_i)\right| \geq 2k^2 r
+    \implies \exists c=(v,...)\in C, 0 < h(v) \leq \frac{t(c)}{|c|} = h_e(v)
+\end{equation}
+    In other words, if the number of distinct $T$-like spiders part of the $\catstate{n(w_i)}$ states
+    is at least $2k^2 r$, then the heuristic $h(v)$ is a valid cut heuristic.
+\end{proposition}
+
+\begin{proof}    
+    Note that $w_1,...,w_k$ are all part of phase gadgets, by Definition \ref{def:reduced-gadget-form}.
+    By cutting at most $\sum_{i=1}^k (n(w_i) - 2)$ $T$-like spiders as legs of the phase gadgets,
+    we can remove at least $\left|\bigcup_{i=1}^k T(w_i)\right|$ $T$-like spiders 
+    Then we must have 
+\begin{equation}
+    h_e(v) \geq \frac{\left|\bigcup_{i=1}^k T(w_i)\right|}{\sum_{i=1}^k n(w_i)} 
+\end{equation}
+Then
+\begin{equation}
+\begin{aligned}
+    h(v) &= \sum_{i=1}^k \frac{2}{n(w_i) - 2} \\
+    &\leq \sum_{i=1}^k \frac{2}{\min \{n(w_i)\}_i - 2} \\
+    &= \frac{2kr}{\max \{n(w_i)\}_i - 2} \\
+    &= \frac{2k^2 r}{k(\max \{n(w_i)\}_i - 2)} \\
+    &\leq \frac{\left|\bigcup_{i=1}^k T(w_i)\right|}{\sum_{i=1}^k n(w_i)} \\
+    &\leq h_e(v)
+\end{aligned}
+\end{equation}
+\end{proof}
