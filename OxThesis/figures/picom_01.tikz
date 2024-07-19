@@ -46,7 +46,7 @@
 		\node [style=none] (58) at (13, -4) {};
 		\node [style=none] (59) at (13, -6) {};
 		\node [style=X phase dot] (61) at (11, -6) {$\pi$};
-		\node [style=none] (62) at (1, -0.25) {(\ref{eq:spider_cut})};
+		\node [style=none] (62) at (1, -0.25) {\CutRule};
 		\node [style=none] (63) at (1, -4.5) {\SpiderRule\PiRule\IdRule};
 	\end{pgfonlayer}
 	\begin{pgfonlayer}{edgelayer}

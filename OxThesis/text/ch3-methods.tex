@@ -113,7 +113,7 @@ The following observation was made.
     \tikzfig{picom_01}
 \end{equation}
 
-Using the graph cut (\ref{eq:spider_cut}), 
+Using the graph \CutRule, 
 which without simplification has $\alpha = 1$ if the spider being cut is a $T$-like spider,
 we can instead obtain a decomposition with $\alpha \approx 0.333$, with simplication,
 for the reduction of 3 $T$-like spiders at the cost of 2 terms.
@@ -123,8 +123,8 @@ In fact, this structure can be stacked in the following way.
     \tikzfig{picom_grouped}
 \end{equation}
 
-Using these observations, a heuristic was developed.
-Briefly, the main idea of the heuristic is to count the number of $T$-like spiders that can be removed,
+Using these observations, a heuristic can be developed,
+where the main idea is to count the number of $T$-like spiders that can be removed,
 divided by how many cuts are needed to remove them.
 
 \begin{definition}
@@ -132,7 +132,7 @@ divided by how many cuts are needed to remove them.
     Let $C$ be the set of sequence of graph cuts.
     For each $c\in C$ where there are $|c|=n$ cuts in the sequence,
     let $t(c)$ be the number of $T$-like spiders removed by the sequence of cuts 
-    using (\ref{eq:spider_cut}), including simplifications between each cut.
+    using \CutRule, including simplifications between each cut.
     Then a \textit{cut heuristic} for the sequence $c$ is defined as
     any heuristic $h: V \to \mathbb{R}^+$ such that
     \begin{equation}
@@ -141,6 +141,8 @@ divided by how many cuts are needed to remove them.
     where $h_e(v)$ is the effective heuristic value.
 \end{definition}
 
+For the cut heuristic to be valid, it should not overestimate the effective heuristic value $h_e$.
+For the cut heuristic to be useful, it should be close to the value of $h_e$.
 We have that a higher cut heuristic value implies a more efficient decomposition.
 In fact, the associated $\alpha_e$ value of the sequence of decompositions is given by 
 
@@ -161,7 +163,7 @@ Let $c^*=(v^*,...)\in C$ be the most efficient decomposition using graph cuts su
 \begin{equation}
     |f(c^*)|=\min \{\left|f(c)\right| \mid c\in C\}
 \end{equation}
-Here, $\forall c=(v,...)\in C, h_e(v^*) \leq h_e(v)$.
+Here, $\forall c=(v,...)\in C, h_e(v^*) \geq h_e(v)$.
 If $c^*$ results in a decomposition where $|f(c^*)|=\chi(V)$,
 then $\alpha_{\chi} = \alpha_e(c^*)$
 \footnote{Here, and in (\ref{eq:cut-heuristic}), we overload notation 
@@ -177,24 +179,22 @@ considering semi-structured diagrams.
 Using the cut heuristic means that there is knowledge on the sequences of cuts to be made.
 With better consideration of sequences, we can continue to use the greedy approach
 on $\alpha$ values, with the hope of obtaining a more efficient decomposition.
-In the tiered approach of \cite{sutcliffe2024proccut}, 
+In the tiered approach of \cite{sutcliffe2024proccut}, a brief description is that 
 increasing lengths of sequences were considered,
-where each sequence of cuts $c_i=(v,...)$ of length $i$ led to computation of the cut heuristic $h(v)$,
-for sequences $c_{i+1}$ of length $i+1$.
-$c_{i+1}$ is obtained from $c_i$ by considering the final vertex of $c_i$, and computing from there.
-Eventually, the algorithm terminates when there is some $l$ 
-where there are no sequences $c_{l+1}$ of length $l+1$.
-The result is the computation of $\alpha$ values for sequences of cuts of length $i\leq l$,
-and the choice to cut $v$ from $c_{best}=(v,...,v_l)$ where 
+where each sequence of cuts $c_i$ for tier $i$ led to computation of the cut heuristic $h_{i+1}(v)$,
+corresponding to sequences $c_{i+1}=k_i:c_i$ for tier $i+1$ for some sequence of vertices $k_i$.
+Eventually, the algorithm terminates when there is some $l=i_{\max}$ 
+where there are no sequences of vertices $k_l$ to compute $c_{l+1}$ at tier $l+1$.
+The result is the computation of $h_i$ values for tiers $i\leq l$,
+and the choice to cut $v$ where 
 \begin{equation}
-    c_{best} := \argmax_{c} \{h(v) \mid c=(v,...) \wedge |c| = l\} 
-    = \argmin_{c} \{\alpha_h(v) \mid c=(v,...) \wedge |c| = l\} 
+    v_{best} := \argmax_{v} h_l(v) = \argmin_{v} \alpha_{h_l}(v)
 \end{equation}
 
 \subsection{Reduced Graph Heuristic}
 
-Unsurprisingly, the cut heuristic is also useful outside of CNOT sandwiches.
-Particularly, the reduced gadget form contains structures that can be cut in a similar way.
+The cut heuristic is also useful outside of CNOT sandwiches.
+Particularly, the reduced gadget form contains structures that when cut, reduce the $T$-count greatly.
 
 In \cite{Codsi2022}, the following observation was made when applying the cut to a \catstate{3}.
 
@@ -204,14 +204,14 @@ In \cite{Codsi2022}, the following observation was made when applying the cut to
 
 The associated efficiency is $\alpha = 1/3$ here, from removing 3 $T$-like spiders at the cost of 1 cut.
 This means that any $T$-like spider that is part of multiple \catstate{3} can contribute to removing
-multiple $T$-like spiders at once.
+all the associated $T$-like spiders at once.
 A visualisation can be seen in Example \ref{ex:reduced-gadget}.
 It can be noted that a \catstate{3} and a two-legged phase gadget are interchangeable concepts
 in the reduced gadget form.
 
 In \cite{Codsi2022}, the effective $\alpha_e$ value was used, 
 after determining the number of \catstate{3} each $T$-like spider was part of.
-Since they were only considering a single cut, the heuristic was essentially
+Since they were only considering a single cut, the heuristic was essentially equivalent to
 \begin{equation}
     \label{eq:cut-heuristic-cat3}
     h(v) = 1 + 2 \cdot (\text{\# \catstate{3} $v$ is part of})
@@ -219,7 +219,7 @@ Since they were only considering a single cut, the heuristic was essentially
 since each neighbouring \catstate{3} can contribute to the removal 2 $T$-like spiders.
 
 \begin{proposition}
-    The heuristic $h(v)$ (\ref{eq:cut-heuristic-cat3}) is a valid cut heuristic.
+    For any ZX-diagram in reduced gadget form, the heuristic $h(v)$ (\ref{eq:cut-heuristic-cat3}) is a valid cut heuristic.
     \[\exists c=(v,...)\in C, 0 < h(v) \leq \frac{t(c)}{|c|} = h_e(v)\]
 \end{proposition}
 
@@ -237,6 +237,10 @@ since each neighbouring \catstate{3} can contribute to the removal 2 $T$-like sp
         h_e(v) \geq 2k+1 = h(v)
     \end{equation}
 \end{proof}
+\begin{figure}[h!]
+\ctikzfig{cat3_heuristic_ex}
+\caption{Diagram to showcase the heuristic (\ref{eq:cut-heuristic-cat3})}
+\end{figure}
 
 More generally, it was also considered that cutting $T$-like spiders part of \catstate{n} states
 would convert them to \catstate{n-1} states.
@@ -251,15 +255,25 @@ The heuristic considering \catstate{n} states could then be defined as follows.
 \end{equation}
 where $w_i$ are neighbours of $v$ that are 0-spiders that are part of $\catstate{n(w_i)}$ states,
 for $n: V \to \mathbb{N}$.
-The heuristic considers sequences of cuts for every $\catstate{n(w_i)}$ that $v$ is part of.
-Because of the potential of overlap in cut sequences, 
-only 2 $T$-like spiders connected to the legs of the phase gadget
-of each $\catstate{n(w_i)}$ are considered, although potentially this could be $\geq 2$.
-We show that this heuristic is a valid cut heuristic with a condition.
+The heuristic considers sequences of cuts for every $\catstate{n(w_i)}$ that $v$ is part of,
+and attempts to add up each pair of $T$-like spiders that could be removed with $n(w_i) - 2$ cuts.
+Unfortunately, this heuristic is not a valid heuristic in general.
+As an example, we have the following ZX-diagram.
+
+
+\begin{figure}[h!]
+\ctikzfig{invalid_heuristic_ex}
+\caption{Diagram where the heuristic (\ref{eq:cut-heuristic-catn}) is not valid}
+\end{figure}
+
+Here, the heuristic would give $h(v_2) = 2/1 + 2 = 3$, but $h_e(v_2) = 5/2 < 3$.
+
+We show that with an added condition, the heuristic is valid.
 
 \begin{proposition}
     Suppose $v$ has 0-spider neighbours $w_1,...,w_k$ that are part of all $\catstate{n(w_i)}$ states.
-    Let $T(w_i)$ be the set of $T$-like spiders that is part of each $\catstate{n(w_i)}$ state.
+    Let $T(w_i)$ be the set of $T$-like spiders that is part of each $\catstate{n(w_i)}$ state,
+    so $|T(w_i)| = n(w_i)$.
     Let $r=\frac{\max \{n(w_i)\}_i - 2}{\min \{n(w_i)\}_i - 2}$.
     Then for the heuristic $h(v)$ (\ref{eq:cut-heuristic-catn}), we have
 \begin{equation}
@@ -276,7 +290,7 @@ We show that this heuristic is a valid cut heuristic with a condition.
     we can remove at least $\left|\bigcup_{i=1}^k T(w_i)\right|$ $T$-like spiders.
     Then we must have 
 \begin{equation}
-    h_e(v) \geq \frac{\left|\bigcup_{i=1}^k T(w_i)\right|}{\sum_{i=1}^k n(w_i)} 
+    h_e(v) \geq \frac{\left|\bigcup_{i=1}^k T(w_i)\right|}{\sum_{i=1}^k (n(w_i) - 2)} 
 \end{equation}
 Then
 \begin{equation}
@@ -285,8 +299,148 @@ Then
     &\leq \sum_{i=1}^k \frac{2}{\min \{n(w_i)\}_i - 2} \\
     &= \frac{2kr}{\max \{n(w_i)\}_i - 2} \\
     &= \frac{2k^2 r}{k(\max \{n(w_i)\}_i - 2)} \\
-    &\leq \frac{\left|\bigcup_{i=1}^k T(w_i)\right|}{\sum_{i=1}^k n(w_i)} \\
+    &\leq \frac{\left|\bigcup_{i=1}^k T(w_i)\right|}{\sum_{i=1}^k (n(w_i) - 2)} \\
     &\leq h_e(v)
 \end{aligned}
 \end{equation}
 \end{proof}
+
+The proposition condition is generally unlikely to be satisfied,
+and we show in the next chapter that the heuristic can perform poorly for some diagrams.
+From the proof, we can gather that there is in fact a cut heuristic that is valid.
+
+\begin{corollary}
+    The following heuristic is a valid cut heuristic.
+\begin{equation}
+    \label{eq:cut-heuristic-catn2}
+    h(v) = \frac{\left|\bigcup_{i=1}^k T(w_i)\right|}{\sum_{i=1}^k (n(w_i) - 2)} \leq h_e(v)
+\end{equation}
+\end{corollary}
+
+Unfortunately, although the heuristic is valid, it can vastly underestimate the effective heuristic value. 
+This happens when there is a large overlap in $T$-like spiders connected to different phase gadgets.
+A simple example is as follows, where we have $\catstate{n}$ for $n=3,4,5$.
+
+\begin{figure}[h!]
+\ctikzfig{overlap_legs}
+\caption{Diagram where the heuristic (\ref{eq:cut-heuristic-catn2}) 
+underestimates the effective heuristic value}
+\end{figure}
+
+$h_e(v_1) \geq \frac{7}{3}$ since only 3 cuts are needed to remove 7 $T$-spiders,
+but $h(v_1) = \frac{4}{3+2+1} = \frac{2}{3} < \frac{7}{3}$.
+
+
+% A better heuristic would take into account the overlap of $T$-like spiders,
+% and not overcount the number of cuts needed.
+% Suppose the $T$-spider part of each phase gadget $w_i$ is labelled vertex $g_i$.
+% Each phase gadget as part of a $\catstate{n}$ would only need a maximum of $n-2$ cuts,
+% so our heuristic would look like
+
+% \begin{equation}
+%     h(v) = \frac{\left|\bigcup_{i=1}^k T(w_i)\right|}
+%     {1+\left|\bigcup_{i=1}^k T(w_i) - \{g_i, v, u_i\}\right|}
+% \end{equation}
+% where $\forall i, u_i \in T(w_i)$ is a chosen $T$-like spider on the leg of phase gadget $w_i$,
+% that does not need to be cut.
+% We would want to choose the $u_i$ that minimizes the denominator, so we have the following heuristic.
+
+% \begin{equation}
+%     h^*(v) = \max_{\forall i, u_i\in T(w_i)} h(v)
+% \end{equation}
+% where the denominator is minimized.
+% \begin{equation}
+%     t_{\min} = 1+\min_{\forall i, u_i\in T(w_i)} \left|\bigcup_{i=1}^k T(w_i) - \{g_i, v, u_i\}\right|
+% \end{equation}
+
+% It is easy to see that this heuristic is valid, by the same argument as the previous proposition.
+% The next question is then figuring out how to compute the heuristic in polynomial time.
+
+
+
+% What we have is a collection of sets $S=\{T(w_i)\}_i$, 
+% so their union $\bigcup_{i=1}^k T(w_i)$ is easy to compute.
+% However, when trying to obtain the minimum value of $h(v)$,
+% it is the same as trying to obtain the maximum number of $T$-like spiders 
+% $n_{\max}$ on the legs of phase gadgets that can be ignored from cutting.
+% This is because subtracting this number from our union $\left|\bigcup_{i=1}^k T(w_i) - \{g_i, v\}\right|$  
+% gives us the number of $T$-like spiders that need to be cut.
+% \begin{equation}
+%     \left|\bigcup_{i=1}^k T(w_i) - \{g_i, v\}\right| 
+%     = 1 + t_{\min} + n_{\max}
+% \end{equation}
+
+% With that in mind, we introduce the maximum coverage problem.
+
+% \textsc{Maximum Coverage}
+% \begin{itemize}
+%     \item \textbf{Instance:} A collection of sets $S=\{S_1,...,S_m\}$, and a number $n$
+%     \item \textbf{Objective:} Find a subset $S' \subseteq S$ such that $|S'| \leq n$,
+%     and the number of elements covered $\left|\bigcup_{S_i\in S'}S_i\right|$ is maximized.
+% \end{itemize}
+
+% \begin{theorem}
+%     \label{thm:opt-np}
+%     Computing the heuristic $h^*(v)$ is $NP$-hard.
+% \end{theorem}
+
+% \begin{proof}
+%     We can reduce the maximum coverage problem to computing the heuristic $h^*(v)$.
+%     Let $n$ be a number and $S=\{S_1,...,S_m\}$ be a collection of sets.
+%     Create an instance $(n, S)$ of computing $h^*(v)$ as follows.
+%     Let $n < k$ and $S=\{T(w_i)\}_i$.
+%     Then we want to find the maximum coverage of $T$-like spiders $t$,
+%     such that at most $n$ $T$-like spiders can be ignored from cutting.
+
+%     $n_{\max}$ is then the value where the maximum coverage where $(n-1,S)$ has maximum coverage
+%     less than $|\bigcup S|$, but $(n,S)$ has maximum coverage equal to $|\bigcup S|$.
+    
+    
+% \end{proof}
+
+
+% % More formally, for each $T$-like spider $t\in \bigcup_{i=1}^k T(w_i)$ 
+% % on the leg of all the phase gadgets $w_i$ where $v$ is on a leg of $w_i$,
+% % let $W(t)$ be the set of phase gadgets $w_i$ that $t$ is part of.
+% % Then we want to find the maximum coverage of $T$-like spiders $t$, 
+% % such that at most $n_{\max} < k$ $T$-like spiders can be ignored from cutting.
+
+% It can be formulated as an integer linear program (ILP), as follows.
+
+% \textbf{Input:} A collection of sets $S=\{W(t_1),...,W(t_m)\}$, where $W(t_i)$ is the set of phase gadgets that $t_i$ is part of.
+% Define $U=\bigcup_{i=1}^m W(t_i)$.
+% \begin{align}
+% \label{eq:f.0} \mbox{minimize}~& \;\sum_{s\in S} x_s& \\
+% \label{eq:f.1} \mbox{s.t. } &\sum_{s:e\in s}x_s \geq 1  & \forall e\in U\\
+% \label{eq:f.2}&x_s\in\{0,1\} & \forall s\in S
+% \end{align}
+
+% The is equivalent set cover problem, which is unfortunately $NP$-hard.
+
+
+
+
+\section{Complexity Analysis}
+
+Here, we consider the complexity of computing the heuristics.
+
+Suppose we have a reduced gadget form $V$ with $n$ phase gadgets 
+and $m$ $T$-like spiders not part of phase gadgets.
+Let $d(v)$ be the degree of a vertex $v$.
+
+For the heuristic (\ref{eq:cut-heuristic-cat3}), it is easy to compute the heuristic in $O(mn)$ time.
+Checking which 0-spiders are part of \catstate{3} states can be done in $O(n)$.
+Each $T$-like spider $v$ can be processed in $O(d(v)) = O(n)$ time,
+and checking for all of them takes $O(mn)$, for an overall of $O(n + mn) = O(mn)$ time.
+
+The heuristic (\ref{eq:cut-heuristic-catn}) has a similar complexity of $O(mn)$.
+
+For the \catstate{n} heuristic (\ref{eq:cut-heuristic-catn2}), a single $T$-like vertex $v$,
+and its 0-spider neighbours $w_1,...,w_k$,
+it takes 
+\begin{equation}
+    O(d(v) + \sum_{i=1}^k d(w_i)) = O(n+mn) = O(mn)
+\end{equation}
+time to compute the heuristic.
+For all $m$ $T$-like spiders, this takes $O(m^2 n)$ time.
+At the cost of slightly higher complexity, we still have a valid heuristic.

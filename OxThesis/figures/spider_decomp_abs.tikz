@@ -30,6 +30,7 @@
 		\node [style=X phase dot] (30) at (13.25, -0.5) {$\pi$};
 		\node [style=X phase dot] (31) at (12.25, -0.5) {$\pi$};
 		\node [style=none] (32) at (10, 0) {$e^{i\alpha}$};
+		\node [style=none] (33) at (3, 0.75) {\CutRule};
 	\end{pgfonlayer}
 	\begin{pgfonlayer}{edgelayer}
 		\draw [bend left] (0.center) to (4);

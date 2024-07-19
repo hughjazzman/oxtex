@@ -39,6 +39,7 @@
 \newcommand{\GadgetSimp}{\ensuremath{(\hyperref[eq:phase-gadget]{\bm{GF}})}\xspace}
 \newcommand{\GFRule}{\GadgetSimp}
 \newcommand{\GFSimp}{\GadgetSimp}
+\newcommand{\CutRule}{\ensuremath{(\hyperref[eq:spider-cut]{\bm{cut}})}\xspace}
 
 %% small versions
 \newcommand{\antipoderule}{\footnotesize\AntipodeRule}

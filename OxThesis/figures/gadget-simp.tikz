@@ -13,22 +13,23 @@
 		\node [style=Z phase dot] (64) at (-2.25, 1) {$\alpha_1$};
 		\node [style=Z phase dot] (66) at (-2.25, -1.25) {$\alpha_n$};
 		\node [style=none, rotate=90] (131) at (-2.25, 0) {...};
-		\node [style=Z dot] (132) at (4.25, 0) {};
-		\node [style=Z phase dot] (133) at (2.5, 0) {$\ \alpha+\beta\ $};
-		\node [style=none] (134) at (6, 1.75) {};
-		\node [style=none] (135) at (4.5, 1.75) {};
-		\node [style=Z phase dot] (136) at (5.25, 1) {$\alpha_1$};
-		\node [style=none] (137) at (4.5, -1.75) {};
-		\node [style=none] (138) at (6, -1.75) {};
-		\node [style=Z dot] (139) at (5.25, -1) {};
-		\node [style=Z phase dot] (143) at (5.25, -1) {$\alpha_n$};
-		\node [style=none, rotate=90] (144) at (5.25, 0) {...};
+		\node [style=Z dot] (132) at (6.25, 0) {};
+		\node [style=Z phase dot] (133) at (4.5, 0) {$\ \alpha+\beta\ $};
+		\node [style=none] (134) at (8, 1.75) {};
+		\node [style=none] (135) at (6.5, 1.75) {};
+		\node [style=Z phase dot] (136) at (7.25, 1) {$\alpha_1$};
+		\node [style=none] (137) at (6.5, -1.75) {};
+		\node [style=none] (138) at (8, -1.75) {};
+		\node [style=Z dot] (139) at (7.25, -1) {};
+		\node [style=Z phase dot] (143) at (7.25, -1) {$\alpha_n$};
+		\node [style=none, rotate=90] (144) at (7.25, 0) {...};
 		\node [style=none] (145) at (0, 0) {=};
 		\node [style=none] (146) at (-2.25, -2) {...};
 		\node [style=none] (147) at (-2.25, 1.75) {...};
-		\node [style=none] (148) at (5.25, 1.75) {...};
-		\node [style=none] (149) at (5.25, -1.75) {...};
+		\node [style=none] (148) at (7.25, 1.75) {...};
+		\node [style=none] (149) at (7.25, -1.75) {...};
 		\node [style=none] (150) at (0, 1) {\GadgetSimp};
+		\node [style=none] (151) at (2, 0) {$\frac{1}{\sqrt{2^{n-1}}}$};
 	\end{pgfonlayer}
 	\begin{pgfonlayer}{edgelayer}
 		\draw [style=hadamard edge] (51) to (52);

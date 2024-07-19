@@ -332,10 +332,10 @@ It is with this motivation that graph cuts are another promising approach.
 
 First, by definition, we can see that 
 \begin{equation}
-    \label{eq:spider_cut}
+    \label{eq:spider-cut}
     \tikzfig{spider_decomp_abs}
 \end{equation}
-Note that while this decomposition (\ref{eq:spider_cut}) is not necessarily on a state,
+Note that while this decomposition \CutRule is not necessarily on a state,
 because of OCM, and the use of cups and caps, we can easily consider this to fit 
 the definition of a \nameref{def:decomposition}. 
 
@@ -348,16 +348,16 @@ Then if we have a diagram with subdiagrams $S_1,...,S_n$, we can see that the fo
 
 At the cost of $m$ cuts, and thus $2^m$ terms, 
 the diagram is split into $\leq m^2 + n$ subdiagrams that can be treated independently.
-If $\alpha_i$ are all $T$-like, then the $\leq m^2$ scalars formed from $a_i \pi$-spiders 
-connected to each other have $T$-counts of 0, and there are only $\leq n$ subdiagrams with $T$-counts $>0$.
+The $\leq m^2$ scalars in the form of spider-pairs are trivially scalars,
+and there are only $\leq n$ subdiagrams with $T$-counts $>0$.
 If each subdiagram $S_i$ has the $T$-count of $t_i$,
 we have a sum of $2^m$ terms, each value which can be obtained with just $\leq m^2 + \sum_{i=1}^n 2^{\alpha t_i}$ stabilizer terms.
 This gives a total of $\leq 2^m(m^2 + \sum_{i=1}^n 2^{\alpha t_i})$ stabilizer terms.
 We can obtain the efficiency.
 \begin{equation}
 \begin{aligned}
-    \alpha' &\leq \frac{\log_2 (2^m(m^2 + n\cdot 2^{\alpha t}))}{\sum_{i=1}^n t_i}\\
-    &= \frac{m + \log_2(m^2 + n\cdot 2^{\alpha t})}{\sum_{i=1}^n t_i}\\
+    \alpha' &\leq \frac{\log_2 (2^m(m^2 + \prod_{i=1}^n 2^{\alpha t_i}))}{\sum_{i=1}^n t_i}\\
+    &= \frac{m + \log_2(m^2 + \prod_{i=1}^n 2^{\alpha t_i})}{\sum_{i=1}^n t_i}\\
     &\leq \frac{m + 2\log_2(m) + \sum_{i=1}^n \alpha t_i}{\sum_{i=1}^n t_i}
 \end{aligned}
 \end{equation}
@@ -384,7 +384,7 @@ More details on this will be discussed in \autoref{sec:graph-cut}.
 
 The same was also found for extremely structured circuits involving cat states,
 where a single decomposition reduced the $T$-count by 286, for an $\alpha \approx 0.0035$ \cite{Codsi2022},
-though these was an ideal case which is unlikely to occur in practice.
+though this was an ideal case which is unlikely to occur in practice.
 
 \section{Subgraph Complement}
 
