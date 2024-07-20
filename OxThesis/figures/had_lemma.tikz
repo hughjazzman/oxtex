@@ -27,6 +27,7 @@
 		\node [style=none] (24) at (-2, -2.75) {$...$};
 		\node [style=none] (25) at (2, -2.75) {$...$};
 		\node [style=none] (27) at (-2, -1) {};
+		\node [style=none] (28) at (0.25, 3) {\HopfRule};
 	\end{pgfonlayer}
 	\begin{pgfonlayer}{edgelayer}
 		\draw (0.center) to (2);

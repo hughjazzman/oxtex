@@ -16,8 +16,6 @@ We can visualize an example as in \autoref{fig:amplitude}, where $V$ is a Cliffo
 The directed edges represent the decomposition used from the parent to the child node, 
 and the leaves $d_i$ are the possible stabiliser decompositions.
 
-\clearpage
-
 \begin{figure}[h!]
 \tikzfig{search-tree}
 \caption{Example search tree for a stabiliser decomposition}
@@ -37,10 +35,10 @@ To traverse the search tree, we might take the following steps \cite{Kissinger20
 \end{enumerate}
 \end{algorithm}
 
-The complexity from using this algorithm was found to be $O(N^3 + 2^{\alpha t})$, 
+The complexity from using this algorithm was found to be $O(N^3 + 2^{\alpha t}t^2)$, 
 where $N$ is the number of gates in the original circuit \cite{Kissinger_2022}.
 Clearly, any circuit with a $T$-count that is not insignificant will mean that 
-the complexity is dominated by $O(2^{\alpha t})$.
+the complexity is dominated by $O(2^{\alpha t}t^2)$.
 
 In this thesis, we will focus on the second step of the algorithm, 
 where we choose the decomposition to apply at each node.
@@ -62,7 +60,7 @@ More formally, we have the following lemma.
     Then the efficiency $\alpha$ value of the decomposition $d$ is given by
 \begin{equation}
     \label{eq:alpha-bound}
-    \alpha \leq \frac{\sum_{i=1}^n \alpha_i t_i}{\sum_{i=1}^n t_i}
+    \alpha(d) \leq \frac{\sum_{i=1}^n \alpha_i t_i}{\sum_{i=1}^n t_i}
 \end{equation}
 \end{lemma}
 
@@ -91,6 +89,7 @@ If the associated number of $T$-like spiders removed is $r,r_e$, where $r \leq r
 before and after simplification respectively, then we have
 
 \begin{equation}
+    \label{eq:effective-alpha}
     \alpha_e = \frac{r}{r_e} \alpha
 \end{equation}
 
@@ -133,12 +132,12 @@ divided by how many cuts are needed to remove them.
     For each $c\in C$ where there are $|c|=n$ cuts in the sequence,
     let $t(c)$ be the number of $T$-like spiders removed by the sequence of cuts 
     using \CutRule, including simplifications between each cut.
-    Then a \textit{cut heuristic} for the sequence $c$ is defined as
+    Then a \textit{cut heuristic} for the sequence $c$ of length $n$ is defined as
     any heuristic $h: V \to \mathbb{R}^+$ such that
     \begin{equation}
         \exists c=(v,...,v_n)\in C, 0 < h(v) \leq \frac{t(c)}{|c|} = h_e(v)
     \end{equation} 
-    where $h_e(v)$ is the effective heuristic value.
+    where $h_e(v)$ is the effective heuristic value of $c$.
 \end{definition}
 
 For the cut heuristic to be valid, it should not overestimate the effective heuristic value $h_e$.
@@ -153,7 +152,8 @@ In fact, the associated $\alpha_e$ value of the sequence of decompositions is gi
 where $\alpha_h(c)$ is the associated $\alpha$ value of the cut heuristic,
 and since the $n=\log_2(2^n)$ cuts contribute to $2^n$ terms.
 
-The effective cut heuristic is closely related to our $\alpha_{\chi}$ value,
+If the sequence of cuts leads to a stabiliser decomposition,
+the effective cut heuristic is closely related to our $\alpha_{\chi}$ value,
 but does not take into account the other decompositions we have available.
 For some Clifford+T diagram $V$,
 let $C$ be the set of sequences of decompositions resulting in a stabiliser decompositions 
@@ -169,6 +169,20 @@ then $\alpha_{\chi} = \alpha_e(c^*)$
 \footnote{Here, and in (\ref{eq:cut-heuristic}), we overload notation 
 by equating $\alpha(f(c^*)) = \alpha(c^*)$}.
 In general, however, $\alpha_{\chi} \leq \alpha_e(c^*)$.
+A simple example of this can be seen in the following diagram,
+where the decomposition makes use of \catstate{4} (\ref{eq:cat-4-decomp}).
+It starts with a $T$-count of 5.
+
+\begin{equation}
+    \tikzfig{alpha_c_more_ex}
+\end{equation}
+Using only cuts would require 2 of them, which would give $2^2$ terms instead of 2 terms.
+We have
+\begin{equation}
+    \alpha_{\chi} \leq \frac{1}{5} < \alpha_e(c^*) = \frac{2}{5}
+\end{equation}
+
+\subsection{CNOT Sandwich Heuristic}
 
 In \cite{sutcliffe2024proccut}, the cut heuristic used concentrated on sequences of cuts that
 were looking to eliminate CNOT gates sandwiched between $T$-like spiders gates.
@@ -191,7 +205,7 @@ and the choice to cut $v$ where
     v_{best} := \argmax_{v} h_l(v) = \argmin_{v} \alpha_{h_l}(v)
 \end{equation}
 
-\subsection{Reduced Graph Heuristic}
+\subsection{Gadget \catstate{3} Heuristic}
 
 The cut heuristic is also useful outside of CNOT sandwiches.
 Particularly, the reduced gadget form contains structures that when cut, reduce the $T$-count greatly.
@@ -205,9 +219,14 @@ In \cite{Codsi2022}, the following observation was made when applying the cut to
 The associated efficiency is $\alpha = 1/3$ here, from removing 3 $T$-like spiders at the cost of 1 cut.
 This means that any $T$-like spider that is part of multiple \catstate{3} can contribute to removing
 all the associated $T$-like spiders at once.
-A visualisation can be seen in Example \ref{ex:reduced-gadget}.
+A visualisation can be seen below (\ref{eq:cat-3-cut}).
 It can be noted that a \catstate{3} and a two-legged phase gadget are interchangeable concepts
 in the reduced gadget form.
+
+\begin{equation}
+    \label{eq:cat-3-cut}
+    \tikzfig{cat-3-cut-multi}
+\end{equation}
 
 In \cite{Codsi2022}, the effective $\alpha_e$ value was used, 
 after determining the number of \catstate{3} each $T$-like spider was part of.
@@ -242,6 +261,12 @@ since each neighbouring \catstate{3} can contribute to the removal 2 $T$-like sp
 \caption{Diagram to showcase the heuristic (\ref{eq:cut-heuristic-cat3})}
 \end{figure}
 
+We can note that even if $k$ is small, the heuristic can be quite effective.
+For instance, with $k=2, \alpha_h = 0.2$ which is already an improvement over
+all the \catstate{n} decompositions in \cite{Kissinger2022cat,Kissinger_2022},
+the best of which is $\alpha = 0.25$ for the \catstate{4} decomposition.
+A $T$-like spider simply has to be connected to 2 \catstate{3} states to improve the decomposition.
+
 More generally, it was also considered that cutting $T$-like spiders part of \catstate{n} states
 would convert them to \catstate{n-1} states.
 However, this was not considered in the heuristic of \cite{Codsi2022},
@@ -258,15 +283,14 @@ for $n: V \to \mathbb{N}$.
 The heuristic considers sequences of cuts for every $\catstate{n(w_i)}$ that $v$ is part of,
 and attempts to add up each pair of $T$-like spiders that could be removed with $n(w_i) - 2$ cuts.
 Unfortunately, this heuristic is not a valid heuristic in general.
-As an example, we have the following ZX-diagram.
-
 
 \begin{figure}[h!]
 \ctikzfig{invalid_heuristic_ex}
 \caption{Diagram where the heuristic (\ref{eq:cut-heuristic-catn}) is not valid}
 \end{figure}
 
-Here, the heuristic would give $h(v_2) = 2/1 + 2 = 3$, but $h_e(v_2) = 5/2 < 3$.
+Here, the heuristic would give $h(v_2) = \frac{2}{1} + 2 = 3$, 
+but cutting 2 vertices to remove 5 $T$-spiders would mean $h_e(v_2) = \frac{5}{2} < 3$.
 
 We show that with an added condition, the heuristic is valid.
 
@@ -330,6 +354,82 @@ underestimates the effective heuristic value}
 $h_e(v_1) \geq \frac{7}{3}$ since only 3 cuts are needed to remove 7 $T$-spiders,
 but $h(v_1) = \frac{4}{3+2+1} = \frac{2}{3} < \frac{7}{3}$.
 
+\subsection{Lone Phase Heuristic}
+
+Another heuristic turns out to be somewhat common to measure is the lone phase heuristic.
+We can observe the following decomposition.
+
+\begin{equation}
+    \tikzfig{lone_phase}
+\end{equation}
+
+A $T$-like spider connected to $n$ magic states $\cbox{\magicspider}$ would allow the $T$-count to drop by $n$.
+Here, we can note that the reduction happens even for spiders with odd integer multiples of $\frac{\pi}{4}$.
+We define the \textit{lone phase heuristic} as follows.
+
+\begin{equation}
+    \label{eq:lone-phase-heuristic}
+    h(v) = 1 + \# \cbox{\magicspider} v \text{ is connected to}
+\end{equation}
+It's clear to see that this is a valid cut heuristic.
+
+What we have then is that we can combine the two "simple" heuristics 
+(\ref{eq:cut-heuristic-cat3}, \ref{eq:lone-phase-heuristic}) so far.
+If $n$ is the number of \catstate{3} states $v$ is part of, 
+and $m$ is the number of magic states $\cbox{\magicspider} v$ is connected to,
+then we have the following heuristic.
+
+\begin{equation}
+    \label{eq:cut-heuristic-combined}
+    h(v) = 1 + 2n + m
+\end{equation}
+
+There is clearly no overlap between the two types of $T$-like spiders that each heuristic considers,
+so the heuristic is still valid.
+Surprisingly, just a simple combination of the two heuristics can be quite effective in practice,
+as we will see in the next chapter.
+
+\subsection{Greedy Algorithm with Cut Heuristic}
+
+A natural extension of the greedy algorithm is to also consider 
+the cut heuristic on top of the cat decompositions.
+
+We have the $\alpha$ values of \catstate{4}, \catstate{6}, \catstate{5}, \catstate{3},
+and magic state $\cbox{\magicspider}^{\otimes 5}$
+being $0.25 < 0.264 < 0.317 < 0.333 < 0.396$ respectively.
+Depending on the value of the best heuristic (\ref{eq:cut-heuristic-combined}),
+and the best available \catstate{n} decomposition in the diagram,
+we can continue to use the greedy approach.
+We have the following simple algorithm.
+
+\begin{algorithm}
+\caption{Greedy Algorithm with Heuristic}
+\begin{algorithmic}[1]
+\State \textbf{Input:} $\alpha$ values for $\catstate{4}$, $\catstate{6}$, $\catstate{5}$, $\catstate{3}$, 
+and $\cbox{\magicspider}^{\otimes 5}$
+\State \textbf{Output:} Chosen state and corresponding decomposition
+
+\State Let $\alpha_{4} = 0.25, \alpha_{6} = 0.264,\alpha_{5} = 0.317, \alpha_{3} = 0.333, 
+\alpha_{\otimes 5} = 0.396$
+\State Compute the best catstate $\catstate{best}$ with the lowest $\alpha$ value
+\State Let $\alpha_{best}$ be the $\alpha$ value of $\catstate{best}$
+
+\State Compute $\alpha_h$ using a heuristic
+
+\If {$\alpha_h < \alpha_{best}$}
+    \State Use the decomposition corresponding to the heuristic
+\Else
+    \State Use the decomposition corresponding to $\catstate{best}$ or $\cbox{\magicspider}^{\otimes 5}$
+\EndIf
+
+\end{algorithmic}
+\end{algorithm}
+
+Even with a small values of $n,m$, the heuristic can be quite effective.
+Just having $n=m=1$ can already give a $\alpha_h = 0.25$, matching the best \catstate{4} decomposition.
+This heuristic also works without any phase gadgets where $n=0$, concentrating on the $T$-like spiders.
+In this scenario, having $m=2$ will already give a better $\alpha_h=1/3$ 
+than the default \hyperref[eq:magic-5-decomp]{5-qubit magic decomposition} at $\alpha \approx 0.396$.
 
 % A better heuristic would take into account the overlap of $T$-like spiders,
 % and not overcount the number of cuts needed.
@@ -439,8 +539,25 @@ For the \catstate{n} heuristic (\ref{eq:cut-heuristic-catn2}), a single $T$-like
 and its 0-spider neighbours $w_1,...,w_k$,
 it takes 
 \begin{equation}
-    O(d(v) + \sum_{i=1}^k d(w_i)) = O(n+mn) = O(mn)
+    O\left(d(v) + \sum_{i=1}^k d(w_i)\right) = O(n+mn) = O(mn)
 \end{equation}
 time to compute the heuristic.
 For all $m$ $T$-like spiders, this takes $O(m^2 n)$ time.
-At the cost of slightly higher complexity, we still have a valid heuristic.
+
+The lone phase heuristic (\ref{eq:lone-phase-heuristic}) can be computed in $O(m^2)$ time,
+each $T$-like spider can be processed in $O(m)$ time, for all $m$ $T$-like spiders.
+
+Combining the complexities for the general heuristic (\ref{eq:cut-heuristic-combined}) 
+will take $O(mn + m^2)$ time.
+With the existing greedy algorithm from \cite{Kissinger2022cat,Kissinger_2022} 
+that has complexity $O(2^{\alpha t}t^2)$, and since $m+n=t$, 
+the complexity remains unchanged.
+Specifically, looking at the $O(t^2)$ operations in between decompositions,
+\begin{equation}
+    O(t^2 + mn + m^2) = O(t^2)
+\end{equation}
+
+Comparing to the method of \cite{Codsi2022} which 
+requires computing $\alpha_e$ values (\ref{eq:effective-alpha})
+for each of the $k$ decompositions considered to select the best one, 
+the number of operations between each decomposition there is $O(kt^2)$.

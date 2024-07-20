@@ -224,6 +224,7 @@ By using $\approx$ to denote equality up to a non-zero factor, we have
 Scalars can also be represented using just spiders.
 
 \begin{equation}
+\label{eq:scalars}
 \tikzfig{scalars}
 \end{equation}
 
@@ -366,7 +367,9 @@ The following proposition can then be proven, using rewrite rules introduced pre
 
 The proof \cite{Kissinger2024,Duncan2020graphtheoretic} makes use of the fact that Hadamard edges in parallel cancel,
 and that we can always remove a Hadamard self-loop.
-Parallel edges cancelling is an application of the \textit{Hopf rule}, derivable from the ZX-rules.
+Parallel edges cancelling is an application of the \textit{Hopf rule} \HopfRule, 
+derivable from the ZX-rules
+\footnote{In fact, $\SCRule \implies \HopfRule$}.
 
 \begin{equation}
 \label{eq:hopf}
@@ -432,7 +435,7 @@ as it tends to bring us closer to the goal of reducing overall $T$-count.
 However, there are exceptions to this, as we will see in the next chapter.
 
 
-\begin{algorithm}[ZX-simplify \cite{Kissinger_2022}]
+\begin{alg}[ZX-simplify \cite{Kissinger_2022}]
 \label{alg:zx-simplify}
 Starting with a graph-like ZX-diagram, do the following:
 \begin{enumerate}
@@ -443,7 +446,7 @@ Starting with a graph-like ZX-diagram, do the following:
   \item Apply \IDSimp and \GFSimp wherever possible. If any matches are found, go back to step 1.
   Otherwise, the diagram is in reduced gadget form.
 \end{enumerate}
-\end{algorithm}
+\end{alg}
 
 \begin{example}
   \label{ex:reduced-gadget}

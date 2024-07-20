@@ -29,7 +29,7 @@
 \newcommand{\BialgebraRule}{\BialgRule}
 \newcommand{\SCRule}{\BialgRule}
 \newcommand{\StrongCompRule}{\BialgRule}
-\newcommand{\HopfRule}{\ensuremath{(\hyperref[table:rewrite]{\bm x})}\xspace}
+\newcommand{\HopfRule}{\ensuremath{(\hyperref[eq:hopf]{\bm x})}\xspace}
 \newcommand{\AntipodeRule}{\HopfRule}
 \newcommand{\CompRule}{\HopfRule}
 \newcommand{\PiCopyRule}{\ensuremath{(\hyperref[table:rewrite]{\bm{\pi c}})}\xspace}

@@ -202,8 +202,9 @@ A closely related metric we can use is the \textit{stabiliser rank}.
 
 We can see that the relation between the stabiliser rank and its efficiency is
 \begin{equation}
-    \chi(\ket{\psi}) = 2^{\alpha_{\chi} t}
+    \chi(\ket{\psi}) = 2^{\alpha_{\chi}(\ket{\psi}) t}
 \end{equation}
+with the $T$-count $t$ of the circuit.
 
 The goal for any stabiliser decomposition is to obtain an efficiency as close to $\alpha_{\chi}$ as possible.
 
@@ -262,6 +263,7 @@ It has an efficiency of $\alpha \approx 0.264$.
 Even better, for $\catstate{4}$, we have the decomposition
 
 \begin{equation}
+    \label{eq:cat-4-decomp}
     \tikzfig{cat-4-decomp}
 \end{equation}
 
@@ -300,6 +302,7 @@ using the decomposition of $\catstate{6}$ gives us a guaranteed way to decompose
 a $T$-count $\geq 5$ \cite{Kissinger2022cat}.
 
 \begin{equation}
+    \label{eq:magic-5-decomp}
     \tikzfig{magic-state-5-decomp}
 \end{equation}
 
@@ -348,7 +351,7 @@ Then if we have a diagram with subdiagrams $S_1,...,S_n$, we can see that the fo
 
 At the cost of $m$ cuts, and thus $2^m$ terms, 
 the diagram is split into $\leq m^2 + n$ subdiagrams that can be treated independently.
-The $\leq m^2$ scalars in the form of spider-pairs are trivially scalars,
+The $\leq m^2$ scalars in the form of spider-pairs are trivially scalars (\ref{eq:scalars}),
 and there are only $\leq n$ subdiagrams with $T$-counts $>0$.
 If each subdiagram $S_i$ has the $T$-count of $t_i$,
 we have a sum of $2^m$ terms, each value which can be obtained with just $\leq m^2 + \sum_{i=1}^n 2^{\alpha t_i}$ stabilizer terms.
@@ -371,7 +374,7 @@ In the ideal case where $t_i=t$ for all $i$, we can produce a crude upper bound
 \end{aligned}
 \end{equation}
 Keeping the ratio $m/n$ small is key to reducing the effective $\alpha$.
-Clearly, less cuts are better, with preferably the end result being many disconnected subdiagrams.
+Clearly, fewer cuts are better, with preferably the end result being many disconnected subdiagrams.
 
 Another way graph cuts also reduce the effective $\alpha$ need not necessarily 
 be by obtaining disconnected subdiagrams.
@@ -392,7 +395,7 @@ A further addition to the strength of graph cuts is the subgraph complement appr
 For a graph-like ZX-diagram $(V, E)$, with $K$ being the set of edges for a complete graph on $V$,
 its \textit{complement} is simply $(V, K \backslash E)$.
 We define a \textit{subdiagram} to simply be a subgraph of the graph-like ZX-diagram.
-If we analyse \LCRule closely, and consider \hyperref[eq:hopf]{Hopf rule} making parallel edges cancel,
+If we analyse \LCRule closely, and consider the Hopf rule \HopfRule making parallel edges cancel,
 there seems to be a way to obtain a subgraph complement with some manipulation of ZX-rules.
 In fact, we have the following result.
 
