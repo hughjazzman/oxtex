@@ -1,0 +1,57 @@
+\chapter{\label{ch:4-results}Results}
+
+\minitoc
+
+\section{Benchmarking}
+To determine the effectiveness of our heuristic methods thus far,
+we need to benchmark them against known methods.
+In this chapter, we introduce the various benchmarking methods we use to evaluate our heuristics.
+This is based off of various previous work, particularly those using ZX-calculus 
+\cite{Kissinger2022cat,Kissinger_2022,sutcliffe2024proccut,Codsi2022}.
+We will be using QuiZX \cite{quizx}, with features added from \cite{Kissinger2022cat},
+especially the \catstate{n} decompositions.
+QuiZX itself was a Rust port of PyZX, originally built in Python \cite{kissinger2020Pyzx}.
+
+\subsection{Random Clifford+T}
+Random Clifford+T circuits coming from \textit{exponentiated Pauli unitaries} 
+were used in the benchmark of the BSS decomposition \cite{Kissinger2020}, 
+and subsequently continued use in the benchmark of the \catstate{n} decomposition \cite{Kissinger2022cat}.
+The operators in this form naturally arise in the literature, 
+including Clifford+T circuit representations \cite{gosset2014}, as cited in \cite{Kissinger2020}.
+We introduce their definitions, pertaining to the ZX-calculus.
+
+\begin{definition}[Unitary]
+    A unitary $U$ is a map of the form
+\begin{equation}
+    \tikzfig{unitary}
+\end{equation} 
+\end{definition}
+
+\begin{definition}[Pauli exponential \cite{Kissinger2024}]
+A \textit{Pauli exponential} is any unitary of the form
+\begin{equation}
+    U := e^{\pm i\theta P_1 \otimes \dots\otimes P_n}
+\end{equation}
+where $P_i$ are Paulis, and $\theta\in \mathbb{R}$ is a phase, and the exponential is defined as
+\begin{equation}
+    e^A := \sum_{k=0}^{\infty} \frac{A^k}{k!}
+\end{equation}
+for any map $A$.
+\end{definition}
+
+\begin{proposition}[\cite{Kissinger2024}]
+    Let $\vec{P} = P_1 \otimes \dots \otimes P_n$ be any Pauli string with no trivial entries, 
+    so $\forall i, P_i \in \{X,Y,Z\}$.
+    Then the Pauli exponential $e^{i\theta \vec{P}}$ is a ZX diagram where
+\begin{equation}
+    e^{\pm i\theta \vec{P}} \approx \tikzfig{pauli_exp}
+\end{equation}
+Here $U_j\in \{\cbox{\idwire}, \cbox{\hadamard}, \cbox{\redphase{\frac{\pi}{2}}}\}$ such that
+\begin{equation}
+    \tikzfig{upuj} = \cbox{\greenphase{\pi}}
+\end{equation}
+\end{proposition}
+
+Choosing $\theta = (2k+1)\frac{\pi}{4}$ for $k\in \mathbb{Z}$, we can generate a random Clifford+T circuit
+with a fixed depth by composing these exponentiated Pauli unitaries.
+This fixes the $T$-count of the circuit, and can be used to benchmark decompositions.

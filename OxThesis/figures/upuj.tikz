@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=gate] (0) at (-2, 0) {$U_j^{\dagger}$};
+		\node [style=gate] (1) at (0, 0) {$P_j$};
+		\node [style=gate] (2) at (2, 0) {$U_j$};
+		\node [style=none] (3) at (3.5, 0) {};
+		\node [style=none] (4) at (-3.5, 0) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (4.center) to (0);
+		\draw (0) to (1);
+		\draw (1) to (2);
+		\draw (2) to (3.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

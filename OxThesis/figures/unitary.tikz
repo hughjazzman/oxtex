@@ -1,0 +1,25 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=gate] (0) at (-6.5, 0) {$U$};
+		\node [style=gate] (1) at (-4.5, 0) {$U^{\dagger}$};
+		\node [style=gate] (2) at (4.5, 0) {$U^{\dagger}$};
+		\node [style=gate] (3) at (6.5, 0) {$U$};
+		\node [style=none] (4) at (-8, 0) {};
+		\node [style=none] (5) at (-3, 0) {};
+		\node [style=none] (6) at (-1, 0) {};
+		\node [style=none] (7) at (1, 0) {};
+		\node [style=none] (8) at (3, 0) {};
+		\node [style=none] (9) at (8, 0) {};
+		\node [style=none] (10) at (-2, 0) {$=$};
+		\node [style=none] (11) at (2, 0) {$=$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (4.center) to (0);
+		\draw (0) to (1);
+		\draw (1) to (5.center);
+		\draw (6.center) to (7.center);
+		\draw (8.center) to (2);
+		\draw (3) to (2);
+		\draw (3) to (9.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

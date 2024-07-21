@@ -1,4 +1,4 @@
-\chapter{\label{ch:3-methods}Search}
+\chapter{\label{ch:3-methods}Heuristics}
 
 \minitoc
 
@@ -10,7 +10,7 @@ along with grap cut decompositions,
 we have not yet detailed the specific steps taken to obtain the stabiliser decompositions
 in the most efficient way so far.
 
-In modeling our task, we can think of the stabiliser decomposition as a search problem, 
+In modeling our task, we can think of the stabiliser decomposition almost as a search problem, 
 where we are searching for the most efficient stabiliser decomposition.
 We can visualize an example as in \autoref{fig:amplitude}, where $V$ is a Clifford+T diagram at the root.
 The directed edges represent the decomposition used from the parent to the child node, 
@@ -18,13 +18,18 @@ and the leaves $d_i$ are the possible stabiliser decompositions.
 
 \begin{figure}[h!]
 \tikzfig{search-tree}
-\caption{Example search tree for a stabiliser decomposition}
+\caption{Example tree for a stabiliser decomposition}
 \end{figure}
 
+One question that arises is how we can efficiently traverse this tree.
+It is strongly believed that the stabiliser rank itself must increase exponentially with the $T$-count $t$,
+so we cannot have $\chi(V) = 2^{o(t)}$ \cite{Morimae:2019onp}, as cited in \cite{Qassim_2021}.
+Thus, even if it was possible to know the most efficient decomposition, at each node,
+we would still face the exponential number of terms.
 
-\begin{algorithm}
+\begin{alg}
 \label{alg:stabiliser-decomposition}
-To traverse the search tree, we might take the following steps \cite{Kissinger2022cat,Kissinger_2022}.
+To traverse the tree, we might take the following steps \cite{Kissinger2022cat,Kissinger_2022}.
 \begin{enumerate}    
     \item Perform necessary spider $\SpiderRule$usions to 
     \hyperref[prop:zx-to-graph]{reduce to graph-like form}.
@@ -33,16 +38,18 @@ To traverse the search tree, we might take the following steps \cite{Kissinger20
     Some Clifford spiders may be removed, and some $T$-like spiders may be combined.
     \item Repeat steps 1-3 until the $T$-count is 0.
 \end{enumerate}
-\end{algorithm}
+\end{alg}
 
 The complexity from using this algorithm was found to be $O(N^3 + 2^{\alpha t}t^2)$, 
 where $N$ is the number of gates in the original circuit \cite{Kissinger_2022}.
-Clearly, any circuit with a $T$-count that is not insignificant will mean that 
+Clearly, any circuit with a $T$-count $t$ that is not insignificant will mean that 
 the complexity is dominated by $O(2^{\alpha t}t^2)$.
 
 In this thesis, we will focus on the second step of the algorithm, 
 where we choose the decomposition to apply at each node.
 There are a variety of ways to choose a decomposition, detailed in the next few sections.
+
+
 
 \section{Greedy Algorithm}
 
@@ -95,6 +102,19 @@ before and after simplification respectively, then we have
 
 This relation can make a significant difference especially for low values of $r$.
 In the next section, we also consider the structure of the diagram to increase $r_e$.
+
+Recall also that the Algorithm \ref{alg:stabiliser-decomposition} has $O(t^2)$ part of the complexity
+between each step of the decompisition.
+Given that we have $k$ decompositions to choose from at each node,
+if we employed a brute force approach to find the best stabiliser decomposition,
+and attempted to find the best decomposition from a node traversing down $d$ levels in the tree,
+it would take $O(km^d)$ time, where $m$ is the maximum number of terms coming from a decomposition,
+for the $k$ decompositions to be applied to all the $m$ terms after each level.
+For example, the above approach of obtaining $\alpha_e$ takes $d=0$.
+
+In theory, this could be extended to larger values of $d\geq 1$, but with $m\geq 2$,
+this would mean that the overall exponential complexity of $O(2^{\alpha t + d\log m}kt^2)$ would be affected.
+This motivates the idea of using heuristics instead.
 
 \section{Graph Structure Heuristic}
 \label{sec:graph-cut}
@@ -238,8 +258,9 @@ Since they were only considering a single cut, the heuristic was essentially equ
 since each neighbouring \catstate{3} can contribute to the removal 2 $T$-like spiders.
 
 \begin{proposition}
-    For any ZX-diagram in reduced gadget form, the heuristic $h(v)$ (\ref{eq:cut-heuristic-cat3}) is a valid cut heuristic.
-    \[\exists c=(v,...)\in C, 0 < h(v) \leq \frac{t(c)}{|c|} = h_e(v)\]
+    For any ZX-diagram in reduced gadget form, the heuristic $h(v)$ (\ref{eq:cut-heuristic-cat3}) 
+    is a valid cut heuristic for a single cut if $v$ is $T$-like.
+    \[\forall v\in V, v \text{ is T-like} \implies 0 < h(v) \leq \frac{t(c)}{|c|} = h_e(v)\]
 \end{proposition}
 
 \begin{proof}
@@ -330,7 +351,7 @@ Then
 \end{proof}
 
 The proposition condition is generally unlikely to be satisfied,
-and we show in the next chapter that the heuristic can perform poorly for some diagrams.
+and ultimately leads to the heuristic performing poorly in general.
 From the proof, we can gather that there is in fact a cut heuristic that is valid.
 
 \begin{corollary}
@@ -363,8 +384,8 @@ We can observe the following decomposition.
     \tikzfig{lone_phase}
 \end{equation}
 
-A $T$-like spider connected to $n$ magic states $\cbox{\magicspider}$ would allow the $T$-count to drop by $n$.
-Here, we can note that the reduction happens even for spiders with odd integer multiples of $\frac{\pi}{4}$.
+Since the legless spiders can easily be treated as scalars,
+a $T$-like spider connected to $n$ magic states $\cbox{\magicspider}$ would allow the $T$-count to drop by $n$.
 We define the \textit{lone phase heuristic} as follows.
 
 \begin{equation}
@@ -394,7 +415,7 @@ as we will see in the next chapter.
 A natural extension of the greedy algorithm is to also consider 
 the cut heuristic on top of the cat decompositions.
 
-We have the $\alpha$ values of \catstate{4}, \catstate{6}, \catstate{5}, \catstate{3},
+We have the $\alpha$ values from decompositions of \catstate{4}, \catstate{6}, \catstate{5}, \catstate{3},
 and magic state $\cbox{\magicspider}^{\otimes 5}$
 being $0.25 < 0.264 < 0.317 < 0.333 < 0.396$ respectively.
 Depending on the value of the best heuristic (\ref{eq:cut-heuristic-combined}),
@@ -412,7 +433,8 @@ and $\cbox{\magicspider}^{\otimes 5}$
 \State Let $\alpha_{4} = 0.25, \alpha_{6} = 0.264,\alpha_{5} = 0.317, \alpha_{3} = 0.333, 
 \alpha_{\otimes 5} = 0.396$
 \State Compute the best catstate $\catstate{best}$ with the lowest $\alpha$ value
-\State Let $\alpha_{best}$ be the $\alpha$ value of $\catstate{best}$
+\State Let $\alpha_{best}$ be the $\alpha$ value of $\catstate{best}$, 
+or of $\cbox{\magicspider}^{\otimes 5}$ if no $\catstate{best}$ is found
 
 \State Compute $\alpha_h$ using a heuristic
 
@@ -427,98 +449,77 @@ and $\cbox{\magicspider}^{\otimes 5}$
 
 Even with a small values of $n,m$, the heuristic can be quite effective.
 Just having $n=m=1$ can already give a $\alpha_h = 0.25$, matching the best \catstate{4} decomposition.
-This heuristic also works without any phase gadgets where $n=0$, concentrating on the $T$-like spiders.
+Furthermore, this will cut the graph at a vertex, as compared to the \catstate{4} decomposition,
+which only cuts the 2nd of its 2 terms, while its first term remains connected, seen below.
+\begin{equation}
+    \tikzfig{cat-4-decomp-cut}
+\end{equation}
+
+This heuristic also works in a diagram without any phase gadgets where $n=0$, concentrating on the $T$-like spiders.
 In this scenario, having $m=2$ will already give a better $\alpha_h=1/3$ 
 than the default \hyperref[eq:magic-5-decomp]{5-qubit magic decomposition} at $\alpha \approx 0.396$.
 
-% A better heuristic would take into account the overlap of $T$-like spiders,
-% and not overcount the number of cuts needed.
-% Suppose the $T$-spider part of each phase gadget $w_i$ is labelled vertex $g_i$.
-% Each phase gadget as part of a $\catstate{n}$ would only need a maximum of $n-2$ cuts,
-% so our heuristic would look like
+\subsection{Other Heuristics}
+Another heuristic considered, based off (\ref{eq:cut-heuristic-catn2}) 
+takes into account the overlap of $T$-like spiders,
+and not overcount the number of cuts needed.
+Suppose the $T$-spider part of each phase gadget $w_i$ is labelled vertex $g_i$.
+Each phase gadget as part of a $\catstate{n}$ would only need a maximum of $n-2$ cuts,
+so our heuristic would look like
 
-% \begin{equation}
-%     h(v) = \frac{\left|\bigcup_{i=1}^k T(w_i)\right|}
-%     {1+\left|\bigcup_{i=1}^k T(w_i) - \{g_i, v, u_i\}\right|}
-% \end{equation}
-% where $\forall i, u_i \in T(w_i)$ is a chosen $T$-like spider on the leg of phase gadget $w_i$,
-% that does not need to be cut.
-% We would want to choose the $u_i$ that minimizes the denominator, so we have the following heuristic.
+\begin{equation}
+    \frac{\left|\bigcup_{i=1}^k T(w_i)\right|}
+    {1+\left|\bigcup_{i=1}^k T(w_i) - \{g_i, v, u_i\}\right|}
+\end{equation}
+where $\forall i, u_i \in T(w_i)$ is a chosen $T$-like spider on the leg of phase gadget $w_i$,
+that does not need to be cut.
+We would want to choose the $u_i$ that minimizes the denominator, so we have the following heuristic.
 
-% \begin{equation}
-%     h^*(v) = \max_{\forall i, u_i\in T(w_i)} h(v)
-% \end{equation}
-% where the denominator is minimized.
-% \begin{equation}
-%     t_{\min} = 1+\min_{\forall i, u_i\in T(w_i)} \left|\bigcup_{i=1}^k T(w_i) - \{g_i, v, u_i\}\right|
-% \end{equation}
+\begin{equation}
+    \label{eq:cut-heuristic-catn-max}
+    h(v) = \max_{\forall i, u_i\in T(w_i)} h(v)
+\end{equation}
+where the denominator is minimized.
+\begin{equation}
+    t_{\min} = 1+\min_{\forall i, u_i\in T(w_i)} \left|\bigcup_{i=1}^k T(w_i) - \{g_i, v, u_i\}\right|
+\end{equation}
 
-% It is easy to see that this heuristic is valid, by the same argument as the previous proposition.
-% The next question is then figuring out how to compute the heuristic in polynomial time.
+It is easy to see that this heuristic is valid, by the same argument as the previous proposition.
+Solving this is akin to maximum bipartite matching.
+The argument is that to minimize the number of cuts, the number of $T$-like spiders matched with a phase gadget
+needs to be maximized, while only one $T$-like spider can be matched with each phase gadget.
+The matching can be found in polynomial time using any maximum bipartite matching algorithm 
+like the Hopcroft-Karp algorithm \cite{Hopcroft1973}.
+Unfortunately, this heuristic is not as effective as the previous heuristic (\ref{eq:cut-heuristic-cat3})
+just involving \catstate{3} states.
 
+The phase gadget heuristic is also considered, where the $T$-like spiders connected to the legs 
+of two phase gadgets $w_i,w_j$ are compared.
+Let $T(w_i),T(w_j)$ be the $T$-like spiders connected to the legs of $w_i,w_j$ respectively.
+Recall from \GFRule, that gadgets with the same set of legs can be fused.
+If all the $T$-like spiders from the symmetric difference $T(w_i) \Delta T(w_j) $ are removed, where
+\begin{equation}
+    A \Delta B = (A \cup B) - (A \cap B)
+\end{equation}
+then the $T$-count can be reduced by 2 via gadget fusion \GFRule, as seen below.
 
+\begin{equation}
+    \tikzfig{phasegadget_heuristic_ex}
+\end{equation}
 
-% What we have is a collection of sets $S=\{T(w_i)\}_i$, 
-% so their union $\bigcup_{i=1}^k T(w_i)$ is easy to compute.
-% However, when trying to obtain the minimum value of $h(v)$,
-% it is the same as trying to obtain the maximum number of $T$-like spiders 
-% $n_{\max}$ on the legs of phase gadgets that can be ignored from cutting.
-% This is because subtracting this number from our union $\left|\bigcup_{i=1}^k T(w_i) - \{g_i, v\}\right|$  
-% gives us the number of $T$-like spiders that need to be cut.
-% \begin{equation}
-%     \left|\bigcup_{i=1}^k T(w_i) - \{g_i, v\}\right| 
-%     = 1 + t_{\min} + n_{\max}
-% \end{equation}
+We could then have the following heuristic, for the simplest case where 
+\[\exists i,j, T(w_i) \Delta T(w_j) = \{g_i,g_j,v\}\]
+\begin{equation}
+    h(v) = 1 + 2\cdot \left|\{\{w_i,w_j\} \mid T(w_i) \Delta T(w_j) = \{g_i,g_j,v\}\}\right|
+\end{equation}
+where $g_i,g_j$ are the $T$-like spiders part of the phase gadgets $w_i,w_j$ respectively.
 
-% With that in mind, we introduce the maximum coverage problem.
-
-% \textsc{Maximum Coverage}
-% \begin{itemize}
-%     \item \textbf{Instance:} A collection of sets $S=\{S_1,...,S_m\}$, and a number $n$
-%     \item \textbf{Objective:} Find a subset $S' \subseteq S$ such that $|S'| \leq n$,
-%     and the number of elements covered $\left|\bigcup_{S_i\in S'}S_i\right|$ is maximized.
-% \end{itemize}
-
-% \begin{theorem}
-%     \label{thm:opt-np}
-%     Computing the heuristic $h^*(v)$ is $NP$-hard.
-% \end{theorem}
-
-% \begin{proof}
-%     We can reduce the maximum coverage problem to computing the heuristic $h^*(v)$.
-%     Let $n$ be a number and $S=\{S_1,...,S_m\}$ be a collection of sets.
-%     Create an instance $(n, S)$ of computing $h^*(v)$ as follows.
-%     Let $n < k$ and $S=\{T(w_i)\}_i$.
-%     Then we want to find the maximum coverage of $T$-like spiders $t$,
-%     such that at most $n$ $T$-like spiders can be ignored from cutting.
-
-%     $n_{\max}$ is then the value where the maximum coverage where $(n-1,S)$ has maximum coverage
-%     less than $|\bigcup S|$, but $(n,S)$ has maximum coverage equal to $|\bigcup S|$.
-    
-    
-% \end{proof}
-
-
-% % More formally, for each $T$-like spider $t\in \bigcup_{i=1}^k T(w_i)$ 
-% % on the leg of all the phase gadgets $w_i$ where $v$ is on a leg of $w_i$,
-% % let $W(t)$ be the set of phase gadgets $w_i$ that $t$ is part of.
-% % Then we want to find the maximum coverage of $T$-like spiders $t$, 
-% % such that at most $n_{\max} < k$ $T$-like spiders can be ignored from cutting.
-
-% It can be formulated as an integer linear program (ILP), as follows.
-
-% \textbf{Input:} A collection of sets $S=\{W(t_1),...,W(t_m)\}$, where $W(t_i)$ is the set of phase gadgets that $t_i$ is part of.
-% Define $U=\bigcup_{i=1}^m W(t_i)$.
-% \begin{align}
-% \label{eq:f.0} \mbox{minimize}~& \;\sum_{s\in S} x_s& \\
-% \label{eq:f.1} \mbox{s.t. } &\sum_{s:e\in s}x_s \geq 1  & \forall e\in U\\
-% \label{eq:f.2}&x_s\in\{0,1\} & \forall s\in S
-% \end{align}
-
-% The is equivalent set cover problem, which is unfortunately $NP$-hard.
-
-
-
+This heuristic is valid, due to the requirement that $\{w_i,w_j\}$ must be distinct.
+As such, there is no overcounting of the number of $T$-like spiders that can be removed.
+Alas, this heuristic is not effective in practice,
+and earns its place in the "other heuristics" category.
+Scenarios for being close to gadget fusion are not common enough, and tend to take more cuts than necessary,
+by which time the cut heuristic (\ref{eq:cut-heuristic-combined}) would have already been more effective.
 
 \section{Complexity Analysis}
 
@@ -545,7 +546,7 @@ time to compute the heuristic.
 For all $m$ $T$-like spiders, this takes $O(m^2 n)$ time.
 
 The lone phase heuristic (\ref{eq:lone-phase-heuristic}) can be computed in $O(m^2)$ time,
-each $T$-like spider can be processed in $O(m)$ time, for all $m$ $T$-like spiders.
+since each $T$-like spider can be processed in $O(m)$ time, for all $m$ $T$-like spiders.
 
 Combining the complexities for the general heuristic (\ref{eq:cut-heuristic-combined}) 
 will take $O(mn + m^2)$ time.
@@ -561,3 +562,11 @@ Comparing to the method of \cite{Codsi2022} which
 requires computing $\alpha_e$ values (\ref{eq:effective-alpha})
 for each of the $k$ decompositions considered to select the best one, 
 the number of operations between each decomposition there is $O(kt^2)$.
+
+For the heuristic taking into account the overlap of $T$-like spiders (\ref{eq:cut-heuristic-catn-max}),
+the Hopcroft-Karp algorithm has a complexity of $O(mn\sqrt{m+n})$ for each $T$-like spider,
+for a total of $O(m^2 n\sqrt{m+n})$ time.
+
+For the phase gadget heuristic, to compare two phase gadgets is $O(m)$,
+for a total of $O(mn)$ for all phase gadgets.
+Computation for all $m$ $T$-like spiders can be done at the same time, so the complexity is $O(mn)$.

@@ -201,14 +201,14 @@
 \newcommand{\magicspider}{\point[style=Z phase dot]{\frac{\pi}{4}}}
 
 
-
+\newcommand{\hadamard}{\,\tikz{\node[style=hadamard] (x) {};\draw (-1.25,0)--(x)--(1.25,0);}\,}
 
 
 \newcommand{\idwire}{\,%
 \begin{tikzpicture}
   \begin{pgfonlayer}{nodelayer}
-    \node [style=none] (0) at (-1.5, 0) {};
-    \node [style=none] (3) at (1.5, 0) {};
+    \node [style=none] (0) at (-1.25, 0) {};
+    \node [style=none] (3) at (1.25, 0) {};
   \end{pgfonlayer}
   \begin{pgfonlayer}{edgelayer}
     \draw (0.center) to (3.center);

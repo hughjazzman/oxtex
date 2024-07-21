@@ -150,55 +150,118 @@
 }
 
 @article{Bravyi_2019,
-   title={Simulation of quantum circuits by low-rank stabilizer decompositions},
-   volume={3},
-   ISSN={2521-327X},
-   url={http://dx.doi.org/10.22331/q-2019-09-02-181},
-   DOI={10.22331/q-2019-09-02-181},
-   journal={Quantum},
-   publisher={Verein zur Forderung des Open Access Publizierens in den Quantenwissenschaften},
-   author={Bravyi, Sergey and Browne, Dan and Calpin, Padraic and Campbell, Earl and Gosset, David and Howard, Mark},
-   year={2019},
-   month=sep, pages={181} }
-
-@article{Bravyi_2016bss,
-   title={Trading Classical and Quantum Computational Resources},
-   volume={6},
-   ISSN={2160-3308},
-   url={http://dx.doi.org/10.1103/PhysRevX.6.021043},
-   DOI={10.1103/physrevx.6.021043},
-   number={2},
-   journal={Physical Review X},
-   publisher={American Physical Society (APS)},
-   author={Bravyi, Sergey and Smith, Graeme and Smolin, John A.},
-   year={2016},
-   month=jun }
-
-@article{Qassim_2021,
-   title={Improved upper bounds on the stabilizer rank of magic states},
-   volume={5},
-   ISSN={2521-327X},
-   url={http://dx.doi.org/10.22331/q-2021-12-20-606},
-   DOI={10.22331/q-2021-12-20-606},
-   journal={Quantum},
-   publisher={Verein zur Forderung des Open Access Publizierens in den Quantenwissenschaften},
-   author={Qassim, Hammam and Pashayan, Hakop and Gosset, David},
-   year={2021},
-   month=dec, pages={606} }
-
-@mastersthesis{Codsi2022,
-  author  = {Codsi, Julien},
-  school  = {University of Oxford},
-  title   = {Cutting-Edge Graphical Stabiliser Decompositions for Classical Simulation of Quantum Circuits},
-  year    = {2022}
+  title     = {Simulation of quantum circuits by low-rank stabilizer decompositions},
+  volume    = {3},
+  issn      = {2521-327X},
+  url       = {http://dx.doi.org/10.22331/q-2019-09-02-181},
+  doi       = {10.22331/q-2019-09-02-181},
+  journal   = {Quantum},
+  publisher = {Verein zur Forderung des Open Access Publizierens in den Quantenwissenschaften},
+  author    = {Bravyi, Sergey and Browne, Dan and Calpin, Padraic and Campbell, Earl and Gosset, David and Howard, Mark},
+  year      = {2019},
+  month     = sep,
+  pages     = {181}
 }
 
-@misc{sutcliffe2024proccut,
-      title={Procedurally Optimised ZX-Diagram Cutting for Efficient T-Decomposition in Classical Simulation}, 
-      author={Matthew Sutcliffe and Aleks Kissinger},
-      year={2024},
-      eprint={2403.10964},
-      archivePrefix={arXiv},
-      primaryClass={quant-ph},
-      url={https://arxiv.org/abs/2403.10964}, 
+@article{Bravyi_2016bss,
+  title     = {Trading Classical and Quantum Computational Resources},
+  volume    = {6},
+  issn      = {2160-3308},
+  url       = {http://dx.doi.org/10.1103/PhysRevX.6.021043},
+  doi       = {10.1103/physrevx.6.021043},
+  number    = {2},
+  journal   = {Physical Review X},
+  publisher = {American Physical Society (APS)},
+  author    = {Bravyi, Sergey and Smith, Graeme and Smolin, John A.},
+  year      = {2016},
+  month     = jun
+}
+
+@article{Qassim_2021,
+  title     = {Improved upper bounds on the stabilizer rank of magic states},
+  volume    = {5},
+  issn      = {2521-327X},
+  url       = {http://dx.doi.org/10.22331/q-2021-12-20-606},
+  doi       = {10.22331/q-2021-12-20-606},
+  journal   = {Quantum},
+  publisher = {Verein zur Forderung des Open Access Publizierens in den Quantenwissenschaften},
+  author    = {Qassim, Hammam and Pashayan, Hakop and Gosset, David},
+  year      = {2021},
+  month     = dec,
+  pages     = {606}
+}
+
+@mastersthesis{Codsi2022,
+  author = {Codsi, Julien},
+  school = {University of Oxford},
+  title  = {Cutting-Edge Graphical Stabiliser Decompositions for Classical Simulation of Quantum Circuits},
+  year   = {2022}
+}
+
+@inproceedings{sutcliffe2024proccut,
+  author          = {Matthew Sutcliffe and Aleks Kissinger},
+  booktitle       = {Quantum Physics and Logic 2024},
+  editor          = {Alejandro Díaz-Caro and Vladimir Zamdzhiev },
+  title           = {Procedurally Optimised ZX-Diagram Cutting for Efficient T-Decomposition in Classical Simulation},
+  year            = {2024},
+  url           = {https://arxiv.org/abs/2403.10964}
+}
+
+@article{Hopcroft1973,
+  author  = {Hopcroft, John E. and Karp, Richard M.},
+  title   = {An {$n^{5/2} $} Algorithm for Maximum Matchings in Bipartite Graphs},
+  journal = {SIAM Journal on Computing},
+  volume  = {2},
+  number  = {4},
+  pages   = {225-231},
+  year    = {1973},
+  doi     = {10.1137/0202019}
+}
+
+@misc{quizx,
+  author       = {Kissinger, Aleks and van de Wetering, John and Vilmart, Renaud},
+  howpublished = {\url{https://github.com/zxcalc/quizx}},
+  title        = {QuiZX: a quick Rust port of PyZX},
+  year         = {2021}
+}
+
+@inproceedings{kissinger2020Pyzx,
+  author    = {Kissinger, Aleks and van de Wetering, John},
+  title     = {{PyZX: Large Scale Automated Diagrammatic Reasoning}},
+  year      = {2020},
+  booktitle = {{\rm Proceedings 16th International Conference on} Quantum Physics and Logic, {\rm Chapman University, Orange, CA, USA., 10-14 June 2019}},
+  editor    = {Coecke, Bob and Leifer, Matthew},
+  series    = {Electronic Proceedings in Theoretical Computer Science},
+  volume    = {318},
+  pages     = {229-241},
+  publisher = {Open Publishing Association},
+  doi       = {10.4204/EPTCS.318.14}
+}
+
+@article{gosset2014,
+  author     = {Gosset, David and Kliuchnikov, Vadym and Mosca, Michele and Russo, Vincent},
+  title      = {An algorithm for the T-count},
+  year       = {2014},
+  issue_date = {November 2014},
+  publisher  = {Rinton Press, Incorporated},
+  address    = {Paramus, NJ},
+  volume     = {14},
+  number     = {15–16},
+  issn       = {1533-7146},
+  abstract   = {We consider quantum circuits composed of Clifford and T gates. In this context the T gate has a special status since it confers universal computation when added to the (classically simulable) Clifford gates. However it can be very expensive to implement fault-tolerantly. We therefore view this gate as a resource which should be used only when necessary. Given an n-qubit unitary U we are interested in computing a circuit that implements it using the minimum possible number of T gates (called the T-count of U). A related task is to decide if the T-count of U is less than or equal to m; we consider this problem as a function of N = 2n and m. We provide a classical algorithm which solves it using time and space both upper bounded as O(Nm poly (m,N)). We implemented our algorithm and used it to show that any Clifford+T circuit for the Toffoli or the Fredkin gate requires at least 7 T gates. This implies that the known 7 T gate circuits for these gates are T-optimal. We also provide a simple expression for the T-count of single-qubit unitaries.},
+  journal    = {Quantum Info. Comput.},
+  month      = nov,
+  pages      = {1261–1276},
+  numpages   = {16}
+}
+
+@article{Morimae:2019onp,
+    author = "Morimae, Tomoyuki and Tamaki, Suguru",
+    title = "{Fine-grained quantum computational supremacy}",
+    doi = "10.26421/QIC19.13-14-2",
+    journal = "Quantum Information and Computation",
+    volume = "19",
+    number = "13-14",
+    pages = "1089--1115",
+    year = "2019"
 }
