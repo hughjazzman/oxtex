@@ -6,19 +6,20 @@
 The task of obtaining the stabiliser decomposition for classical simulation purposes
 has only been discussed at a high level so far.
 While we have the various methods of magic state, cat state decompositions, 
-along with grap cut decompositions,
+along with graph cut decompositions,
 we have not yet detailed the specific steps taken to obtain the stabiliser decompositions
-in the most efficient way so far.
+in the most efficient way known.
 
 In modeling our task, we can think of the stabiliser decomposition almost as a search problem, 
 where we are searching for the most efficient stabiliser decomposition.
-We can visualize an example as in \autoref{fig:amplitude}, where $V$ is a Clifford+T diagram at the root.
+We can visualize an example as in \autoref{fig:search-tree}, where $V$ is a Clifford+T diagram at the root.
 The directed edges represent the decomposition used from the parent to the child node, 
 and the leaves $d_i$ are the possible stabiliser decompositions.
 
 \begin{figure}[h!]
 \tikzfig{search-tree}
 \caption{Example tree for a stabiliser decomposition}
+\label{fig:search-tree}
 \end{figure}
 
 One question that arises is how we can efficiently traverse this tree.
@@ -63,7 +64,7 @@ More formally, we have the following lemma.
 \begin{lemma}
     Let $d$ be a stabiliser decomposition, 
     and let $\alpha_1,...,\alpha_n$ and $t_1,...,t_n$ be the $\alpha$ values and $T$-count reductions
-    of each of the $n$ decompositions to obtain $d$ from the initial Clifford+T diagram.
+    of each of the $n$ constituent decompositions to obtain $d$ from the initial Clifford+T diagram.
     Then the efficiency $\alpha$ value of the decomposition $d$ is given by
 \begin{equation}
     \label{eq:alpha-bound}
@@ -89,6 +90,29 @@ where we simplify the diagram using \nameref{alg:zx-simplify}.
 In \cite{Kissinger_2022}, although the BSS decomposition has the $\alpha \approx 0.468$,
 the actual $\alpha$ value obtained in experiments was lower, at $\approx 0.4$ \cite{sutcliffe2024proccut}.
 
+\begin{mccorrection}
+In the next chapter, we see that for some graphs in the current implementation \cite{Kissinger2022cat}, 
+we can have alpha $\alpha_e > 0.396$, which is higher than the supposed worst case
+efficiency of the partial decomposition on the 
+5-qubit magic state $\cbox{\magicspider}^{\otimes 5}$ (\ref{eq:magic-5-decomp}).
+This can be observed in the worst case, where for an initial $T$-count $t$,
+the decomposition is used until the $T$-count is 3.
+Here, the decomposition on $\cbox{\magicspider}$ (\ref{def:magic-state}, \ref{eq:magic2}) is used,
+for a total of $2^2$ terms.
+If the efficiency was $\alpha_b$ up until then, the final count of terms is
+\begin{equation}
+    2^{\alpha_b(t-3)+2} = 2^{t\left(\alpha_b+\frac{2-3\alpha_b}{t}\right)}
+\end{equation}
+This gives an effective $\alpha_e = \alpha_b + \frac{2-\alpha_b}{t}$.
+Given that we test for $10\leq t\leq 60$, this translates to a discrepancy of up to 
+$\Delta \alpha \simeq 0.02$ at $t \simeq 45$, where
+\begin{equation}
+    \Delta \alpha := \alpha_e - \alpha_b = \frac{2-\alpha_b}{t}
+\end{equation}
+As we see in the next chapter, this accounts for some decompositions giving $\alpha_e \approx 0.42$.
+This does not affect the runtime scaling of the algorithm, as noted in \cite{Codsi2022}.
+\end{mccorrection}
+
 A step further than using the $\alpha$ value of a decomposition,
 is to consider the $\alpha$ value when including the simplification step.
 In \cite{Codsi2022}, this is defined as the \textit{effective} $\alpha_e$ value.
@@ -108,12 +132,12 @@ between each step of the decompisition.
 Given that we have $k$ decompositions to choose from at each node,
 if we employed a brute force approach to find the best stabiliser decomposition,
 and attempted to find the best decomposition from a node traversing down $d$ levels in the tree,
-it would take $O(km^d)$ time, where $m$ is the maximum number of terms coming from a decomposition,
+it would take \mccorrect{$O((km)^d t^2)$} time, where $m$ is the maximum number of terms coming from a decomposition,
 for the $k$ decompositions to be applied to all the $m$ terms after each level.
 For example, the above approach of obtaining $\alpha_e$ takes $d=0$.
 
-In theory, this could be extended to larger values of $d\geq 1$, but with $m\geq 2$,
-this would mean that the overall exponential complexity of $O(2^{\alpha t + d\log m}kt^2)$ would be affected.
+In theory, this could be extended to larger values of $d\geq 1$, but with $km\geq 2$,
+this would mean that the overall exponential complexity of $O(2^{\alpha t + d\log mk}t^2)$ would be affected.
 This motivates the idea of using heuristics instead.
 
 \section{Graph Structure Heuristic}
@@ -316,6 +340,7 @@ but cutting 2 vertices to remove 5 $T$-spiders would mean $h_e(v_2) = \frac{5}{2
 We show that with an added condition, the heuristic is valid.
 
 \begin{proposition}
+    \label{prop:cut-heuristic-catn}
     Suppose $v$ has 0-spider neighbours $w_1,...,w_k$ that are part of all $\catstate{n(w_i)}$ states.
     Let $T(w_i)$ be the set of $T$-like spiders that is part of each $\catstate{n(w_i)}$ state,
     so $|T(w_i)| = n(w_i)$.
@@ -418,7 +443,7 @@ the cut heuristic on top of the cat decompositions.
 We have the $\alpha$ values from decompositions of \catstate{4}, \catstate{6}, \catstate{5}, \catstate{3},
 and magic state $\cbox{\magicspider}^{\otimes 5}$
 being $0.25 < 0.264 < 0.317 < 0.333 < 0.396$ respectively.
-Depending on the value of the best heuristic (\ref{eq:cut-heuristic-combined}),
+Depending on the value of the best heuristic (\ref{eq:cut-heuristic-combined}), $\max_v h(v)$,
 and the best available \catstate{n} decomposition in the diagram,
 we can continue to use the greedy approach.
 We have the following simple algorithm.
@@ -427,16 +452,16 @@ We have the following simple algorithm.
 \caption{Greedy Algorithm with Heuristic}
 \begin{algorithmic}[1]
 \State \textbf{Input:} $\alpha$ values for $\catstate{4}$, $\catstate{6}$, $\catstate{5}$, $\catstate{3}$, 
-and $\cbox{\magicspider}^{\otimes 5}$
+and $\cbox{\magicspider}^{\otimes 5}$, and the graph $G$
 \State \textbf{Output:} Chosen state and corresponding decomposition
 
 \State Let $\alpha_{4} = 0.25, \alpha_{6} = 0.264,\alpha_{5} = 0.317, \alpha_{3} = 0.333, 
 \alpha_{\otimes 5} = 0.396$
-\State Compute the best catstate $\catstate{best}$ with the lowest $\alpha$ value
+\State Compute the best catstate $\catstate{best}$ in $G$ with the lowest $\alpha$ value
 \State Let $\alpha_{best}$ be the $\alpha$ value of $\catstate{best}$, 
 or of $\cbox{\magicspider}^{\otimes 5}$ if no $\catstate{best}$ is found
 
-\State Compute $\alpha_h$ using a heuristic
+\State Compute $\alpha_h$ on $G$ using a heuristic
 
 \If {$\alpha_h < \alpha_{best}$}
     \State Use the decomposition corresponding to the heuristic
@@ -450,7 +475,8 @@ or of $\cbox{\magicspider}^{\otimes 5}$ if no $\catstate{best}$ is found
 Even with a small values of $n,m$, the heuristic can be quite effective.
 Just having $n=m=1$ can already give a $\alpha_h = 0.25$, matching the best \catstate{4} decomposition.
 Furthermore, this will cut the graph at a vertex, as compared to the \catstate{4} decomposition,
-which only cuts the 2nd of its 2 terms, while its first term remains connected, seen below.
+which only locally partitions the second of its 2 terms, 
+while its first term remains connected, seen below.
 \begin{equation}
     \tikzfig{cat-4-decomp-cut}
 \end{equation}
@@ -484,9 +510,10 @@ where the denominator is minimized.
     t_{\min} = 1+\min_{\forall i, u_i\in T(w_i)} \left|\bigcup_{i=1}^k T(w_i) - \{g_i, v, u_i\}\right|
 \end{equation}
 
-It is easy to see that this heuristic is valid, by the same argument as the previous proposition.
+It is easy to see that this heuristic is valid, 
+by the same argument as the previous Proposition \ref{prop:cut-heuristic-catn}.
 Solving this is akin to maximum bipartite matching.
-The argument is that to minimize the number of cuts, the number of $T$-like spiders matched with a phase gadget
+The is because to minimize the number of cuts, the number of $T$-like spiders matched with a phase gadget
 needs to be maximized, while only one $T$-like spider can be matched with each phase gadget.
 The matching can be found in polynomial time using any maximum bipartite matching algorithm 
 like the Hopcroft-Karp algorithm \cite{Hopcroft1973}.
