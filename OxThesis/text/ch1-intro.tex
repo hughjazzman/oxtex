@@ -1,10 +1,3 @@
-% \begin{savequote}[8cm]
-% \textlatin{Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...}
-
-% There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...
-%   \qauthor{--- Cicero's \textit{de Finibus Bonorum et Malorum}}
-% \end{savequote}
-
 \chapter{\label{ch:1-intro}Introduction} 
 
 \minitoc
@@ -21,17 +14,12 @@ a quantum computer could potentially bypass these scaling issues - dubbed the "q
 
 If scalable quantum computers were to become a reality, 
 they could solve some of the most challenging problems in computer science much more efficiently than classical computers. 
-One notable example is Shor's algorithm for factoring large numbers, which could break widely-used cryptographic systems such as RSA. 
-Another significant algorithm is Grover's search algorithm, which provides quadratic speed-ups for unstructured search problems. 
-
-Classical computations play an essential role in assisting and accelerating the development of quantum computers. 
-Classical simulation is a fundamental aspect of understanding and designing quantum hardware, 
+Classical computations play an essential role in assisting and accelerating the development of quantum computers, 
+since classical simulation is a fundamental aspect of understanding and designing quantum hardware, 
 often serving as the only means to validate these quantum systems \cite{xu2023herculean}. 
 Additionally, quantum algorithms can be implemented on classical simulators for testing and verification purposes 
 while full-fledged quantum computers remain beyond reach (for now). 
 These simulators emulate the behavior of quantum computers, allowing researchers to simulate processes as if running on actual quantum devices.
-
-% \section{Contribution}
 
 This thesis aims to present the speedup of classical simulation of quantum circuits in an almost entirely graphical approach.
 From the introduction of the qubits, to the representation of quantum circuits and linear maps,
@@ -40,8 +28,27 @@ Using ZX-Calculus, a graphical calculus detailed in \autoref{sec:zx-calculus},
 quantum circuits can be represented as diagrams, 
 allowing for different discoveries to be more easily made when analysing the structure of said diagrams.
 
+The thesis is organised as follows.
+First, from this chapter, we introduce the basic notation and concepts of quantum computing,
+with a focus on the ZX-Calculus.
+Next, \autoref{ch:2-litreview} outlines the methods used for classical simulation via stabiliser decomposition
+using ZX-Calculus as covered in \cite{Kissinger_2022, Kissinger2022cat,Codsi2022}.
+\autoref{ch:3-methods} formalises the definition of using heuristics to improve classical simulation,
+and connects these heuristics to the existing methods in the literature 
+\cite{Codsi2022,sutcliffe2024proccut,codsi2023}.
+The classes of circuits benchmarked are introduced in \autoref{ch:4-results},
+as well as the numerical results of using heuristics covered in \autoref{ch:3-methods}.
+
+TODO: details of last chapters
+
 \section{Basic Notation}
 \label{sec:basic-notation}
+\textit{
+  This section, and the one after it, introduce the basic notation and concepts of quantum computing,
+  along with the ZX-Calculus, and is a subset of the concepts covered by Coecke and Kissinger  
+  in Picturing Quantum Processes \cite{coecke2017picturing}.
+}
+
 In classical computing, a bit is the fundamental unit of information, 
 and is denoted by a boolean value $b\in\{0,1\}$.
 In quantum computing, the fundamental unit of information is the qubit,
@@ -333,6 +340,13 @@ combining with the fact that any single-qubit phase gate can be approximated by 
 with details found in \cite{Nielsen_Chuang_2010}.
 
 \section{Graph Reduction}
+\textit{
+  This section connects the ZX-diagrams to graphs, in a way which will continue to be used
+  for the rest of the thesis.
+  The content in this section will be covered by Kissinger and van de Wetering 
+  in the soon-to-be-published Picturing Quantum Software \cite{Kissinger2024}.
+  Most of the concepts were also covered in \cite{Duncan2020graphtheoretic,Kissinger2020}
+}
 
 Because of OCM, ZX-diagrams up until now have very similar structure to graphs,
 where the spiders are the vertices and the wires are the edges.

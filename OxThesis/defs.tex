@@ -9,11 +9,23 @@
 \usepackage{xcolor}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{titlesec}
+\usepackage{subcaption}
 
 \graphicspath{{.}{./figures/}}
 
 \input{quantum.tikzstyles}
 \input{dots.tikzdefs}
+
+
+% \titleformat{\chapter}[display]
+% {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+
+% this alters "before" spacing (the second length argument) to 0
+\titlespacing*{\chapter}{0pt}{-40pt}{40pt}
+
+\renewcommand{\chapterautorefname}{Chapter}
+\renewcommand{\sectionautorefname}{Section}
 
 \theoremstyle{definition}
 \newtheorem{theorem}{Theorem}[section]

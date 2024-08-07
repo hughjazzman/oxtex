@@ -1,0 +1,16 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=big gate] (0) at (0, 0) {CCZ};
+		\node [style=none] (3) at (1.5, 0.75) {};
+		\node [style=none] (4) at (1.5, 0) {};
+		\node [style=none] (5) at (1.5, -0.75) {};
+		\node [style=none] (6) at (-1.5, -0.75) {};
+		\node [style=none] (7) at (-1.5, 0) {};
+		\node [style=none] (8) at (-1.5, 0.75) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (4.center) to (7.center);
+		\draw (6.center) to (5.center);
+		\draw (8.center) to (3.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

@@ -2,6 +2,16 @@
 
 \minitoc
 
+\textit{
+    This chapter presents the classes of circuits used to benchmark our heuristics,
+    which are not novel themselves, but are used to compare the effectiveness of our methods.
+    There are some novel analyses or generalisations of the structures of some circuits,
+    notably the \nameref{sec:random-iqp} and the \nameref{sec:modified-hidden-shift} circuits.\\
+    In the section afterward, we present the results of the benchmarking of our heuristics,
+    with experimentation setup detailed.
+    We also discuss the reasons behind effectiveness of heuristics to certain classes of circuits.
+}
+
 \section{Benchmarking}
 To determine the effectiveness of our heuristic methods thus far,
 we need to benchmark them against known methods.
@@ -58,3 +68,385 @@ Here $U_j\in \{\cbox{\idwire}, \cbox{\hadamard}, \cbox{\redphase{\frac{\pi}{2}}}
 Choosing $\theta = (2k+1)\frac{\pi}{4}$ for $k\in \mathbb{Z}$, we can generate a random Clifford+T circuit
 with a fixed depth by composing these exponentiated Pauli unitaries.
 This fixes the $T$-count of the circuit, and can be used to benchmark decompositions.
+
+\subsection{Random IQP}
+\label{sec:random-iqp}
+Instantaneous Quantum Polynomial (IQP) circuits were used in the benchmark of \cite{Codsi2022}.
+These circuits were chosen as a possible model to demonstrate quantum supremacy \cite{Bremner_2017}.
+They can likely by build in a quantum computer, while at the same time,
+they are a class of commuting quantum computations which are shown to be hard to simulate classically,
+even when adding in the presence of physically motivated constraints, 
+such as sparsity and noise \cite{Bremner_2017}.
+First, we introduce the CZ-gate.
+
+\begin{definition}[CZ-gate]
+    The CZ-gate is the controlled Z-gate, defined as
+\begin{equation}
+    CZ := \tikzfig{cz}
+\end{equation}
+\end{definition}
+
+More generally, we can define the controlled Z($\alpha$)-gate, 
+where $\alpha=k\frac{\pi}{2}, k\in \mathbb{Z}$, so $CZ(\pi) = CZ$.
+
+\begin{definition}[$CZ(\alpha)$-gate \cite{coecke2017picturing}]
+    The controlled Z($\alpha$)-gate is the phase gadget,
+\begin{equation}
+    CZ(\alpha) := \tikzfig{cza}
+\end{equation}
+\end{definition}
+
+
+\begin{definition}[IQP circuit \cite{Bremner_2016,codsi2023}]
+    An IQP circuit is a circuit composed of Hadamard gates, $CZ(\frac{k\pi}{2})$-gates,
+    and $T^m$-gates, where $k,m\in \mathbb{Z}$.
+\begin{figure}[h!]
+    \ctikzfig{def-IQP}
+    \caption{An IQP circuit as a ZX-diagram, for $x_i,y_{i,j}\in\mathbb{Z}$, 
+    as defined in \cite{codsi2023}}
+    \label{fig:def-IQP}
+\end{figure}
+\end{definition}
+
+Intuitively, the commutative nature of the phase gadgets can be seen directly in the ZX-calculus.
+We also see the presence of many phase gadgets which only have 2 legs,
+which lends itself directly to the strength of our heuristic (\ref{eq:cut-heuristic-combined}),
+considering the number of \catstate{3} states (\ref{eq:cut-heuristic-cat3}).
+
+In \cite{codsi2023}, dense IQP circuits were found to be simulable in $O(\frac{\log^2 n}{n}2^{n})$ time,
+where $n$ is the number of qubits,
+which is a significant improvement and faster than $O(2^n/poly(n))$ for any $poly(n)$,
+compared to $O(n^4 2^{O(n^2)})$ of just using stabiliser decomposition.
+They concluded that current hardware is probably not enough to demonstrate quantum supremacy
+using IQP circuits.
+We note, however, that the heuristic approach can easily give us a better upper bound than than the general one.
+
+\begin{lemma}
+    Given a dense $n$-qubit IQP circuit, the heuristic approach to stabiliser decomposition
+    can be completed in $O(2^n)$ time.
+\end{lemma}
+
+\begin{proof}
+    Note that as stated in \cite{codsi2023}, we can decompose the IQP circuit into $O(2^n)$
+    just by cutting the $T$-like spiders corresponding to the $n$ qubits.
+    It suffices to show that the heuristic will pick the correct cut decompositions,
+    or result in an equivalent number of terms.
+    First, note that we can set the algorithm \ref{alg:stabiliser-decomposition} 
+    to skip the \nameref{alg:zx-simplify} step between each cut.
+    Consider a $T$-like spider connected to a leg of a phase gadget.
+    Note that there are only $n$ of such spiders.
+    We know it will always be connected to $k \geq 1$ phase gadgets 
+    (i.e. the $x_i$ T-spiders in \autoref{fig:def-IQP}).
+    Also, the $T$-like spiders in the phase gadgets themselves are only connected 
+    to a single phase gadget by definition (i.e. the $y_{i,j}$ T-spiders in \autoref{fig:def-IQP}).
+    If $k=1$ for both legs of the phase gadget, it doesn't matter which $T$-like spider we pick, 
+    as they would be equivalent cuts.
+    Otherwise, if $k > 1$ for some leg, the heuristic will always pick that $T$-like spider, 
+    and since its $\alpha_h \leq 0.2 < 0.25$
+    is better than any of the \catstate{n} decompositions, 
+    it will be picked over them in the greedy algorithm.
+    If we are left with $T$-like spiders where all are connected to $k=1$ phase gadgets,
+    then since the only cat state present is the \catstate{3},
+    its decomposition of 2 terms will give an equivalent number of terms as the cut decomposition.
+    Thus, the heuristic will always pick the correct cuts, 
+    or use the \catstate{3} decomposition.
+\end{proof}
+
+While this is not as good as the $O(\frac{\log^2 n}{n}2^{n})$ time of the dense IQP circuits,
+it gives a much closer upper bound than the general one, 
+and is relatively easy to implement in practice.
+In fact, we can generalise this even further.
+
+\begin{proposition}
+    \label{prop:reduced-gadget-cut}
+    Suppose we have ZX-diagram in reduced gadget form, 
+    which has $n$ $T$-like spiders not part of phase gadgets,
+    and $\tilde{O}(n^k)$
+    \footnote{$\tilde{O}(f(n)) = O(f(n) \log^p f(n))$ for some $p$ is a convenient shorthand 
+    ignoring polylogarithmic factors} 
+    phase gadgets, for $k\in \mathbb{R}_+$.
+    Then the stabiliser decomposition can be completed in $O(2^n)$ time.
+\end{proposition}
+
+\begin{proof}
+    Simply cut the $n$ $T$-like spiders to get $O(2^n)$ terms.
+    Since the phase gadgets will now be legless, the diagram is easy to simulate.
+\end{proof}
+
+We have that for dense IQP circuits, $k=2$.
+The resulting efficiency of just using cuts is then
+\begin{equation}
+    \alpha = \frac{n}{n+\tilde{O}(n^k)} = \frac{1}{1+\tilde{O}(n^{k-1})}
+\end{equation}
+It can be noted that for $k \leq 1$, the cut approach will not really be useful,
+since $n^{k-1} \leq 1$ so its $\alpha \geq 0.5$ as $n\to\infty$.
+However, for $k > 1$, we see that $\alpha < 0.5$ as $n\to\infty$ is inversely correlated with $n^{k-1} > 1$,
+and so it might be useful to use a different metric that is not based on the $T$-count.
+Instead, as observed in \cite{codsi2023}, we see that the growth of the number of terms
+is more like $O(2^{\beta n})$ for some $0 < \beta \leq 1$.
+For dense IQP circuits, they obtained $\beta \approx 0.93$.
+For sparse IQP circuits where $k=1$ (so there were $O(n\log n)$ phase gadgets), 
+they obtained $0.5 < \beta < 0.93$.
+Compare this to using $\alpha$ where we have the growth being 
+\begin{equation}
+O(2^{\alpha \cdot \tilde{O}(n^k)}) = O\left(2^{\frac{\tilde{O}(n^k)}{\tilde{O}(n^{k-1})}}\right) 
+= O(2^{O(n)})
+\end{equation}
+which ends up being equivalent.
+
+\begin{definition}
+    Suppose we have ZX-diagram in reduced gadget form, 
+    which has $n$ $T$-like spiders not part of phase gadgets,
+    and $\tilde{O}(n^k)$ phase gadgets, for $k\in \mathbb{R}_{> 1}$.
+    Let $p$ be the number of terms in the stabiliser decomposition $D$.
+    We define the \textit{cut efficiency} $\beta$ as
+    \begin{equation}
+        \beta(D) = \frac{p}{n}
+    \end{equation}
+\end{definition}
+
+We note that the cut heuristic as defined in (\ref{eq:cut-heuristic-combined})
+works very well due to the presence of many \catstate{3}.
+In the general case where this may not be true, 
+the conceptualisation of different heuristics could be developed to
+exploit any classes of circuits that have a structure such that 
+its reduced gadget form allows for Proposition \ref{prop:reduced-gadget-cut} to be applied.
+
+\subsection{Modified Hidden Shift}
+\label{sec:modified-hidden-shift}
+
+Hidden shift circuits have been used in various benchmarks since being introduced in \cite{Bravyi_2016bss},
+starting from the benchmark of the BSS decomposition, 
+and continuing to the benchmark of the \catstate{n} decomposition 
+\cite{Bravyi_2019,Kissinger_2022,Kissinger2022cat,Peres_2023}.
+However, it was noted that improvements QuiZX trivialised the decomposition of these circuits,
+with a conjecture that the class of circuits being simulable in polynomial time \cite{Codsi2022}.
+Thus, in \cite{koch2023}, they introduced a modification to the hidden shift circuits,
+which they called the \textit{modified hidden shift} circuits.
+
+First, we note that the $T$-count of the hidden shift circuits only comes from
+the $T$-spiders appearing CCZ gates in the circuits.
+We introduce the definition of the CCZ gate, shown as presented in \cite{Kissinger_2022}.
+
+\begin{definition}[CCZ gate \cite{Kissinger_2022}]
+    The CCZ gate is the controlled-CZ-gate, defined as
+\begin{equation}\label{eq:7t-ccz}
+\tikzfig{ccz-box} := \tikzfig{ccz} \ =\ 
+\sqrt{2}^5\ 
+\tikzfig{7t-ccz}
+\end{equation}
+It arises from simplifying the `textbook' presentation of CCZ or Toffoli in terms of CNOT and T gates 
+(see e.g.~\cite{Nielsen_Chuang_2010}, Section 4.3). 
+The 4-spider version is the following:
+\begin{equation}\label{eq:4t-ccz}
+\tikzfig{ccz} \ =\ 
+4e^{i\frac\pi4}\ 
+\tikzfig{4t-ccz}
+\end{equation}
+\end{definition}
+
+While the structure of the original hidden shift circuits made use of CCZ gates,
+the modified hidden shift circuits used controlled swap gates instead.
+The simple addition of the CNOT and Hadamard gates to form the new controlled swap gate
+made the circuits non-trivial again.
+
+\begin{definition}[Controlled swap gate]
+    The controlled swap (Friedkin) gate is defined as
+\begin{equation}
+    \tikzfig{cswap-box} := \tikzfig{cswap}
+\end{equation}
+\end{definition}
+
+
+We also have the following useful observation about the CCZ gate.
+
+\begin{lemma}
+    The CCZ gate can be decomposed into 2 stabiliser terms.
+\end{lemma}
+\begin{proof}
+\begin{equation}
+    \tikzfig{7t-ccz-decomp}
+\end{equation}
+\end{proof}
+
+While at first glance, this seems to give a decent $\alpha = 1/7 \approx 0.143$,
+we notice from Eq. \ref{eq:4t-ccz} that CCZ gates can be expressed with just 4 $T$-spiders.
+In fact, the 2 terms can be derived from the 4 $T$-spider version.
+
+\begin{equation}
+    \tikzfig{4t-ccz-decomp}
+\end{equation}
+
+It is then fairer to say that this cut decomposition has $\alpha = 0.25$.
+
+The structure of CCZ can be visually inspected to see that 2 and 3-legged phase gadgets appear
+in the circuits.
+The effectiveness of the heuristic in exploiting this structure can be seen later in this chapter.
+
+\subsection{Random Clifford+T with CCZ}
+Last but not least, we consider the combination of the random Clifford+T circuits with CCZ gates,
+as was benchmarked in \cite{koch2023}.
+We use the similar distribution of gate sets with 5\% each of CCZ and T gates,
+with the rest of distribution uniform over the Clifford gates (Hadamard, CNOT, CZ, S).
+
+\section{Experiments}
+
+We now present the results of the benchmarking of our heuristics.
+For all experiments, we have a timeout of 90 seconds per circuit simulated.
+
+\subsection{Random Clifford+T}
+
+For these circuits, we can choose the number of qubits $q$, and the depth $d$.
+We stick with the standard minimum and maximum weights of 2 and 4 as in \cite{Kissinger2022cat}.
+We take $q=7,19,20,47,50,97,100$ and $10 \leq d \leq 103$, where we increment $d$ by 3 each time,
+and take the results of 50 random circuits for each $(q,d)$ pair.
+
+\begin{figure}
+    \includegraphics{alpha_all_pauli.png}
+    \caption{$\alpha$ values for all random Clifford+T circuits}
+\end{figure}
+
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{alpha_mean_er_pauli.png}
+    \caption{Mean $\alpha$ values for different $T$-counts}
+    \label{fig:alpha_mean_er_pauli}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{alpha_mean_qs_pauli.png}
+    \caption{Mean $\alpha$ values separated by number of qubits}
+    \label{fig:alpha_mean_qs_pauli}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{logterms_qs_pauli.png}
+    \caption{Mean log number of terms for different $T$-counts, separated by number of qubits}
+    \label{fig:logterms_qs_pauli}
+\end{figure}
+\begin{figure}
+    \includegraphics[width=\textwidth]{logtime_qs_pauli.png}
+    \caption{Mean log time for different $T$-counts, separated by number of qubits}
+    \label{fig:logtime_qs_pauli}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{alpha_improve_pauli.png}
+    \caption{Improvement in $\alpha$ values for all random Clifford+T circuits}
+\end{figure}
+
+\begin{figure}
+    \includegraphics{logtime_improve_pauli.png}
+    \caption{Improvement in log time for all random Clifford+T circuits}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{count7-pauli.png}
+    \caption{Number of completed simulations before timeout for $q=7$}
+    \label{fig:count7-pauli}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{count19-pauli.png}
+    \caption{Number of completed simulations before timeout for $q=19$}
+    \label{fig:count19-pauli}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{count50-pauli.png}
+    \caption{Number of completed simulations before timeout for $q=50$}
+    \label{fig:count50-pauli}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{count100-pauli.png}
+    \caption{Number of completed simulations before timeout for $q=100$}
+    \label{fig:count100-pauli}
+\end{figure}
+
+\subsection{Random IQP}
+
+For these circuits, we can choose the number of qubits $q$.
+We take $5 \leq q \leq 25$.
+As mentioned in the previous section, the $\beta$ effiency is a more useful metric for these circuits.
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{beta_mean_qs_iqp.png}
+    \caption{Mean $\beta$ values separated by number of qubits}
+    \label{fig:beta_mean_qs_iqp}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{beta_improve_iqp.png}
+    \caption{Improvement in $\beta$ values for all random IQP circuits}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{logtime_improve_iqp.png}
+    \caption{Improvement in log time for all random IQP circuits}
+\end{figure}
+
+We also compare this to only using the single cut heuristic.
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{beta_mean_qs_vsingle_iqp.png}
+    \caption{Mean $\beta$ values separated by number of qubits, cut vs combined}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{beta_improve_vsingle_iqp.png}
+    \caption{Improvement in $\beta$ values for all random IQP circuits, cut vs combined}
+\end{figure}
+
+\begin{figure}
+    \includegraphics{logtime_improve_vsingle_iqp.png}
+    \caption{Improvement in log time for all random IQP circuits, cut vs combined}
+\end{figure}
+
+\subsection{Modified Hidden Shift}
+
+For these circuits, we can choose the number of qubits $q$, and the number of CCZ gates $n$.
+We take $q=6,20,50$ and $2 \leq n \leq 40$. 
+For $q=6$, we take $2 \leq n \leq 200$.
+
+\begin{figure}
+    \includegraphics{alpha_all_hs.png}
+    \caption{$\alpha$ values for all modified hidden shift circuits}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{alpha_mean_qs_hs.png}
+    \caption{Mean $\alpha$ values of modified hidden shift circuits for different $T$-counts}
+    \label{fig:alpha_mean_qs_hs}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{logtime_mean_qs_hs.png}
+    \caption{Mean log time of modified hidden shift circuits for different $T$-counts}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{logtime_improve_hs.png}
+    \caption{Improvement in log time for all modified hidden shift circuits}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{count6-hs.png}
+    \caption{Number of completed simulations before timeout for $q=7$}
+    \label{fig:count7-hs}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{count20-hs.png}
+    \caption{Number of completed simulations before timeout for $q=20$}
+    \label{fig:count20-hs}
+\end{figure}
+
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{count50-hs.png}
+    \caption{Number of completed simulations before timeout for $q=50$}
+    \label{fig:count50-hs}
+\end{figure}
+
+\subsection{Random Clifford+T with CCZ}

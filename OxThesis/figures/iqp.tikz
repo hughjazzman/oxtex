@@ -1,0 +1,63 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=X dot] (0) at (-8.75, 4) {};
+		\node [style=X dot] (1) at (-8.75, 1) {};
+		\node [style=X dot] (2) at (-8.75, -3) {};
+		\node [style=hadamard] (3) at (-6.75, 4) {};
+		\node [style=hadamard] (4) at (-6.75, 1) {};
+		\node [style=hadamard] (5) at (-6.75, -3) {};
+		\node [style=X dot] (8) at (-5.25, 2.5) {};
+		\node [style=Z phase dot] (9) at (-3.75, 2.5) {$-\frac{a_1 \pi}{4}$};
+		\node [style=Z phase dot] (10) at (-5.25, 4) {$ \frac{a_1\pi}{4}$};
+		\node [style=Z phase dot] (11) at (-5.25, 1) {$\frac{a_1 \pi}{4}$};
+		\node [style=Z phase dot] (12) at (-3.25, 1) {$\frac{a_2\pi}{4}$};
+		\node [style=Z phase dot] (13) at (-3.25, -3) {$\frac{a_2\pi}{4}$};
+		\node [style=none] (14) at (-7.75, -0.75) {$\vdots$};
+		\node [style=X dot] (15) at (-3.25, -1) {};
+		\node [style=Z phase dot] (16) at (-1.75, -1) {$-\frac{a_2\pi}{4}$};
+		\node [style=Z phase dot] (17) at (1.5, 4) {$\frac{a_k\pi}{4}$};
+		\node [style=Z phase dot] (18) at (1.5, -3) {$\frac{a_k\pi}{4}$};
+		\node [style=Z phase dot] (19) at (3, 0) {$-\frac{a_k\pi}{4}$};
+		\node [style=X dot] (20) at (1.5, 0) {};
+		\node [style=hadamard] (21) at (6.75, 4) {};
+		\node [style=hadamard] (22) at (6.75, 1) {};
+		\node [style=hadamard] (23) at (6.75, -3) {};
+		\node [style=X phase dot] (24) at (8.75, 4) {$x_1 \pi$};
+		\node [style=X phase dot] (25) at (8.75, 1) {$x_2 \pi$};
+		\node [style=X phase dot] (26) at (8.75, -3) {$x_n \pi$};
+		\node [style=none] (27) at (7.75, -0.75) {$\vdots$};
+		\node [style=none] (28) at (-0.25, -0.5) {$\dots$};
+		\node [style=Z phase dot] (29) at (4.75, 4) {$\frac{b_1\pi}{4}$};
+		\node [style=Z phase dot] (30) at (4.75, 1) {$\frac{b_2\pi}{4}$};
+		\node [style=Z phase dot] (31) at (4.75, -3) {$\frac{b_n\pi}{4}$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (0.center) to (3);
+		\draw (10) to (17);
+		\draw (21) to (24.center);
+		\draw (3) to (10);
+		\draw (10) to (8);
+		\draw (8) to (11);
+		\draw (8) to (9);
+		\draw (1.center) to (4);
+		\draw (4) to (11);
+		\draw (11) to (12);
+		\draw (22) to (25.center);
+		\draw (17) to (20);
+		\draw (20) to (19);
+		\draw (12) to (15);
+		\draw (15) to (13);
+		\draw (5) to (2.center);
+		\draw (5) to (13);
+		\draw (13) to (18);
+		\draw (23) to (26.center);
+		\draw (20) to (18);
+		\draw (15) to (16);
+		\draw (17) to (29);
+		\draw (30) to (12);
+		\draw (21) to (29);
+		\draw (30) to (22);
+		\draw (31) to (18);
+		\draw (23) to (31);
+	\end{pgfonlayer}
+\end{tikzpicture}

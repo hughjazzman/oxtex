@@ -2,6 +2,13 @@
 
 \minitoc
 
+\textit{
+    This chapter introduced the concepts required for classical simulation,
+    using stabiliser decompositions, magic states, cat states, and graph cuts.
+    There is no novel work in this chapter, with all results being adapted from existing literature
+    \cite{Kissinger2022cat,Kissinger_2022,Qassim_2021,Bravyi_2016bss,Codsi2022}.
+}
+
 \section{Introduction}
 As mentioned in the previous chapter, classical simulation of quantum circuits provides an essential tool 
 for verification and validation, despite its inherent limitations. 
@@ -290,10 +297,10 @@ any internal spider that is Clifford will be part of a non-Clifford phase gadget
 Further, no two Clifford spiders will be neighbours \cite{Kissinger2022cat}.
 Then, we can apply the cat state decompositions to the cat states centered at the 0-spiders 
 that are part of these phase gadgets in the reduced gadget form, if they have $\geq 3$ neighbours.
-This can be seen below, where $j,k,l\in\mathbb{Z}$.
+This can be seen below, where $k,k_i\in\mathbb{Z}$ \cite{Kissinger2022cat}.
 
 \begin{equation}
-    \tikzfig{reduced_to_cat}
+    \tikzfig{phase-gadget-to-cat}
 \end{equation}
 
 However, if the cat states are not present, we would need to fallback to a magic state decomposition.

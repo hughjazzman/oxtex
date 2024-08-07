@@ -1,0 +1,45 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (0) at (-6.5, 3) {};
+		\node [style=none] (1) at (-6.5, 1) {};
+		\node [style=none] (3) at (-6.5, -3) {};
+		\node [style=none] (4) at (-5.75, -1) {$\vdots$};
+		\node [style=Z phase dot] (5) at (-4, 3) {$\ x_1\frac{\pi}{4}~$};
+		\node [style=Z phase dot] (9) at (-4, 1) {$\ x_2\frac{\pi}{4}~$};
+		\node [style=Z phase dot] (11) at (-4, -3) {$\ x_n\frac{\pi}{4}~$};
+		\node [style=none] (12) at (2.75, 3) {};
+		\node [style=none] (13) at (2.75, 1) {};
+		\node [style=none] (14) at (2.75, -3) {};
+		\node [style=none] (15) at (2, -1) {$\vdots$};
+		\node [style=X dot] (16) at (-2, 2) {};
+		\node [style=Z phase dot] (17) at (0.25, 2) {$\ y_{1,2}\frac{ \pi}{4}~$};
+		\node [style=X dot] (18) at (-2, -2) {};
+		\node [style=Z phase dot] (19) at (0.25, -2) {$\ y_{1,n}\frac{ \pi}{4}~$};
+		\node [style=X dot] (20) at (-2, -0.25) {};
+		\node [style=Z phase dot] (21) at (0.25, -0.25) {$\ y_{2,n}\frac{ \pi}{4}~$};
+		\node [style=none] (22) at (-4, -1) {$\vdots$};
+		\node [style=hadamard] (23) at (-5.75, 3) {};
+		\node [style=hadamard] (24) at (-5.75, 1) {};
+		\node [style=hadamard] (25) at (-5.75, -3) {};
+		\node [style=hadamard] (26) at (2, 3) {};
+		\node [style=hadamard] (27) at (2, 1) {};
+		\node [style=hadamard] (28) at (2, -3) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [in=180, out=0] (0.center) to (5);
+		\draw (1.center) to (9);
+		\draw (3.center) to (11);
+		\draw (5) to (12.center);
+		\draw (13.center) to (9);
+		\draw (11) to (14.center);
+		\draw (5) to (16);
+		\draw (9) to (16);
+		\draw (16) to (17);
+		\draw (18) to (19);
+		\draw [in=105, out=-60, looseness=0.75] (5) to (18);
+		\draw (18) to (11);
+		\draw (20) to (21);
+		\draw (9) to (20);
+		\draw (20) to (11);
+	\end{pgfonlayer}
+\end{tikzpicture}

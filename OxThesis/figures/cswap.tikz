@@ -1,0 +1,24 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=big gate] (0) at (0, 0) {CCZ};
+		\node [style=hadamard] (1) at (-1.5, -0.75) {};
+		\node [style=hadamard] (2) at (1.5, -0.75) {};
+		\node [style=Z dot] (3) at (-2.5, -0.75) {};
+		\node [style=Z dot] (4) at (2.5, -0.75) {};
+		\node [style=X dot] (5) at (2.5, 0) {};
+		\node [style=X dot] (6) at (-2.5, 0) {};
+		\node [style=none] (7) at (-3.5, 0.75) {};
+		\node [style=none] (8) at (-3.5, 0) {};
+		\node [style=none] (9) at (-3.5, -0.75) {};
+		\node [style=none] (10) at (3.5, 0.75) {};
+		\node [style=none] (11) at (3.5, 0) {};
+		\node [style=none] (12) at (3.5, -0.75) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (7.center) to (10.center);
+		\draw (11.center) to (8.center);
+		\draw (9.center) to (12.center);
+		\draw (5) to (4);
+		\draw (6) to (3);
+	\end{pgfonlayer}
+\end{tikzpicture}

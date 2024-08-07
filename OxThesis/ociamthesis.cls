@@ -439,8 +439,8 @@
 
 
 % JEM: adjust start-of-chapter spacing
-\renewcommand{\chapterheadstartvskip}{\vspace*{40pt}}
-\renewcommand{\chapterheadendvskip}{\vspace{30pt}}
+\renewcommand{\chapterheadstartvskip}{\vspace*{-3cm}}
+\renewcommand{\chapterheadendvskip}{\vspace{10pt}}
 
 
 % JEM: combine all of the commands you run before appendices start

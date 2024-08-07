@@ -1,0 +1,35 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=Z dot] (0) at (-4, 1.5) {};
+		\node [style=hadamard] (1) at (-4, 0) {};
+		\node [style=Z dot] (2) at (-4, -1.5) {};
+		\node [style=none] (3) at (-2, 1.5) {};
+		\node [style=none] (4) at (-2, -1.5) {};
+		\node [style=none] (5) at (-6, 1.5) {};
+		\node [style=none] (6) at (-6, -1.5) {};
+		\node [style=none] (7) at (0, 0) {$=$};
+		\node [style=none] (11) at (6, 1.5) {};
+		\node [style=none] (12) at (6, -1.5) {};
+		\node [style=none] (13) at (2, 1.5) {};
+		\node [style=none] (14) at (2, -1.5) {};
+		\node [style=Z phase dot] (15) at (4, 1.5) {$\frac{\pi}{2}$};
+		\node [style=Z phase dot] (16) at (4, -1.5) {$\frac{\pi}{2}$};
+		\node [style=Z phase dot] (17) at (5.5, 0) {$-\frac{\pi}{2}$};
+		\node [style=X dot] (18) at (4, 0) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (5.center) to (0);
+		\draw (0) to (3.center);
+		\draw (0) to (1);
+		\draw (1) to (2);
+		\draw (2) to (4.center);
+		\draw (2) to (6.center);
+		\draw (13.center) to (15);
+		\draw (11.center) to (15);
+		\draw (15) to (18);
+		\draw (18) to (17);
+		\draw (18) to (16);
+		\draw (16) to (12.center);
+		\draw (16) to (14.center);
+	\end{pgfonlayer}
+\end{tikzpicture}
