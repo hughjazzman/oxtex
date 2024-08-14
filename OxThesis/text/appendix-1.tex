@@ -1,8 +1,39 @@
-\chapter{\label{app} Appendices}
+\chapter{\label{app} Appendix}
 
-\minitoc
+% \minitoc
 
-Appendices are just like chapters.  Their sections and subsections get numbered and included in the table of contents; figures and equations and tables added up, etc.  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et dui sem. Aliquam dictum et ante ut semper. Donec sollicitudin sed quam at aliquet. Sed maximus diam elementum justo auctor, eget volutpat elit eleifend. Curabitur hendrerit ligula in erat feugiat, at rutrum risus suscipit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer risus nulla, facilisis eget lacinia a, pretium mattis metus. Vestibulum aliquam varius ligula nec consectetur. Maecenas ac ipsum odio. Cras ac elit consequat, eleifend ipsum sodales, euismod nunc. Nam vitae tempor enim, sit amet eleifend nisi. Etiam at erat vel neque consequat.
+% Appendices are just like chapters. 
 
-\section{Linear Algebra}
-\label{sec:anatomy}
+\section{Rust Code}
+\label{sec:rust-code}
+
+\lstinputlisting[language=Rust, style=colouredRust,
+caption={Decompose with split components}]{text/split_comps.rs}
+
+\section{Experimental Results}
+\label{sec:app-results}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{logterms6_hs.png}
+    \caption{Mean log terms (lower better) for 6-qubit modified hidden shift circuits}
+\end{figure}
+
+The slope being close to 0 points to a constant number of terms $O(1)$ with respect to the $T$-count.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{logtime6_hs.png}
+    \caption{Mean log time (lower better) for 6-qubit modified hidden shift circuits}
+\end{figure}
+
+The log time graph supports this showing an $O(\log t)$ relationship, 
+showing that the heuristic is $poly(t)$ in time complexity.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{logtime6_paired_hs.png}
+    \caption{Mean log time (lower better) against log $T$-count for \texttt{single+paired} 
+    on 6-qubit modified hidden shift circuits}
+\end{figure}
+

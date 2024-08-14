@@ -1,4 +1,4 @@
-\chapter{\label{ch:3-methods}Heuristics}
+\chapter{\label{ch:3-methods}Methods}
 
 \minitoc
 
@@ -10,6 +10,13 @@
     with its algorithmic implementation building off of work by Kissinger et al. \cite{Kissinger2022cat}.
     The methods used by Sutcliffe and Kissinger, as well as Codsi, are also formalised
     using this idea of a cut heuristic \cite{sutcliffe2024proccut,Codsi2022}.
+}
+\textit{
+    Novel heuristics used in experiments for the \nameref{ch:4-results} chapter are also detailed,
+    and include those in \autoref{sec:2-legged-heuristic}, \ref{sec:lone-phase-heuristic},
+    \ref{sec:paired-heuristics}, and \ref{sec:k-connected-heuristics}.
+    The updated algorithm is then presented in \autoref{sec:greedy-cut},
+    and the complexity of each heuristic is discussed in \autoref{sec:complexity}.
 }
 
 \section{Introduction}
@@ -216,7 +223,7 @@ We have
     \alpha_{\chi} \leq \frac{1}{5} < \alpha_e(c^*) = \frac{2}{5}
 \end{equation}
 
-\subsection{CNOT Sandwich Heuristic}
+\section{CNOT Sandwich Heuristic}
 
 In \cite{sutcliffe2024proccut}, the cut heuristic used concentrated on sequences of cuts that
 were looking to eliminate CNOT gates sandwiched between $T$-like spiders gates.
@@ -240,7 +247,8 @@ and the choice to cut $v$ where
     v_{best} := \argmax_{v} h_l(v) = \argmin_{v} \alpha_{h_l}(v)
 \end{equation}
 
-\subsection{Gadget \catstate{3} Heuristic}
+\section{2-Legged Heuristic}
+\label{sec:2-legged-heuristic}
 
 The cut heuristic is also useful outside of CNOT sandwiches.
 Particularly, the reduced gadget form contains structures that when cut, reduce the $T$-count greatly.
@@ -396,7 +404,7 @@ underestimates the effective heuristic value}
 $h_e(v_1) \geq \frac{7}{3}$ since only 3 cuts are needed to remove 7 $T$-spiders,
 but $h(v_1) = \frac{4}{3+2+1} = \frac{2}{3} < \frac{7}{3}$.
 
-\subsection{Lone Phase Heuristic}
+\section{Lone Phase Heuristic}
 \label{sec:lone-phase-heuristic}
 
 Another heuristic turns out to be somewhat common to measure is the lone phase heuristic.
@@ -432,7 +440,8 @@ so the heuristic is still valid.
 Surprisingly, just a simple combination of the two heuristics can be quite effective in practice,
 as we will see in the next chapter.
 
-\subsection{Paired Heuristics}
+\section{Paired Heuristics}
+\label{sec:paired-heuristics}
 
 The heuristics thus far concentrate on cutting single vertices, 
 with the hope of further simplification aftewards.
@@ -463,7 +472,7 @@ Then we can \CutRule vertex $v$ to remove the $T$-like spiders.
     \tikzfig{pair_eq_cut}
 \end{equation}
 
-A total of $2n+2$ $T$-like spiders are removed with a single, giving an $\alpha = \frac{1}{2n+2}$.
+A total of $2n+2$ $T$-like spiders are removed with a single cut, giving an $\alpha = \frac{1}{2n+2}$.
 
 We can go even further, if we draw inspiration from the lone phase heuristic (\ref{eq:lone-phase-heuristic}).
 If we have a pair of $T$-like spiders fully connected to $m$ 2-legged $T$-like spiders,
@@ -502,7 +511,40 @@ This is essentially the average of the two heuristics,
 which is necessarily smaller than the maximum between the two heuristics.
 Since we can process the heuristics sequentially, we can just consider them separately as before.
 
-\subsection{Greedy Algorithm with Cut Heuristic}
+\section{$k$-connected Heuristics}
+\label{sec:k-connected-heuristics}
+
+We can extend the idea of paired heuristics to $k$-connected heuristics.
+Suppose we have $k$ $T$-like spiders $\vec{v}_k$ fully connected to $n$ $k+1$-legged phase gadgets,
+and $m$ $k$-legged $T$-like spiders.
+Using the $\PivotRule$ivot rule, we can remove $m$ or $n$ $T$-like spiders with a single cut as before.
+
+\begin{equation}
+    \tikzfig{k-connected}
+\end{equation}
+
+Then we have the following heuristics.
+
+\begin{equation}
+\begin{aligned}
+    \label{eq:cut-heuristic-k}
+    h_1(\vec{v}_k) &= 2n \\
+    h_2(\vec{v}_k) &= m
+\end{aligned}
+\end{equation}
+
+The drawback of this heuristic is that it can be relatively expensive to compute.
+We will see in the next \autoref{sec:complexity} that the complexity of computing the heuristic 
+is $O(kt^{k+1})$ given a $T$-count $t$.
+This results in an overall time complexity of $O(2^{\alpha t}t^{k+1})$,
+which practically affects runtime heavily for low $t$, even if $\alpha$ is reduced significantly.
+As such, we leave this general heuristic to be useful in much larger computations,
+and in numerical experiments of \autoref{ch:4-results}, we only consider the case of $k=1,2$,
+corresponding to (\ref{eq:cut-heuristic-combined}, \ref{eq:cut-heuristic-pair}).
+
+
+\section{Greedy Algorithm with Cut Heuristic}
+\label{sec:greedy-cut}
 
 A natural extension of the greedy algorithm is to also consider 
 the cut heuristic on top of the cat decompositions.
@@ -516,6 +558,7 @@ we can continue to use the greedy approach.
 We have the following simple algorithm.
 
 \begin{algorithm}
+\label{alg:greedy-cut}
 \caption{Greedy Algorithm with Heuristic}
 \begin{algorithmic}[1]
 \State \textbf{Input:} $\alpha$ values for $\catstate{4}$, $\catstate{6}$, $\catstate{5}$, $\catstate{3}$, 
@@ -552,7 +595,8 @@ This heuristic also works in a diagram without any phase gadgets where $n=0$, co
 In this scenario, having $m=2$ will already give a better $\alpha_h=1/3$ 
 than the default \hyperref[eq:magic-5-decomp]{5-qubit magic decomposition} at $\alpha \approx 0.396$.
 
-\subsection{Other Heuristics}
+\section{Other Heuristics}
+\label{sec:other-heuristics}
 Another heuristic considered, based off (\ref{eq:cut-heuristic-catn2}) 
 takes into account the overlap of $T$-like spiders,
 and not overcount the number of cuts needed.
@@ -598,6 +642,7 @@ If all the $T$-like spiders from the symmetric difference $T(w_i) \Delta T(w_j) 
 then the $T$-count can be reduced by 2 via gadget fusion \GFRule, as seen below.
 
 \begin{equation}
+    \label{eq:phasegadget_heuristic_ex}
     \tikzfig{phasegadget_heuristic_ex}
 \end{equation}
 
@@ -625,7 +670,22 @@ Scenarios for being close to gadget fusion are not common enough, and tend to ta
 by which time the cut heuristics (\ref{eq:cut-heuristic-combined}, \ref{eq:cut-heuristic-pair}) 
 would have already been more effective.
 
+In \autoref{sec:subgraph-complement}, we introduce the subgraph complement cut.
+The heuristic used here was simply to determine the number of edges 
+in the subgraph excluding the phase gadgets,
+and to carry out the cut if the number of edges was above a certain threshold.
+For example, with $k$ vertices in the subgraph, we could cut if there were 
+$>p\cdot\frac{k(k-1)}{2}$ edges for some $0.5 < p \leq 1$.
+We only tested with $p=3/4$, which did not seem to affect the results much.
+Smartly choosing the right subgraph that are near cliques to execute the cut would be useful here,
+as demonstrated in \autoref{sec:subgraph-complement},
+but finding near cliques is at least as hard as the maximum cliques problem, 
+which itself is NP-hard \cite{behera2022}.
+However, there is work done on partitioning graphs that will be considered 
+in future work \cite{sutcliffe2024part}.
+
 \section{Complexity Analysis}
+\label{sec:complexity}
 
 Here, we consider the complexity of computing the heuristics.
 
@@ -664,8 +724,8 @@ Specifically, looking at the $O(t^2)$ operations in between decompositions,
 
 Comparing to the method of \cite{Codsi2022} which 
 requires computing $\alpha_e$ values (\ref{eq:effective-alpha})
-for each of the $k$ decompositions considered to select the best one, 
-the number of operations between each decomposition there is $O(kt^2)$.
+for each of the $p$ decompositions considered to select the best one, 
+the number of operations between each decomposition there is $O(pt^2)$.
 
 The paired heuristics are (\ref{eq:cut-heuristic-pair}) are slightly more costly than 
 the single heuristics, with a complexity of $O(m^2(n+m))$.
@@ -674,15 +734,21 @@ and $O(m)$ $T$-like spider neighbours, and so can be processed in $O(n+m)$ time.
 With the $O(m^2)$ pairs of $T$-like spiders, the complexity is $O(m^2(n+m))$.
 This overhead cost comes into play since $O(m^2(n+m)) = O(t^3)$ in the worst case,
 compared to the original $O(t^2)$ complexity.
+However, in better cases, where $m \ll n \leq t$, we can have $O(t)$ complexity instead.
+Such cases can be described in the next chapter in \autoref{sec:experiments} 
+when we see different classes of circuits being affected differently by the overhead cost.
 With a higher $T$-count, and the reduction of $\alpha$ due to more efficient cuts,
-the paired heuristics can still be effective in practice,
-as we see in the next chapter.
+we will see that the paired heuristics can still be effective in practice.
+
+The $k$-connected heuristics (\ref{eq:cut-heuristic-k}) considers $O(m^k)$ $k$-connected $T$-like spiders,
+requiring the check of $O(k(m+n))$ edges, for a total of $O(m^k(m+n)k)$ time.
+In the worst case, this is $O(kt^{k+1})$, showing its impracticality for small $t$.
 
 
 For the heuristic taking into account the overlap of $T$-like spiders (\ref{eq:cut-heuristic-catn-max}),
 the Hopcroft-Karp algorithm has a complexity of $O(mn\sqrt{m+n})$ for each $T$-like spider,
 for a total of $O(m^2 n\sqrt{m+n})$ time.
 
-For the phase gadget heuristic, to compare two phase gadgets is $O(m)$,
+For the phase gadget heuristic (\ref{eq:phasegadget_heuristic_ex}), to compare two phase gadgets is $O(m)$,
 for a total of $O(mn)$ for all phase gadgets.
 Computation for all $m$ $T$-like spiders can be done at the same time, so the complexity is $O(mn)$.

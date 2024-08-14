@@ -1,0 +1,21 @@
+\chapter{\label{ch:5-conclusion}Conclusion}
+
+In this thesis, we started in \autoref{ch:1-intro} and \ref{ch:2-litreview} 
+by exploring the existing approaches to the problem of classical simulation with the ZX-Calculus.
+We have seen that the existing stabiliser decomposition algorithms are powerful tools,
+as demonstrated in \cite{Kissinger2022cat}.
+We also saw that heuristic approaches can be used to improve the performance of these algorithms,
+as demonstrated in \cite{sutcliffe2024proccut,Codsi2022}.
+Thus, in \autoref{ch:3-methods} we formalised the heuristic method and applied the formalism 
+to the existing approaches.
+We also developed new heuristics that take advantage of structure made available in
+the \nameref{alg:zx-simplify} algorithm of \cite{Duncan2020graphtheoretic}.
+We presented the results of these heuristics in \autoref{ch:4-results} and showed that they
+can greatly improve the performance of the existing stabiliser decomposition algorithms.
+
+\subsection{Future Work}
+
+As mentioned in \autoref{sec:other-heuristics}, the \nameref{sec:subgraph-complement} cut
+is a potential area for future work, 
+perhaps making use of the future graph partioning work in \cite{sutcliffe2024part}.
+

@@ -38,7 +38,7 @@
 		\node [style=Z phase dot] (39) at (5, 3.25) {$a\pi$};
 		\node [style=Z phase dot] (40) at (7, 3.25) {$a\pi$};
 		\node [style=Z dot] (41) at (7, -1) {};
-		\node [style=Z phase dot] (42) at (7, -5) {$-\frac{\pi}{2}$};
+		\node [style=Z phase dot] (42) at (7, -5) {$(1-a)\frac{\pi}{2}$};
 		\node [style=Z phase dot] (43) at (7, -6.25) {-$\frac\pi2$};
 		\node [style=none] (44) at (4.5, -1) {};
 		\node [style=none] (45) at (4.5, -3) {};

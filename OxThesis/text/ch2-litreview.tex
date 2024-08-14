@@ -1,4 +1,4 @@
-\chapter{\label{ch:2-litreview}Classical Simulation}
+\chapter{\label{ch:2-litreview}Background}
 
 \minitoc
 
@@ -7,6 +7,9 @@
     using stabiliser decompositions, magic states, cat states, and graph cuts.
     There is no novel work in this chapter, with all results being adapted from existing literature
     \cite{Kissinger2022cat,Kissinger_2022,Qassim_2021,Bravyi_2016bss,Codsi2022}.
+    We also show a proof of Prop. \ref{prop:cat-decomp} in ZX-Calculus, 
+    adapting from \cite{Qassim_2021},
+    and give a detailed analysis of the power of cuts in \nameref{sec:graph-cut}.
 }
 
 \section{Introduction}
@@ -228,6 +231,7 @@ Cat states are used because their decompositions have low value of $\alpha$,
 as well as the following proposition, which bounds the $\alpha$ of the corresponding magic state decomposition.
 
 \begin{proposition}
+    \label{prop:cat-decomp}
     Suppose $\alpha_1,\alpha_2$ are the efficiency metrics of the decompositions of 
     \[\left.\cbox{\npoint{cat_n}}\right\} n \quad\quad, \quad\quad 
     \left. \begin{matrix}
@@ -319,6 +323,7 @@ In the next chapter, we will continue using the algorithm from \cite{Kissinger20
 and improve upon the use of these cat and magic state decompositions.
 
 \section{Graph Cuts}
+\label{sec:graph-cut}
 
 In a complementary approach to reducing the effective $\alpha$ of the stabiliser decomposition, 
 graph cuts offer a different perspective \cite{Codsi2022}.
@@ -326,6 +331,7 @@ Suppose we have 2 Clifford+T diagrams $S_1, S_2$ of $T$-counts $t_1,t_2$ that bo
 have a stabiliser decomposition efficiency of $\alpha$.
 
 \begin{equation}
+    \label{eq:graph-cut-ex}
     \tikzfig{graph_cut_ex}
 \end{equation}
 
@@ -397,6 +403,7 @@ where a single decomposition reduced the $T$-count by 286, for an $\alpha \appro
 though this was an ideal case which is unlikely to occur in practice.
 
 \section{Subgraph Complement}
+\label{sec:subgraph-complement}
 
 A further addition to the strength of graph cuts is the subgraph complement approach.
 For a graph-like ZX-diagram $(V, E)$, with $K$ being the set of edges for a complete graph on $V$,
