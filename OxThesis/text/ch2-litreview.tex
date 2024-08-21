@@ -6,8 +6,8 @@
     This chapter introduced the concepts required for classical simulation,
     using stabiliser decompositions, magic states, cat states, and graph cuts.
     There is no novel work in this chapter, with all results being adapted from existing literature
-    \cite{Kissinger2022cat,Kissinger_2022,Qassim_2021,Bravyi_2016bss,Codsi2022}.
-    We also show a proof of Prop. \ref{prop:cat-decomp} in ZX-Calculus, 
+    \cite{Kissinger2022cat,Kissinger_2022,Qassim_2021,Bravyi_2016bss,Codsi2022,Kissinger2024}.
+    We show a proof of Prop. \ref{prop:cat-decomp} in ZX-Calculus, 
     adapting from \cite{Qassim_2021},
     and give a detailed analysis of the power of cuts in \nameref{sec:graph-cut}.
 }
@@ -91,9 +91,9 @@ and the spider phases are negated.
 The scalar factors of $1/\sqrt{2}$ comes from those seen in (\ref{eq:spider-basis}).
 If $V$ is a Clifford diagram, then following from the \nameref{thm:gottesman-knill}, 
 the scalars can be computed efficiently.
-Obtaining the probabilities this way is known as \textit{strong simulation}.
 
-Marginal probabilities can also be obtained similarly.
+Note that being able to obtain any \textit{marginal} probability is called \textit{strong simulation}.
+These can also be obtained similarly.
 Recall that using the law of total probability, we have for $k < n$,
 
 \begin{equation}
@@ -109,11 +109,43 @@ Then, applying the (\ref{eq:total-prob}) to (\ref{eq:prob-all}), and using the $
 we can obtain the marginal probabilities.
 
 \begin{equation}
+    \label{eq:prob-marginal}
     \Pr(x_1,x_2,...,x_k) = \frac{1}{2^{n+k}} \tikzfig{prob_marginal}
 \end{equation}
 
+This technique to obtain the probabilities is sometimes called "doubling".
 A natural question that arises is whether the same can be done if $V$ is a Clifford+T diagram instead.
 The following sections will delve into the methods used to simulate such circuits.
+
+\subsection{Weak Simulation}
+
+Strong simulation requires the calculation of any marginal probability (\ref{eq:prob-marginal}).
+Weak simulation, on the other hand, just requires a probabilistic algorithm
+that can produce the bitstrings $\vec{y}\in\{0,1\}^n$ with the distribution from (\ref{eq:prob-marginal})
+\footnote{The distribution can be `suitably close'. See \cite{Kissinger2024} Section 5.4.3}.
+Strong simulation implies weak simulation - 
+if we can calculate the actual marginal probabilities, 
+we can sample from the distribution \cite{Kissinger2024}.
+
+\begin{equation}
+\begin{aligned}
+    \Pr(x_1,x_2,...,x_n) &= \prod_{i=1}^n \Pr(x_i|x_1,x_2,...,x_{i-1})\\
+    &= \prod_{i=1}^n \frac{\Pr(x_1,...,x_i)}{\Pr(x_1,...,x_{i-1})}\\
+\end{aligned}
+\end{equation}
+
+By iterating from $i=1..n$, we can obtain the bitstring $\vec{y}$ that corresponds to an output state.
+In \cite{Codsi2022}, this is called \textit{qubit-per-qubit} simulation.
+
+In \cite{Bravyi_2022}, they found that weak simulation could be done
+without computing marginals, avoiding the doubling approach which can increase the $T$-count of the circuit.
+This is not covered in this thesis, but interested readers can refer to
+the \textit{gate-per-gate} approach shown with ZX-Calculus \cite{Codsi2022}.
+
+What these show is that increasing the efficiency of strong simulation 
+thus can imply increasing the efficiency of weak simulation.
+For results in this thesis, we will then focus on strong simulation.
+
 
 \section{Stabiliser Decomposition}
 
@@ -396,7 +428,7 @@ graph cuts were used to take advantage of the structure to optimise for the use 
 spider $\SpiderRule$usion in cascading fashion, 
 where a single cut can lead to a large reduction in the $T$-count \cite{sutcliffe2024proccut}. 
 There, the effective efficiency obtained was $0.1 \lesssim \alpha \lesssim 0.2$.
-More details on this will be discussed in \autoref{sec:graph-cut}.
+More details on this will be discussed in \autoref{sec:cut-heuristic}.
 
 The same was also found for extremely structured circuits involving cat states,
 where a single decomposition reduced the $T$-count by 286, for an $\alpha \approx 0.0035$ \cite{Codsi2022},

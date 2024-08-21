@@ -7,12 +7,12 @@
     which are not novel themselves, but are used to compare the effectiveness of our methods.
     There are some novel analyses or generalisations of the structures of some circuits,
     notably the \nameref{sec:random-iqp} and the \nameref{sec:modified-hidden-shift} circuits.
+    We also discuss the reasons behind effectiveness of heuristics to these classes of circuits.
 }
 
 \textit{
-    In the section afterward, we present the results of the benchmarking of our heuristics,
+    In \autoref{sec:experiments}, we present the results of the benchmarking of our heuristics,
     with experimentation setup detailed.
-    We also discuss the reasons behind effectiveness of heuristics to certain classes of circuits.
 }
 
 \section{Benchmarking}
@@ -76,10 +76,14 @@ This fixes the $T$-count of the circuit, and can be used to benchmark decomposit
 \label{sec:random-iqp}
 Instantaneous Quantum Polynomial (IQP) circuits were used in the benchmark of \cite{Codsi2022}.
 These circuits were chosen as a possible model to demonstrate quantum supremacy \cite{Bremner_2017}.
-They can likely by build in a quantum computer, while at the same time,
+They can likely be built in a quantum computer, while at the same time,
 they are a class of commuting quantum computations which are shown to be hard to simulate classically,
 even when adding in the presence of physically motivated constraints, 
 such as sparsity and noise \cite{Bremner_2017}.
+While it is noted that IQP circuits have been questioned in their ability 
+to demonstrate quantum supremacy \cite{codsi2023,Codsi2022},
+we show that the heuristic approach gives performance that match previous work.
+
 First, we introduce the CZ-gate.
 
 \begin{definition}[CZ-gate]
@@ -103,6 +107,7 @@ where $\alpha=k\frac{\pi}{2}, k\in \mathbb{Z}$, so $CZ(\pi) = CZ$.
 \begin{definition}[IQP circuit \cite{Bremner_2016,codsi2023}]
     An IQP circuit is a circuit composed of Hadamard gates, $CZ(\frac{k\pi}{2})$-gates,
     and $T^m$-gates, where $k,m\in \mathbb{Z}$.
+    Thus, the following \autoref{fig:def-IQP} is a simplified IQP circuit.
 \begin{figure}[h!]
     \ctikzfig{def-IQP}
     \caption{An IQP circuit as a ZX-diagram, for $x_i,y_{i,j}\in\mathbb{Z}$, 
@@ -141,9 +146,9 @@ We note, however, that the heuristic approach can easily give us a better upper 
     Consider a $T$-like spider connected to a leg of a phase gadget.
     Note that there are only $n$ of such spiders.
     We know it will always be connected to $k \geq 1$ phase gadgets 
-    (i.e. the $x_i$ T-spiders in \autoref{fig:def-IQP}).
+    (i.e. the $x_i$ $T$-like spiders in \autoref{fig:def-IQP}).
     Also, the $T$-like spiders in the phase gadgets themselves are only connected 
-    to a single phase gadget by definition (i.e. the $y_{i,j}$ T-spiders in \autoref{fig:def-IQP}).
+    to a single phase gadget by definition (i.e. the $y_{i,j}$ $T$-like spiders in \autoref{fig:def-IQP}).
     If $k=1$ for both legs of the phase gadget, it doesn't matter which $T$-like spider we pick, 
     as they would be equivalent cuts.
     Otherwise, if $k > 1$ for some leg, the heuristic will always pick that $T$-like spider, 
@@ -180,6 +185,7 @@ In fact, we can generalise this even further.
 \end{proof}
 
 We have that for dense IQP circuits, $k=2$.
+
 The resulting efficiency of just using cuts is then
 \begin{equation}
     \alpha = \frac{n}{n+\tilde{O}(n^k)} = \frac{1}{1+\tilde{O}(n^{k-1})}
@@ -219,6 +225,14 @@ the conceptualisation of different heuristics could be developed to
 exploit any classes of circuits that have a structure such that 
 its reduced gadget form allows for Proposition \ref{prop:reduced-gadget-cut} to be applied.
 
+% Computing the expected complexity as discussion in \autoref{sec:complexity},
+% with the number of non-phase gadget $T$-like spiders is $O(n)$, and phase gadgets $O(n^2)$,
+% the overhead cost for \texttt{single+paired} is $O(n^2 (n^2 + n)) = O(n^4) = O(t^2)$,
+% where $t$ is the $T$-count of the circuit.
+% This does not change the overhead complexity compared to the default \texttt{quizx} implementation.
+% Note that here, we do not skip the \nameref{alg:zx-simplify} step between each cut,
+% to obtain the benefits of simplification.
+
 \subsection{Modified Hidden Shift}
 \label{sec:modified-hidden-shift}
 
@@ -227,11 +241,11 @@ starting from the benchmark of the BSS decomposition,
 and continuing to the benchmark of the \catstate{n} decomposition 
 \cite{Bravyi_2019,Kissinger_2022,Kissinger2022cat,Peres_2023}.
 However, it was noted that improvements to QuiZX trivialised the decomposition of these circuits,
-with a conjecture that the class of circuits being simulable in polynomial time \cite{Codsi2022}.
+with a conjecture of the class of circuits being simulable in polynomial time \cite{Codsi2022}.
 Thus, in \cite{koch2023}, they introduced the \textit{modified hidden shift} circuits.
 
 First, we note that the $T$-count of the hidden shift circuits only comes from
-the $T$-spiders appearing CCZ gates in the circuits.
+the $T$-like spiders appearing in CCZ gates in the circuits.
 We introduce the definition of the CCZ gate, shown as presented in \cite{Kissinger_2022}.
 
 \begin{definition}[CCZ gate \cite{Kissinger_2022}]
@@ -276,7 +290,7 @@ We also have the following useful observation about the CCZ gate.
 \end{proof}
 
 While at first glance, this seems to give a decent $\alpha = 1/7 \approx 0.143$,
-we notice from Eq. \ref{eq:4t-ccz} that CCZ gates can be expressed with just 4 $T$-spiders.
+we notice from (\ref{eq:4t-ccz}) that CCZ gates can be expressed with just 4 $T$-like spiders.
 In fact, the 2 terms can be derived from the 4 $T$-spider version.
 
 \begin{equation}
@@ -285,15 +299,19 @@ In fact, the 2 terms can be derived from the 4 $T$-spider version.
 
 It is then fairer to say that this cut decomposition has $\alpha = 0.25$.
 
-The structure of CCZ can be visually inspected to see that 2 and 3-legged phase gadgets appear
-in the circuits.
-The effectiveness of the heuristic in exploiting this structure can be seen later in this chapter.
+The structure of the CCZ gate can be visually inspected to see that 2 and 3-legged phase gadgets will be
+quite common in the circuits.
+The effectiveness of the heuristic in exploiting this structure can be seen later
+in their results in \autoref{sec:results-modified-hidden-shift}.
 
 \subsection{Random Clifford+T with CCZ}
 Last but not least, we consider the combination of the random Clifford+T circuits with CCZ gates,
 as was benchmarked in \cite{koch2023}.
 We use the similar distribution of gate sets with 5\% each of CCZ and T gates,
 with the rest of distribution uniform over the Clifford gates (Hadamard, CNOT, CZ, S).
+
+Similar to the modified hidden shift circuits, the CCZ gates will contribute to the effectiveness
+of the heuristic.
 
 \section{Experiments}
 \label{sec:experiments}
@@ -304,11 +322,16 @@ All $T$-counts shown are the $T$-count \textit{after the first simplification}
 using \nameref{alg:zx-simplify}.
 For initial $T$-counts before simplification, we will place these in the appendix.
 We also filter for circuits that have a $T$-count  $>10$ after initial simplification 
-using \nameref{alg:zx-simplify}, since simulating low $T$-count is effectively efficient.
+using \nameref{alg:zx-simplify}, since simulating low $T$-count can already be done very quickly.
 All $\log_2$ values are taken in base 2, 
 so graphs showing a $\log$ scale with a best fit line are showing an exponential fit $y = c2^{mx}$.
 When comparing with the default \texttt{quizx} implementation,
 it uses the greedy approach on \catstate{n} states \cite{Kissinger2022cat}.
+We show the results for \texttt{single}, corresponding to (\ref{eq:cut-heuristic-combined}),
+and \texttt{single+paired}, corresponding to using both \texttt{single} and (\ref{eq:cut-heuristic-pair}).
+For each circuit, we simulate the scalar from \autoref{fig:amplitude}.
+Specifically, we randomly plug an output state $\bra{\vec{x}}$ where $\vec{x}\in \{0,1\}^n$
+and decompose from there.
 
 We note that the default \texttt{quizx} implementation does not in fact make use of the
 \nameref{eq:graph-cut-ex} in their implementation, 
@@ -320,29 +343,40 @@ We add the code used in the appendix \autoref{sec:rust-code}.
 
 For these circuits, we can choose the number of qubits $q$, and the depth $d$.
 We stick with the standard minimum and maximum weights of 2 and 4 as in \cite{Kissinger2022cat}.
-We take $q=7,19,20,47,50,97,100$ and $10 \leq d \leq 103$, where we increment $d$ by 3 each time,
+We take $q=8,20,50,100$ and $10 \leq d \leq 103$, where we increment $d$ by 3 each time,
 and take the results of 50 random circuits for each $(q,d)$ pair.
+
+In \autoref{fig:alpha_all_pauli}, we can see that the $\alpha$ values are generally lower for the heuristic,
+than the default \texttt{quizx} implementation.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.5\textwidth]{alpha_all_pauli.png}
-    \caption{$\alpha$ values (lower better) for all random Clifford+T circuits}
+    \includegraphics[width=0.6\textwidth]{alpha_all_pauli.png}
+    \caption{$\alpha$ values (lower better) for Clifford+T circuits}
+    \label{fig:alpha_all_pauli}
 \end{figure}
 
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{alpha_mean_er_pauli.png}
+    \includegraphics[width=0.6\textwidth]{alpha_mean_er_pauli.png}
     \caption{Mean $\alpha$ values (lower better) with standard deviation bars 
     against different $T$-counts for Clifford+T circuits}
     \label{fig:alpha_mean_er_pauli}
 \end{figure}
 
+\autoref{fig:alpha_mean_er_pauli} shows the mean $\alpha$ values for each $T$-count,
+where there are less experiments for higher $T$-counts, especially those with $t>63$,
+as most of these correspond to $q=100$, 
+which have a larger variation in the reduced $T$-count after initial simplification.
+This is much clearer to be seen in \autoref{fig:alpha_mean_qs_pauli},
+which separates the mean $\alpha$ values by number of qubits.
+
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{alpha_mean_qs_pauli.png}
-    \caption{Mean $\alpha$ values (lower better) separated by number of qubits
-    for all random Clifford+T circuits}
+    \includegraphics[width=0.6\textwidth]{alpha_mean_qs_pauli.png}
+    \caption{Mean $\alpha$ values (lower better), separated by number of qubits,
+    for Clifford+T circuits}
     \label{fig:alpha_mean_qs_pauli}
 \end{figure}
 
@@ -350,9 +384,9 @@ and take the results of 50 random circuits for each $(q,d)$ pair.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{logterms_qs_pauli.png}
+    \includegraphics[width=0.6\textwidth]{logterms_qs_pauli.png}
     \caption{Mean log number of terms (lower better) by $T$-counts, separated by number of qubits,
-    for all random Clifford+T circuits}
+    for Clifford+T circuits}
     \label{fig:logterms_qs_pauli}
 \end{figure}
 
@@ -360,17 +394,17 @@ and take the results of 50 random circuits for each $(q,d)$ pair.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{logtime_qs_pauli.png}
+    \includegraphics[width=0.6\textwidth]{logtime_qs_pauli.png}
     \caption{Mean log time (lower better) by $T$-counts, separated by number of qubits,
-    for all random Clifford+T circuits}
+    for Clifford+T circuits}
     \label{fig:logtime_qs_pauli}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{alpha_improve_pauli.png}
+    \includegraphics[width=0.6\textwidth]{alpha_improve_pauli.png}
     \caption{Improvement in $\alpha$ values (\texttt{single+paired} vs. \texttt{quizx}) 
-    for all random Clifford+T circuits}
+    for Clifford+T circuits}
     \label{fig:alpha_improve_pauli}
 \end{figure}
 
@@ -378,26 +412,30 @@ and take the results of 50 random circuits for each $(q,d)$ pair.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{logtime_improve_pauli.png}
-    \caption{Improvement in log time for all random Clifford+T circuits}
+    \includegraphics[width=0.6\textwidth]{logtime_improve_pauli.png}
+    \caption{Improvement in log time for Clifford+T circuits}
     \label{fig:logtime_improve_pauli}
 \end{figure}
 
 We find that although almost all $\alpha$ values show an improvement in \autoref{fig:alpha_improve_pauli},
 we find a significant proportion of the same circuits giving worse values 
-for the $\log$ time values in \autoref{fig:logtime_improve_pauli}.
-This can be attributed to the overhead caused by computing the heuristic between each step of the decomposition.
-We see in the log term graph in \autoref{fig:logterms_qs_pauli} that the slopes are essentially
-similar for $q < 47$, and only diverge for $q \geq 47$.
+for the $\log_2$ time values in \autoref{fig:logtime_improve_pauli}.
+Since the time complexity of the decomposition is $O(t^2 2^{\alpha t})$,
+its slope, in theory, should be close to value of $\alpha$.
+The worse values in time could be attributed to the overhead caused 
+by computing the heuristic between each step of the decomposition.
+We see in the $\log_2$ terms and time graphs in \autoref{fig:logterms_qs_pauli}, \ref{fig:logtime_qs_pauli}, 
+that the slopes are essentially
+similar for $q \leq 20$, and only diverge for $q \geq 50$.
 On the other hand, \autoref{fig:alpha_mean_qs_pauli} shows that $\alpha_h$ is generally lower 
-for any chosen $q$.
+no matter the value of $q$.
 We show that as the $T$-count $t$ increases, this overhead becomes less significant
 if our efficiency $\alpha_h < \alpha$ is decisively lowered.
 
 \begin{lemma}
     Suppose we have a circuit in reduced gadget form with a $T$-count $t$.
-    Given $\alpha_h < \alpha$ using the heuristics \autoref{eq:cut-heuristic-combined}, 
-    \ref{eq:cut-heuristic-pair} compared against the default \texttt{quizx} implementation,
+    Given $\alpha_h < \alpha$ using the heuristics (\ref{eq:cut-heuristic-combined}, 
+    \ref{eq:cut-heuristic-pair}) compared against the default \texttt{quizx} implementation,
     the log time improvement is $(\alpha - \alpha_h)t - \log t $.
     The overhead of computing the heuristic can be given by $\log t$.
 \end{lemma}
@@ -422,16 +460,26 @@ but since $\log t = o((\alpha - \alpha_h)t)$\footnote{using little-o notation} f
 the overhead becomes less significant as $t$ increases.
 For the results shown here, we are limited to showing low $T$-counts as the time taken 
 to run experiments is not feasible for higher $T$-counts.
-In \autoref{fig:countall-pauli}, we see that the number of completed simulations before timeout
-is lower for the heuristic for $q \leq 50$, but $q=97,100$ have a higher number of completed simulations.
+In \autoref{fig:count8-50-pauli}, \ref{fig:count100-pauli}, 
+we see that the number of completed simulations before timeout
+is lower for the heuristic for $q \leq 50$, but $q=100$ has a higher number of completed simulations.
 We expect that if we run this experiment with a much longer timeout,
 then the heuristic will show its superiority in terms of time to match that of its improved $\alpha$.
+We can quantify the expected $T$-counts for which this occurs by solving for $(\alpha - \alpha_h)t > \log t$,
+shown in the appendix \autoref{sec:app-results}.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{countall-pauli.png}
-    \caption{Number of completed simulations before timeout for all random Clifford+T circuits}
-    \label{fig:countall-pauli}
+    \includegraphics[width=0.6\textwidth]{count8-50-pauli.png}
+    \caption{Number of completed simulations before timeout for $q=8,20,50$ for Clifford+T circuits}
+    \label{fig:count8-50-pauli}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{count100-pauli.png}
+    \caption{Number of completed simulations before timeout for $q=100$ for Clifford+T circuits}
+    \label{fig:count100-pauli}
 \end{figure}
 
 \clearpage
@@ -439,14 +487,14 @@ then the heuristic will show its superiority in terms of time to match that of i
 \subsection{Random IQP}
 
 For these circuits, we can choose the number of qubits $q$.
-We take $10 \leq q \leq 26$ and the results of 100 random circuits for each $q$.
+We take $10 \leq q \leq 27$ and the results of 100 random circuits for each $q$.
 Random IQP circuits will be dense, with the $T$-count $t=O(q^2)$.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{alpha_mean_qs_iqp.png}
-    \caption{Mean $\alpha$ values (lower better) with standard deviation bars 
-    separated by number of qubits for all random IQP circuits}
+    \caption{Mean $\alpha$ values (lower better)
+    by number of qubits for IQP circuits}
     \label{fig:alpha_qs_iqp}
 \end{figure}
 
@@ -458,11 +506,12 @@ there is a strong likelihood that set of data obeys the relationship $\alpha=c/q
 As such, the $\beta$ values as defined in Def. \ref{def:beta-efficiency} are more useful
 for these circuits, to better compare the various decomposition methods 
 without being directly correlated to the number of qubits or $T$-count.
+These are shown below in \autoref{fig:beta_mean_qs_iqp}.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{beta_mean_qs_iqp.png}
-    \caption{Mean $\beta$ values (lower better) separated by number of qubits for random IQP circuits}
+    \caption{Mean $\beta$ values (lower better) by number of qubits for IQP circuits}
     \label{fig:beta_mean_qs_iqp}
 \end{figure}
 
@@ -472,7 +521,7 @@ without being directly correlated to the number of qubits or $T$-count.
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{logtime_qs_iqp.png}
-    \caption{Mean log time (lower better) separated by number of qubits for random IQP circuits}
+    \caption{Mean log time (lower better) by number of qubits for IQP circuits}
     \label{fig:logtime_qs_iqp}
 \end{figure}
 
@@ -480,7 +529,7 @@ without being directly correlated to the number of qubits or $T$-count.
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{logterms_qs_iqp.png}
-    \caption{Mean log terms (lower better) separated by number of qubits for random IQP circuits}
+    \caption{Mean log terms (lower better) by number of qubits for IQP circuits}
     \label{fig:logterms_qs_iqp}
 \end{figure}
 
@@ -491,7 +540,8 @@ with $O(n)$ other qubits, we have that our circuits are dense.
 We can then compare with the value of $\beta\approx0.93$ obtained in \cite{codsi2023},
 and see that the slope of $\beta\approx0.891$ is an improvement.
 It can be noted that comparing using time taken may be inconsistent across different machines,
-so we show the log terms as a better alternative for comparison for any future work.
+so we show the log terms as a better alternative for comparison for any future work,
+where $\beta\approx 0.873$ for \texttt{single+paired} and $\beta\approx 0.939$ for \texttt{single}.
 
 \clearpage
 
@@ -503,28 +553,37 @@ since that is the state of the art for IQP circuits \cite{codsi2023,Codsi2022}.
     \centering
     \includegraphics[width=0.6\textwidth]{beta_improve_vsingle_iqp.png}
     \caption{Improvement in $\beta$ values (\texttt{single+paired} vs. \texttt{single}) 
-    for random IQP circuits}
+    for IQP circuits}
     \label{fig:beta_improve_iqp}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.6\textwidth]{logtime_improve_vsingle_iqp.png}
     \caption{Improvement in log time (\texttt{single+paired} vs. \texttt{single}) 
-    for random IQP circuits}
+    for IQP circuits}
     \label{fig:logtime_improve_iqp}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.6\textwidth]{countall-iqp.png}
-    \caption{Number of completed simulations before timeout for random IQP circuits}
+    \caption{Number of completed simulations before timeout for IQP circuits}
     \label{fig:countall-iqp}
 \end{figure}
 
-\clearpage
+The number of completed simulations before timeout in \autoref{fig:countall-iqp},
+also shows the heuristic \texttt{single+paired} is able to simulate up to $q=27$, 
+whereas the default \texttt{quizx} implementation
+is only able to simulate up to $q=22$, and \texttt{single} up to $q=26$.
+
+We see a clear improvement in using the \texttt{single+paired} heuristic in IQP circuits,
+with its performance even matching the theoretical state-of-the-art results of \cite{codsi2023}.
+We have shown that for these class of circuits, the $\beta$ efficiency proves to be a useful metric
+when comparing any future improvements in decomposition methods.
 
 \subsection{Modified Hidden Shift}
+\label{sec:results-modified-hidden-shift}
 
 For these circuits, we can choose the number of qubits $q$, and the number of CCZ gates $n$.
 We take $q=20,50,100$ and $2 \leq n \leq 60$ at steps of 10 for $n\geq 10$. 
@@ -533,40 +592,60 @@ For each $(q,n)$ pair, we take the results of 100 random circuits.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{alpha_all_hs.png}
-    \caption{Mean $\alpha$ values (lower better) by $T$-count with standard deviation bars
-    for all modified hidden shift circuits}
+    \caption{Mean $\alpha$ values (lower better) by $T$-count
+    for modified hidden shift circuits}
+    \label{fig:alpha_all_hs}
 \end{figure}
+
+Across the whole range of $T$-counts after initial simplification,
+we see in \autoref{fig:alpha_all_hs} that the heuristic is able to give lower $\alpha$ values,
+compared to both the \texttt{quizx} and \texttt{single} implementations.
+Because of the steps of 10 for the CCZ gates $n$, 
+we see that there are gaps in \autoref{fig:alpha_all_hs}, \ref{fig:alpha_mean_qs_hs}.
+Nevertheless, the trend is more important to see.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{alpha_mean_qs_hs.png}
-    \caption{Mean $\alpha$ values (lower better) by $T$-count of modified hidden shift circuits 
-    separated by number of qubits}
+    \caption{Mean $\alpha$ values (lower better) by $T$-count, separated by number of qubits,
+    of modified hidden shift circuits}
     \label{fig:alpha_mean_qs_hs}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{logterms_qs_hs.png}
-    \caption{Mean log terms (lower better) with best fit line of modified hidden shift circuits, 
-    separated by number of qubits}
+    \caption{Mean log terms (lower better), separated by number of qubits, 
+    of modified hidden shift circuits}
     \label{fig:logterms_qs_hs}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{logtime_qs_hs.png}
-    \caption{Mean log time (lower better) with best fit line of modified hidden shift circuits, 
-    separated by number of qubits}
+    \caption{Mean log time (lower better), separated by number of qubits, 
+    of modified hidden shift circuits}
     \label{fig:logtime_qs_hs}
 \end{figure}
 
-Note that in \autoref{fig:logterms_qs_hs}, \ref{fig:logtime_qs_hs},
-for $q=100$, there is not enough data to show a best fit line for \texttt{quizx} and \texttt{single}
+We see great improvements for $\log_2$ terms and time graphs 
+in \autoref{fig:logterms_qs_hs}, \ref{fig:logtime_qs_hs}.
+For $q=20$, the slope in the $\log_2$ terms graph gives $\alpha\approx 0.027$ for the heuristic,
+compared to $\alpha\approx 0.153,0.124$ for \texttt{quizx} and \texttt{single} respectively.
+For $q=50$, the slope gives $\alpha\approx 0.047$ for the heuristic,
+compared to $\alpha\approx 0.156,0.114$ for \texttt{quizx} and \texttt{single} respectively.
+
+Note that for $q=100$, there is not enough data to show a best fit line 
+for \texttt{quizx} and \texttt{single}
 since most of the simulations could not complete before the timeout.
 As such, it is difficult to draw conclusive slope comparison here, 
 though it does show the superiority of the heuristic,
 as we see in the count of completed simulations in \autoref{fig:countall-hs}.
+
+\clearpage
+
+We also see clear improvement in both $\alpha$ and $\log_2$ time values
+in \autoref{fig:alpha_improve_hs}, \ref{fig:logtime_improve_hs}.
 
 Although it is not shown here, we also found that for $q=6$, 
 the slope of the best fit line for \texttt{single+paired} is $\approx 0$,
@@ -575,11 +654,12 @@ with respect to the $T$-count,
 while \texttt{quizx} and \texttt{single} were not able to do so.
 See the appendix \autoref{sec:app-results} for these results.
 
-\begin{figure}
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{alpha_improve_hs.png}
     \caption{Improvement in $\alpha$ (\texttt{single+paired} vs. \texttt{quizx}) 
     for modified hidden shift circuits}
+    \label{fig:alpha_improve_hs}
 \end{figure}
 
 \begin{figure}
@@ -587,9 +667,15 @@ See the appendix \autoref{sec:app-results} for these results.
     \includegraphics[width=0.8\textwidth]{logtime_improve_hs.png}
     \caption{Improvement in log time (\texttt{single+paired} vs. \texttt{quizx}) 
     for modified hidden shift circuits}
+    \label{fig:logtime_improve_hs}
 \end{figure}
 
-\begin{figure}
+We have a signficiant improvement in using the \texttt{single+paired} heuristic 
+in both $\alpha$ and log time for the modified hidden shift circuits,
+with a much higher possible $CCZ$ depth simulated at $n=60$ compared to
+$n=40,30$ for the \texttt{quizx} and \texttt{single} implementations respectively.
+
+\begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{countall-hs.png}
     \caption{Number of completed simulations before timeout
@@ -613,27 +699,32 @@ We take the results of 100 random circuits for each $(q,d)$ pair.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.8\textwidth]{alpha_all_ccz.png}
-    \caption{$\alpha$ values (lower better) for random Clifford+T circuits with CCZ}
+    \includegraphics[width=0.6\textwidth]{alpha_all_ccz.png}
+    \caption{$\alpha$ values (lower better) for Clifford+T circuits with CCZ}
+    \label{fig:alpha_all_ccz}
 \end{figure}
 
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{alpha_mean_er_ccz.png}
-    \caption{Mean $\alpha$ values (lower better) with standard deviation bars 
-    against different $T$-counts for Clifford+T circuits with CCZ}
+    \includegraphics[width=0.6\textwidth]{alpha_mean_er_ccz.png}
+    \caption{Mean $\alpha$ values (lower better)
+    by $T$-count for Clifford+T circuits with CCZ}
     \label{fig:alpha_mean_er_ccz}
 \end{figure}
 
+Both \autoref{fig:alpha_all_ccz}, \ref{fig:alpha_mean_er_ccz} show that the heuristic 
+is able to give lower $\alpha$ values than both the \texttt{quizx} and \texttt{single} implementations.
 
 \clearpage
 
+
+
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{logterms_ccz.png}
-    \caption{Mean log number of terms (lower better) with standard deviation bars by $T$-counts, 
-    for random Clifford+T circuits with CCZ}
+    \includegraphics[width=0.6\textwidth]{logterms_ccz.png}
+    \caption{Mean log number of terms (lower better) by $T$-count
+    for Clifford+T circuits with CCZ}
     \label{fig:logterms_ccz}
 \end{figure}
 
@@ -641,42 +732,57 @@ We take the results of 100 random circuits for each $(q,d)$ pair.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{logtime_ccz.png}
-    \caption{Mean log time (lower better) with standard deviation bars by $T$-counts, 
-    for random Clifford+T circuits with CCZ}
+    \includegraphics[width=0.6\textwidth]{logtime_ccz.png}
+    \caption{Mean log time (lower better) by $T$-count 
+    for Clifford+T circuits with CCZ}
     \label{fig:logtime_qs_ccz}
 \end{figure}
 
-\clearpage
-\begin{figure}
+The $\log_2$ terms and time graphs in \autoref{fig:logterms_ccz}, \ref{fig:logtime_qs_ccz},
+show lower values and lower slopes obtaining $\alpha \approx 0.132$ from the $\log_2$ terms graph,
+compared to $\alpha \approx 0.209, 0.177$ for the \texttt{quizx} and \texttt{single} 
+implementations respectively.
+
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.8\textwidth]{alpha_improve_ccz.png}
+    \includegraphics[width=0.6\textwidth]{alpha_improve_ccz.png}
     \caption{Improvement in $\alpha$ values (\texttt{single+paired} vs. \texttt{quizx}) 
-    for random Clifford+T circuits with CCZ}
+    for Clifford+T circuits with CCZ}
+    \label{fig:alpha_improve_ccz}
 \end{figure}
 
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{logtime_improve_ccz.png}
+    \includegraphics[width=0.6\textwidth]{logtime_improve_ccz.png}
     \caption{Improvement in log time (\texttt{single+paired} vs. \texttt{quizx}) 
-    for random Clifford+T circuits with CCZ}
+    for Clifford+T circuits with CCZ}
+    \label{fig:logtime_improve_ccz}
 \end{figure}
+
+Across the board, we see a clear dominance of the \texttt{single+paired} heuristic
+in the Clifford+T circuits with CCZ gates.
+Both $\alpha$ and $\log_2$ time show a significant improvement 
+in \autoref{fig:alpha_improve_ccz}, \ref{fig:logtime_improve_ccz},
+with the number of completed simulations before timeout being significantly higher
+in \autoref{fig:count8-20-ccz}, \ref{fig:count50-ccz}, \ref{fig:count100-ccz}.
+
+\clearpage
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{count-8-19-20-ccz.png}
     \caption{Number of completed simulations before timeout for $q=8,19,20$ 
-    for random Clifford+T circuits with CCZ}
+    for Clifford+T circuits with CCZ}
     \label{fig:count8-20-ccz}
 \end{figure}
 
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{count50-ccz.png}
+    \includegraphics[width=0.8\textwidth]{count50-ccz.png}
     \caption{Number of completed simulations before timeout for $q=50$ 
-    for random Clifford+T circuits with CCZ}
+    for Clifford+T circuits with CCZ}
     \label{fig:count50-ccz}
 \end{figure}
 
@@ -684,8 +790,6 @@ We take the results of 100 random circuits for each $(q,d)$ pair.
     \centering
     \includegraphics[width=0.8\textwidth]{count100-ccz.png}
     \caption{Number of completed simulations before timeout for $q=100$ 
-    for random Clifford+T circuits with CCZ}
+    for Clifford+T circuits with CCZ}
     \label{fig:count100-ccz}
 \end{figure}
-
-\clearpage

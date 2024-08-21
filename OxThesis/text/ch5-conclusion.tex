@@ -6,16 +6,73 @@ We have seen that the existing stabiliser decomposition algorithms are powerful 
 as demonstrated in \cite{Kissinger2022cat}.
 We also saw that heuristic approaches can be used to improve the performance of these algorithms,
 as demonstrated in \cite{sutcliffe2024proccut,Codsi2022}.
+However, as was challenged in \cite{sutcliffe2024proccut}, and alluded to in \cite{Codsi2022},
+obtaining lower $\alpha$ decompositions need not be just by looking at the immediate $T$-count reduction
+from a decomposition, but also by exploiting the structure of the ZX-diagrams 
+after carrying out the decomposition.
+This involves looking at how the $T$-like spiders can fuse after using the \CutRule decomposition,
+based on certain local patterns.
+
 Thus, in \autoref{ch:3-methods} we formalised the heuristic method and applied the formalism 
 to the existing approaches.
 We also developed new heuristics that take advantage of structure made available in
 the \nameref{alg:zx-simplify} algorithm of \cite{Duncan2020graphtheoretic}.
-We presented the results of these heuristics in \autoref{ch:4-results} and showed that they
-can greatly improve the performance of the existing stabiliser decomposition algorithms.
+We presented the results of these heuristics in \autoref{ch:4-results} and showed that 
+the \texttt{paired+single} heuristic can greatly improve 
+the performance of the existing stabiliser decomposition algorithms.
 
-\subsection{Future Work}
+We also explored various classes of circuits and how some of their structures
+lend very well to the heuristics developed.
+We managed to match the performance of \cite{codsi2023} for IQP circuits,
+and showed a clear improvement for circuits with a high number of CCZ gates.
+For modified hidden shift circuits, we obtained an improvement of 3 times the $T$-count
+that could be simulated within the time limit.
+
+We showed that $\alpha$ is generally reduced for all classes of circuits tested,
+though this does not necessarily translate to a reduction in time.
+This happens with random Clifford+T circuits coming from Pauli exponentials,
+where overhead of computing the heuristics outweighed the saved terms for the range of $T$-counts tested.
+However, we have also shown that this overhead is insignificant for circuits with a high $T$-count,
+though this remains to be tested for larger circuits and more compute power to match.
+
+We therefore conclude that the heuristic method to stabiliser decomposition
+is not only limited to that of the CNOT sandwich \cite{sutcliffe2024proccut},
+or the trivial \CutRule decomposition on 2-legged phase gadgets \cite{Codsi2022},
+but can also be extended to a wider range of ZX-diagram structures.
+In this thesis, this concentrated on the structure created by the reduced gadget form,
+as well as the $\PivotRule$ivot rewrite rule,
+but potentially more of such structures could be found.
+
+
+\section{Future Work}
 
 As mentioned in \autoref{sec:other-heuristics}, the \nameref{sec:subgraph-complement} cut
 is a potential area for future work, 
 perhaps making use of the future graph partioning work in \cite{sutcliffe2024part}.
+
+More compute power could also test the potential of the \nameref{sec:k-connected-heuristics}
+on larger circuits, and also to determine the size of the circuit for which the overhead of the heuristics
+is outweighed by the saved terms.
+
+Further analysis could also be done on \nameref{sec:complexity} of computing the heuristics,
+and whether there could also be a heuristic to not use or only partially use \nameref{alg:zx-simplify}
+between each step of a decomposition.
+This could allow the overhead of using heuristics to be minimised,
+while still providing the $\alpha$-reduction benefits.
+Particularly, there are few ways this could be done:
+\begin{itemize}
+    \item Coming up with a heuristic based version of \nameref{alg:zx-simplify} 
+    that knows when \textit{not} to simplify certain vertices to aid the \CutRule decomposition.
+    \item Parallelising the heuristic computation for each vertex in the ZX-diagram to avoid 
+    the $poly(n)$ time overhead.
+    \item Developing much cheaper meta-heuristics that can decide when to use the heuristics.
+    \item Bounding how often the heuristics are used or computed in the overall decomposition.
+\end{itemize}
+
+Another direction for heuristics is also to also have them for the \catstate{n} decompositions.
+These would be more complex due to different resulting patterns in the resulting terms of a decomposition,
+but could be very beneficial.
+The ideal heuristic would be able to give the best decomposition not just using \CutRule,
+but also from any known decomposition.
+
 

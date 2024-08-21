@@ -52,7 +52,7 @@
 % Either way, you'll have to choose and configure an appropriate bibliography format...
 
 % The science-type option: numerical in-text citation with references in order of appearance.
-\usepackage[style=numeric-comp, sorting=none, backend=biber, doi=false, isbn=false]{biblatex}
+\usepackage[style=numeric-comp, sorting=none, backend=biber, doi=false, isbn=false, abbreviate=false]{biblatex}
 \newcommand*{\bibtitle}{References}
 
 % The humanities-type option: author-year in-text citation with an alphabetical works cited.
@@ -163,9 +163,9 @@
 % \end{acknowledgements}
 
 %%%%% ABSTRACT -- Nothing to do here except comment out if you don't want it.
-% \begin{abstract}
-% 	\input{text/abstract}
-% \end{abstract}
+\begin{abstract}
+	\input{text/abstract}
+\end{abstract}
 
 %%%%% MINI TABLES
 % This lays the groundwork for per-chapter, mini tables of contents.  Comment the following line
