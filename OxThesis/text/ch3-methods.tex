@@ -130,7 +130,7 @@ between each step of the decompisition.
 Given that we have $k$ decompositions to choose from at each node,
 if we employed a brute force approach to find the best stabiliser decomposition,
 and attempted to find the best decomposition from a node traversing down $d$ levels in the tree,
-it would take \mccorrect{$O(k^{d+1} m^d t^2)$} time, where $m$ is the maximum number of terms coming from a decomposition,
+it would take $O(k^{d+1} m^d t^2)$ time, where $m$ is the maximum number of terms coming from a decomposition,
 for the $k$ decompositions to be applied to all the $m$ terms after each level.
 For example, the above approach of obtaining $\alpha_e$ takes $d=0$.
 
@@ -164,32 +164,36 @@ In fact, this structure can be stacked in the following way.
     \tikzfig{picom_grouped}
 \end{equation}
 
-Using these observations, a heuristic can be developed,
+Using these observations, a heuristic weighting function can be developed,
 where the main idea is to count the number of $T$-like spiders that can be removed,
 divided by how many cuts are needed to remove them.
 
 \begin{definition}
     Let $V$ be a Clifford+T diagram, and let $v$ be a vertex in $V$.
     Let $C$ be the set of sequence of graph cuts.
-    For each $c\in C$ where there are $|c|=n$ cuts in the sequence,
+    For each $c=(v_c,...)\in C$ where there are $|c|=n$ cuts in the sequence,
     let $t(c)$ be the number of $T$-like spiders removed by the sequence of cuts 
     using \CutRule, including simplifications between each cut.
-    Then a \textit{cut heuristic} for the sequence $c$ of length $n$ is defined as
-    any heuristic $h: V \to \mathbb{R}^+$ such that
+
+    The \textit{effective cut heuristic} $h_e:V\to \mathbb{R}^+$ 
+    for a sequence $c$ of length $n$ is defined as
     \begin{equation}
-        \exists c=(v,...,v_n)\in C, 0 < h(v) \leq \frac{t(c)}{|c|} = h_e(v)
-    \end{equation} 
-    where $h_e(v)$ is the effective heuristic value of $c$.
+        h_e(v_c) = \frac{t(c)}{|c|}
+    \end{equation}
+
+    A cut heuristic $h:V\to \mathbb{R}^+$ for sequences $c$ of length $n$ is \textit{valid} if
+    \begin{equation}
+        \forall v\in V, \exists c=(v,...,v_n)\in C, h(v) \leq h_e(v)
+    \end{equation}
 \end{definition}
 
-For the cut heuristic to be valid, it should not overestimate the effective heuristic value $h_e$.
-For the cut heuristic to be useful, it should be close to the value of $h_e$.
+Note that a useful cut heuristic is one where the value of $h(v)$ is close to $h_e(v)$, $\forall v\in V$.
 We have that a higher cut heuristic value implies a more efficient decomposition.
-In fact, the associated $\alpha_e$ value of the sequence of decompositions is given by 
+In fact, the associated $\alpha_e$ value of the best sequence of \CutRule decompositions $c$ is given by 
 
 \begin{equation}
     \label{eq:cut-heuristic}
-    \alpha_e(c) = \frac{t(c)}{|c|} = \frac{1}{h_e(v)} \leq \frac{1}{h(v)} = \alpha_h(c)
+    \alpha_e(c) = \frac{|c|}{t(c)} = \frac{1}{h_e(v_c)} \leq \frac{1}{h(v_c)} = \alpha_h(c)
 \end{equation}
 where $\alpha_h(c)$ is the associated $\alpha$ value of the cut heuristic,
 and since the $n=\log_2(2^n)$ cuts contribute to $2^n$ terms.
@@ -512,11 +516,12 @@ so 2 cuts are needed to remove all the vertices.
 This is essentially the average of the two heuristics, 
 which is necessarily smaller than the maximum between the two heuristics.
 Since we can process the heuristics sequentially, we can just consider them separately as before.
+By doing so, we maintain the validity of the heuristics with the same argument as before 
+(\ref{eq:cut-heuristic-combined}).
 
 \section{$k$-connected Heuristics}
 \label{sec:k-connected-heuristics}
 
-\begin{mccorrection}
 We can extend the idea of paired heuristics to $k$-connected heuristics.
 Suppose we have $k$ $T$-like spiders $\vec{t}_k = (t_1,...,t_k)$ fully connected to $n$ $k+1$-legged phase gadgets,
 and $m$ $k$-legged $T$-like spiders.
@@ -526,7 +531,7 @@ Using the $\PivotRule$ivot rule, we can remove $m$ or $n$ $T$-like spiders with 
     \tikzfig{k-connected}
 \end{equation}
 
-Then we have the following heuristics.
+Then we have the following valid heuristics.
 
 \begin{equation}
 \begin{aligned}
@@ -544,8 +549,6 @@ which practically affects runtime heavily for low $t$, even if $\alpha$ is reduc
 As such, we leave this general heuristic to be useful in much larger computations,
 and in numerical experiments of \autoref{ch:4-results}, we only consider the case of $k=1,2$,
 corresponding to (\ref{eq:cut-heuristic-combined}, \ref{eq:cut-heuristic-pair}).
-
-\end{mccorrection}
 
 \section{Greedy Algorithm with Cut Heuristic}
 \label{sec:greedy-cut}
@@ -674,7 +677,6 @@ Scenarios for being close to gadget fusion are not common enough, and tend to ta
 by which time the cut heuristics (\ref{eq:cut-heuristic-combined}, \ref{eq:cut-heuristic-pair}) 
 would have already been more effective.
 
-\begin{mccorrection}
 In \autoref{sec:subgraph-complement}, we introduce the subgraph complement cut.
 The heuristic that could be used here is simply to determine the number of edges 
 in the subgraph excluding the phase gadgets,
@@ -690,7 +692,6 @@ but finding near cliques is at least as hard as the maximum cliques problem,
 which itself is NP-hard \cite{behera2022}.
 However, there is work done on partitioning graphs that will be considered 
 in future work \cite{sutcliffe2024part}.
-\end{mccorrection}
 
 \section{Complexity Analysis}
 \label{sec:complexity}
@@ -751,7 +752,6 @@ compared to the original $O(t^2)$ complexity.
 With a higher $T$-count, and the reduction of $\alpha$ due to more efficient cuts,
 we will see that the paired heuristics can still be effective in practice.
 
-\begin{mccorrection}
 However, in better cases, where $m \ll n \leq t$, we can have $O(t)$ complexity instead.
 Such cases can be described in the next chapter in \autoref{sec:experiments} 
 when we see different classes of circuits being affected differently by the overhead cost.
@@ -759,7 +759,6 @@ when we see different classes of circuits being affected differently by the over
 The $k$-connected heuristics (\ref{eq:cut-heuristic-k}) considers $O(m^k)$ $k$-connected $T$-like spiders,
 requiring the check of $O(k(m+n))$ edges, for a total of $O(m^k(m+n)k)$ time.
 In the worst case, this is $O(kt^{k+1})$, showing its impracticality for small $t$.
-\end{mccorrection}
 
 For the heuristic taking into account the overlap of $T$-like spiders (\ref{eq:cut-heuristic-catn-max}),
 the Hopcroft-Karp algorithm has a complexity of $O(mn\sqrt{m+n})$ for each $T$-like spider,

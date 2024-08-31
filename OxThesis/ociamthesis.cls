@@ -375,7 +375,7 @@
 \usepackage[grey,utopia]{quotchap} 
 	% To put nice quotes at the beginning of the chapters
 
-\usepackage[nottoc]{tocbibind}
+\usepackage[nottoc,notlof,notlot]{tocbibind}
 	% Used for inserting the Bibliography, List of Figures, indices, etc into the table of contents.
 
 % JEM: Allow flexible spacing after figures, to reduce other stretching

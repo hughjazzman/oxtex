@@ -390,7 +390,12 @@
   \tikzfig{amplitude}
 \end{lrbox}
 
+
+\newkeycommand{\catfour}[style=none]{\,\tikz{\node[style=\commandkey{style}] (x) at (0,0.5) {\catstate{4}};
+\node[style=none] (x) at (0,0) {};}\,}
+
+
 \newsavebox\catstatecd
 \begin{lrbox}{\catstatecd}
-  \catstate{4}
+\catfour
 \end{lrbox}
